@@ -10,8 +10,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **ORM**: **Drizzle** — Schema in `src/lib/db/schema.ts`
 - **Auth**: bei Bedarf mit bcrypt + eigener Session (kein Supabase, kein NextAuth)
 - **PWA**: `public/manifest.webmanifest` + `public/sw.js` — Service Worker cached
-  die App-Shell für Offline-Nutzung. Icons in `public/icons/` (aktuell nur
-  Platzhalter — durch echte Hausfest-Icons ersetzen).
+  die App-Shell für Offline-Nutzung. Icons in `public/icons/` (leuchtendes
+  Haus auf dunklem Grund, passend zum App-Theme `#0a0a0a`).
 - **Deploy**: Push auf `main` → GitHub Actions baut Docker-Image → SSH-Deploy zum VPS
 - **Live-URL**: https://hausfest-via.al-daellen.ch
 
