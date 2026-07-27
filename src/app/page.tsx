@@ -1,17 +1,14 @@
 import SiteNav from "@/components/site-nav";
 import {
-  Achtung,
   Bubble,
   Coral,
   CoralRule,
-  FloorIcon,
-  Haken,
+  Kalender,
   SparteIcon,
 } from "@/components/doodles";
 import {
   ACTS,
   FEST,
-  FLOORS,
   JUBILAEEN,
   TICKET_PASSWORT,
   TICKET_URL,
@@ -26,33 +23,37 @@ export default function Home() {
       {/* Titel — die Illustration trägt den Kopf der Seite. Der Verlauf
           dunkelt nur so weit ab, dass die Schrift trägt, ohne die Zeichnung
           zuzudecken; die Schatten am Text erledigen den Rest. */}
-      <header className="relative px-6 pb-12 pt-10 text-center sm:pb-16 sm:pt-16">
+      <header className="relative px-6 pb-12 pt-12 text-center sm:pb-16 sm:pt-16">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-night-900/60 via-night-900/35 to-night-900/70"
         />
         <div className="relative mx-auto max-w-2xl [text-shadow:0_2px_14px_rgba(7,21,64,0.95)]">
-          <p className="font-hand text-2xl text-blossom sm:text-3xl">
-            Wir möchten feiern.
-          </p>
-          <h1 className="mt-1 font-display text-6xl font-extrabold tracking-tight text-foam sm:text-8xl">
+          <h1 className="font-display text-5xl font-extrabold tracking-tight text-foam sm:text-7xl">
             Hausfest
+            <br className="sm:hidden" />
+            <span className="sm:ml-4">Via1</span>
           </h1>
-          <p className="mt-2 font-hand text-2xl text-sun sm:text-3xl">
-            Und zwar mit dir!
-          </p>
 
           {/* Wann, wo und warum in einem Block — auf eigener dunkler Fläche,
               sonst gehen die Zahlen in der Zeichnung unter. */}
-          <div className="mt-8 inline-flex flex-col items-center rounded-3xl border border-white/25 bg-night-900/75 px-7 py-5 backdrop-blur-md">
+          <div className="mt-8 inline-flex flex-col items-center rounded-3xl border border-white/25 bg-night-900/75 px-6 py-5 backdrop-blur-md sm:px-8">
             <p className="font-display text-xl font-bold text-foam sm:text-2xl">
               {FEST.datum}
             </p>
-            <p className="text-foam-dim">
-              {FEST.zeit} · {FEST.ort}
-            </p>
+            <p className="text-foam-dim">{FEST.zeit}</p>
+            <p className="mt-2 text-foam">{FEST.ort}</p>
+            <p className="text-sm text-foam-dim">{FEST.adresse}</p>
 
-            <div className="ink-rule mt-4 w-full" />
+            <a
+              href="/kalender"
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-sky/50 bg-sky/15 px-4 py-2 text-sm text-foam transition-colors hover:bg-sky/25"
+            >
+              <Kalender className="h-4 w-4" />
+              Im Kalender speichern
+            </a>
+
+            <div className="ink-rule mt-5 w-full" />
 
             {/* Die zwei Jubiläen als Zahlen — spart einen ganzen Satz. */}
             <ul className="mt-4 flex items-start justify-center gap-7 sm:gap-10">
@@ -78,52 +79,10 @@ export default function Home() {
             bleiben — die Zeichnung läuft aussen herum weiter. */}
         <div className="mx-auto max-w-2xl rounded-[2rem] border border-white/10 bg-night-900/88 backdrop-blur-md">
           <div className="px-5 py-10 sm:px-10 sm:py-14">
-            {/* Zuoberst das Ticket: erst der Grund, dann die zwei Wege
-                hinein, dann der Knopf. */}
-            <Abschnitt id="tickets" titel="Tickets" form={0}>
-              <p>
-                Wir kochen und kaufen für alle ein, die kommen. Darum brauchen
-                wir eine Ahnung, mit wie vielen wir rechnen dürfen.
+            <Abschnitt id="willkommen" titel="Willkommen" form={0}>
+              <p className="font-hand text-2xl text-sun">
+                Schön, hast du hierhin gefunden!
               </p>
-
-              <div className="not-prose mt-7 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-mint/40 bg-mint/10 p-4">
-                  <p className="flex items-center gap-2 font-display font-bold text-mint">
-                    <Haken className="h-5 w-5 shrink-0" />
-                    Mit Ticket
-                  </p>
-                  <p className="mt-1.5 text-sm text-foam-dim">
-                    Du bist sicher dabei. Und wir wissen, für wie viele wir
-                    einkaufen.
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-sun/40 bg-sun/10 p-4">
-                  <p className="flex items-center gap-2 font-display font-bold text-sun">
-                    <Achtung className="h-5 w-5 shrink-0" />
-                    Abendkasse
-                  </p>
-                  <p className="mt-1.5 text-sm text-foam-dim">
-                    Gibt es auch — aber ab einer bestimmten Anzahl Leute
-                    stoppen wir den Einlass.
-                  </p>
-                </div>
-              </div>
-
-              <div className="not-prose mt-7 flex flex-col items-center gap-4">
-                <TicketButton />
-                <TicketPasswort />
-              </div>
-            </Abschnitt>
-
-            {/* Der Absatz über die offenen Türen bleibt unangetastet — die
-                Floors darunter fächern ihn nur visuell auf. */}
-            <Abschnitt id="fest" titel="Das Fest" form={1}>
-              <p>
-                Der Grund? Wir feiern einfach gern. Und dieses Jahr gleich
-                doppelt.
-              </p>
-              {/* Wortlaut unverändert, nur in zwei Absätze geteilt — als ein
-                  Block war es am Handy eine Wand. */}
               <p>
                 Am 5. September ab 16 Uhr öffnen wir die Türen zu unserem Haus
                 — und zwar gleich alle. Gefeiert wird auf mehreren Floors: im
@@ -132,36 +91,32 @@ export default function Home() {
               </p>
               <p>
                 Es erwarten dich Kinderprogramm, Essen, Bands, Theater und DJs
-                — und das bis in die frühen Morgenstunden. Das Programm mit
-                allen Acts und Zeiten schalten wir laufend auf — es lohnt sich
-                also, immer wieder vorbeizuschauen.
+                — und das bis in die frühen Morgenstunden.
               </p>
-
-              <ul className="not-prose mt-7 grid gap-3 sm:grid-cols-2">
-                {FLOORS.map((floor) => (
-                  <li
-                    key={floor.name}
-                    className="flex items-start gap-3 rounded-2xl border border-white/15 bg-white/5 p-4"
-                  >
-                    <FloorIcon
-                      art={floor.icon}
-                      className="mt-0.5 h-6 w-6 shrink-0 text-sky"
-                    />
-                    <div className="min-w-0">
-                      <p className="font-display font-bold text-foam">
-                        {floor.name}
-                      </p>
-                      <p className="mt-0.5 text-sm text-foam-dim">
-                        {floor.beschrieb}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <p>
+                Wir laden dich in unsere privaten vier Wände ein. Darum bitten
+                wir dich, die Info bedacht weiterzugeben.
+              </p>
             </Abschnitt>
 
-            <Abschnitt id="lineup" titel="Line-up" form={2}>
-              <p>Diese Acts sind bestätigt — weitere kommen laufend dazu.</p>
+            <Abschnitt id="tickets" titel="Tickets" form={1}>
+              <p>
+                Wir kochen und kaufen für alle ein, die kommen — darum hol dir
+                dein Ticket am besten vorher. Eine Abendkasse gibt es auch,
+                aber ab einer bestimmten Anzahl Leute stoppen wir den Einlass.
+                Mit Ticket bist du auf der sicheren Seite.
+              </p>
+              <div className="not-prose mt-7 flex justify-center">
+                <TicketButton />
+              </div>
+            </Abschnitt>
+
+            <Abschnitt id="programm" titel="Programm" form={2}>
+              <p>
+                Diese Acts sind bestätigt. Das Line-up wächst laufend, und die
+                Zeiten schalten wir auf, sobald sie stehen — es lohnt sich
+                also, immer wieder vorbeizuschauen.
+              </p>
 
               <ul className="not-prose mt-6 space-y-3">
                 {ACTS.map((act) => (
@@ -191,41 +146,45 @@ export default function Home() {
               </ul>
             </Abschnitt>
 
-            <Abschnitt id="haus" titel="Das Haus" form={0}>
+            <Abschnitt id="miteinander" titel="Miteinander" form={0}>
               <p>
-                Die Via Felsenau ist kein Veranstaltungslokal, sondern unser
-                Zuhause. Wir laden dich in unsere eigenen vier Wände ein — sei
-                mit der Einladung also so umsichtig, wie du es bei dir selbst
-                wärst. Lieber den Menschen erzählen, die wirklich zu uns
-                passen, als der ganzen Timeline.
+                Wir wollen ein Fest, an dem sich alle wohlfühlen — Kinder,
+                Nachbarinnen, alte Freunde und Leute, die zum ersten Mal da
+                sind.
               </p>
-
-              <div className="not-prose mt-7 rounded-2xl border border-white/15 bg-white/5 p-5">
-                <p className="font-display font-bold text-foam">
-                  Als App installieren
-                </p>
-                <p className="mt-2 text-sm text-foam-dim">
-                  So hast du Programm und Infos immer griffbereit — auch ohne
-                  Empfang im Keller.
-                </p>
-                <p className="mt-3 text-sm text-foam-dim">
-                  iPhone: Teilen-Symbol → „Zum Home-Bildschirm“
-                  <br />
-                  Android: Menü → „App installieren“
-                </p>
-              </div>
+              <p>
+                Diskriminierung, Rassismus, Sexismus und grenzüberschreitendes
+                Verhalten haben bei uns keinen Platz. Achtet aufeinander,
+                fragt im Zweifel nach, und akzeptiert ein Nein als Nein.
+              </p>
+              <p>
+                Wenn dir etwas passiert oder du etwas mitbekommst: Sag uns
+                Bescheid. Wir sind da und kümmern uns darum.
+              </p>
             </Abschnitt>
+
+            <div className="mt-10 rounded-2xl border border-white/15 bg-white/5 p-5">
+              <p className="font-display font-bold text-foam">
+                Als App installieren
+              </p>
+              <p className="mt-2 text-sm text-foam-dim">
+                So hast du Programm und Infos immer griffbereit — auch ohne
+                Empfang im Keller.
+              </p>
+              <p className="mt-3 text-sm text-foam-dim">
+                iPhone: Teilen-Symbol → „Zum Home-Bildschirm“
+                <br />
+                Android: Menü → „App installieren“
+              </p>
+            </div>
           </div>
         </div>
       </main>
 
       <footer className="relative bg-night-900/80 px-6 py-10 text-center backdrop-blur-md">
         <Coral form={1} className="mx-auto h-8 w-8 text-blossom/60" />
-        <p className="mt-3 font-hand text-xl text-foam">
-          Wir sehen uns am 5. September!
-        </p>
-        <p className="mt-1 text-sm text-foam-dim">
-          {FEST.ort} · {FEST.anlass}
+        <p className="mt-3 font-hand text-2xl text-foam">
+          Bis zum 5. September!
         </p>
       </footer>
     </div>
@@ -257,12 +216,14 @@ function Abschnitt({
   );
 }
 
-/** Ticket-Aufruf. Solange kein Shop-Link gesetzt ist, wird ehrlich ein
- *  Hinweis gezeigt statt eines Buttons, der ins Leere führt. */
+/** Ticket-Aufruf. Das Shop-Passwort steht im Knopf selbst — so sieht man es
+ *  im selben Moment, in dem man ihn antippt, und muss nicht zurückblättern.
+ *  Solange kein Shop-Link gesetzt ist, wird ehrlich ein Hinweis gezeigt
+ *  statt eines Knopfs, der ins Leere führt. */
 function TicketButton() {
   if (!TICKET_URL) {
     return (
-      <p className="inline-block rounded-full border border-dashed border-white/30 bg-night-900/60 px-6 py-3 text-sm text-foam-dim backdrop-blur-sm">
+      <p className="inline-block rounded-full border border-dashed border-white/30 bg-night-900/60 px-6 py-3 text-sm text-foam-dim">
         Ticketverkauf startet in Kürze
       </p>
     );
@@ -274,22 +235,14 @@ function TicketButton() {
       href={TICKET_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-block rounded-full bg-gradient-to-br from-coral to-blossom px-8 py-3.5 font-display text-lg font-bold text-night-900 shadow-lg shadow-coral/25 transition-transform hover:scale-[1.03] active:scale-100"
+      className="inline-flex flex-col items-center rounded-3xl bg-gradient-to-br from-coral to-blossom px-8 py-4 text-night-900 shadow-lg shadow-coral/25 transition-transform hover:scale-[1.03] active:scale-100"
     >
-      Ticket sichern
+      <span className="font-display text-lg font-bold">Ticket sichern</span>
+      {TICKET_PASSWORT ? (
+        <span className="mt-0.5 text-sm text-night-900/80">
+          Passwort: <strong className="font-bold">{TICKET_PASSWORT}</strong>
+        </span>
+      ) : null}
     </a>
-  );
-}
-
-/** Das Shop-Passwort — gross genug, um es im Laden abzutippen. */
-function TicketPasswort() {
-  if (!TICKET_URL || !TICKET_PASSWORT) return null;
-  return (
-    <p className="text-center text-sm text-foam-dim">
-      Der Shop ist geschützt. Passwort:{" "}
-      <span className="ml-1 inline-block rounded-lg border border-white/20 bg-white/10 px-2.5 py-1 font-display font-bold tracking-wide text-foam">
-        {TICKET_PASSWORT}
-      </span>
-    </p>
   );
 }

@@ -57,45 +57,8 @@ export function CoralRule({ form = 0 }: { form?: 0 | 1 | 2 }) {
   );
 }
 
-/** Strichzeichnung für einen Floor — sagt auf einen Blick, was dort läuft. */
-export function FloorIcon({
-  art,
-  className = "",
-}: {
-  art: "garten" | "pyramide" | "wohnung" | "club";
-  className?: string;
-}) {
-  const pfade = {
-    garten: (
-      <>
-        <path d="M12 21v-9" />
-        <path d="M12 15c-3.2 0-5.4-2.2-5.4-5.4C9.8 9.6 12 11.8 12 15Z" />
-        <path d="M12 13c2.8 0 4.8-2 4.8-4.8C14 8.2 12 10.2 12 13Z" />
-      </>
-    ),
-    pyramide: (
-      <>
-        <path d="M12 3 3 20h18L12 3Z" />
-        <path d="M12 3v17" />
-        <path d="M7.6 12h8.8" />
-      </>
-    ),
-    wohnung: (
-      <>
-        <path d="M3 11 12 4l9 7" />
-        <path d="M5.2 10v10h13.6V10" />
-        <path d="M10 20v-5h4v5" />
-      </>
-    ),
-    club: (
-      <>
-        <path d="M9 17V5.5l10-2V15" />
-        <circle cx="6" cy="17.5" r="3" />
-        <circle cx="16" cy="15.5" r="3" />
-      </>
-    ),
-  }[art];
-
+/** Kalenderblatt für den Termin-Download. */
+export function Kalender({ className = "" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -103,11 +66,14 @@ export function FloorIcon({
       className={className}
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.7}
+      strokeWidth={1.9}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {pfade}
+      <rect x="3.2" y="5" width="17.6" height="16" rx="3" />
+      <path d="M3.2 10h17.6" />
+      <path d="M8 3v4" />
+      <path d="M16 3v4" />
     </svg>
   );
 }
@@ -145,42 +111,6 @@ export function SparteIcon({
           <circle cx="16" cy="15.5" r="3" />
         </>
       )}
-    </svg>
-  );
-}
-
-/** Häkchen und Ausrufezeichen für die zwei Wege zum Einlass. */
-export function Haken({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m5 12.5 4.5 4.5L19 7" />
-    </svg>
-  );
-}
-
-export function Achtung({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-    >
-      <circle cx="12" cy="12" r="8.6" />
-      <path d="M12 7.6v5.6" />
-      <path d="M12 16.4h.01" />
     </svg>
   );
 }

@@ -1,7 +1,7 @@
 {
-  "name": "Hausfest Via",
+  "name": "Hausfest Via1",
   "short_name": "Hausfest",
-  "description": "Alles fürs Hausfest — Programm, Anfahrt, Infos",
+  "description": "Alles fürs Hausfest — Programm, Tickets, Infos",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

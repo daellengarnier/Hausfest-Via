@@ -2,7 +2,7 @@
 // serviert später auch offline (Fallback auf Cache wenn Netzwerk fehlschlägt).
 // Bei App-Updates automatisch aktivieren.
 
-const CACHE_NAME = "hausfest-via-v3";
+const CACHE_NAME = "hausfest-via-v4";
 const SHELL = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
