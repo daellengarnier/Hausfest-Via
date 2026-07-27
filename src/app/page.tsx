@@ -86,8 +86,8 @@ export default function Home() {
               <p>
                 Am 5. September ab 16 Uhr öffnen wir die Türen zu unserem Haus
                 — und zwar gleich alle. Gefeiert wird auf mehreren Floors: im
-                Garten, unter unserer grossen Glaspyramide, in den Wohnungen
-                und im Club im Keller.
+                Garten, in unserer Glaspyramide, in den Wohnungen und im Club
+                im Keller.
               </p>
               <p>
                 Es erwarten dich Kinderprogramm, Essen, Bands, Theater und DJs
@@ -101,10 +101,14 @@ export default function Home() {
 
             <Abschnitt id="tickets" titel="Tickets" form={1}>
               <p>
-                Wir kochen und kaufen für alle ein, die kommen — darum hol dir
-                dein Ticket am besten vorher. Eine Abendkasse gibt es auch,
-                aber ab einer bestimmten Anzahl Leute stoppen wir den Einlass.
-                Mit Ticket bist du auf der sicheren Seite.
+                Wir bitten dich ganz fest, ein Ticket zu kaufen. Wir kochen und
+                kaufen für alle ein, die kommen — mit deinem Ticket wissen wir,
+                mit wie vielen wir rechnen dürfen.
+              </p>
+              <p>
+                Eine Abendkasse gibt es auch, aber ab einer bestimmten Anzahl
+                Leute stoppen wir den Einlass. Mit Ticket bist du auf der
+                sicheren Seite.
               </p>
               <div className="not-prose mt-7 flex justify-center">
                 <TicketButton />
