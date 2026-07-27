@@ -10,8 +10,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **ORM**: **Drizzle** — Schema in `src/lib/db/schema.ts`
 - **Auth**: bei Bedarf mit bcrypt + eigener Session (kein Supabase, kein NextAuth)
 - **PWA**: `public/manifest.webmanifest` + `public/sw.js` — Service Worker cached
-  die App-Shell für Offline-Nutzung. Icons in `public/icons/` (leuchtendes
-  Haus auf dunklem Grund, passend zum App-Theme `#0a0a0a`).
+  die App-Shell für Offline-Nutzung. Icons in `public/icons/`.
+- **Look**: gezeichnete Tuschewelt auf Nachtblau (`#071540`) — Seifenblasen,
+  Korallen, das Haus. Illustration, Icons und die Laser-Vorlage entstehen aus
+  Code in `scripts/art/` (siehe README dort), nicht von Hand.
+- **Schriften**: liegen als OFL-TTF in `src/app/fonts/` und werden über
+  `next/font/local` geladen — der Docker-Build braucht dafür kein Netz.
+- **Fest-Inhalte**: Datum, Floors, Acts und der Ticket-Link stehen zentral in
+  `src/lib/fest.ts`. Neue Bands dort eintragen, nicht im JSX.
 - **Deploy**: Push auf `main` → GitHub Actions baut Docker-Image → SSH-Deploy zum VPS
 - **Live-URL**: https://hausfest-via.al-daellen.ch
 

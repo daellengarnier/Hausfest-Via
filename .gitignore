@@ -18,3 +18,7 @@ yarn-error.log*
 
 *.tsbuildinfo
 next-env.d.ts
+
+# Python-Zwischenstände der Bild-Generatoren
+__pycache__/
+*.pyc

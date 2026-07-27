@@ -1,9 +1,29 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 
+// Schriften liegen im Repo (OFL, Lizenzen daneben) — so braucht der
+// Docker-Build kein Netz und der Build bleibt reproduzierbar.
+const display = localFont({
+  src: [
+    { path: "./fonts/Outfit-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/Outfit-Bold.ttf", weight: "700", style: "normal" },
+  ],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const hand = localFont({
+  src: "./fonts/NothingYouCouldDo-Regular.ttf",
+  weight: "400",
+  variable: "--font-hand",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Hausfest Via",
-  description: "Alles fürs Hausfest — Programm, Anfahrt, Infos",
+  title: "Hausfest Via — 5. September",
+  description:
+    "Wir möchten feiern. Und zwar mit dir! 10 Jahre Spinnerei, 33 Jahre Via Felsenau — am 5. September ab 16 Uhr.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
@@ -20,7 +40,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#071540",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -32,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="de">
+    <html lang="de" className={`${display.variable} ${hand.variable}`}>
       <head>
         {/* Service Worker registrieren — sobald der Browser die Seite lädt. */}
         <script
@@ -47,7 +67,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-neutral-950 text-neutral-100 antialiased">
+      <body className="min-h-screen bg-night-900 font-display text-foam antialiased">
         {children}
       </body>
     </html>

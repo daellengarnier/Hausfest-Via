@@ -1,9 +1,71 @@
 @import "tailwindcss";
 
+/* Farbwelt der Illustration: Tuschezeichnung auf Nachtblau, Pastellakzente. */
+@theme {
+  --color-night-900: #071540;
+  --color-night-800: #0a1d52;
+  --color-night-700: #102c6f;
+  --color-night-600: #17408f;
+  --color-ink: #0d2a6b;
+
+  --color-foam: #eaf3ff;
+  --color-foam-dim: #a9c4ea;
+
+  --color-coral: #ff8a6b;
+  --color-blossom: #ff9ec7;
+  --color-mint: #b6f2c0;
+  --color-sky: #8fd8ff;
+  --color-sun: #ffc36b;
+
+  --font-display: var(--font-display), ui-rounded, system-ui, sans-serif;
+  --font-hand: var(--font-hand), cursive;
+}
+
 /* Safe-Area-Support für iOS mit Notch */
 body {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Ankersprünge dürfen nicht unter der klebenden Navigation landen. */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Die Illustration liegt als eigene, am Viewport fixierte Ebene hinter dem
+   Inhalt. Bewusst ein positioniertes Element statt background-attachment:
+   fixed — letzteres ruckelt auf iOS und würde die Zeichnung über die volle
+   Dokumenthöhe strecken, sodass am Handy nur ein Ausschnitt sichtbar wäre. */
+.fest-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--color-night-800);
+  background-image: url("/art/hero.svg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* Handgezeichnete Trennlinie zwischen den Abschnitten. */
+.ink-rule {
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--color-foam-dim) 0 22px,
+    transparent 22px 34px
+  );
+  opacity: 0.35;
 }
