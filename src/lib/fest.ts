@@ -48,7 +48,7 @@ export const ACTS: Act[] = [
   { name: "DJ Pantichrist", sparte: "DJ" },
   { name: "Yotah", sparte: "DJ" },
   { name: "Morchel", sparte: "DJ" },
-  { name: "Tino Kaufholz" },
+  { name: "Tino Kaufholz", sparte: "DJ" },
 ];
 
 export type NavItem = { id: string; label: string };
