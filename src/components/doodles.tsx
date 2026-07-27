@@ -78,14 +78,40 @@ export function Kalender({ className = "" }: { className?: string }) {
   );
 }
 
-/** Symbol für die Sparte eines Acts. */
+/** Symbol für die Sparte eines Acts. Ohne Sparte ein neutraler Stern —
+ *  besser als ein Symbol, das etwas Falsches behauptet. */
 export function SparteIcon({
   art,
   className = "",
 }: {
-  art: "Band" | "Theater";
+  art?: "Band" | "Theater" | "DJ";
   className?: string;
 }) {
+  const pfade = {
+    Theater: (
+      <>
+        <path d="M4.5 5.5h15v5.5a7.5 7.5 0 0 1-15 0V5.5Z" />
+        <path d="M9 10h.01" />
+        <path d="M15 10h.01" />
+        <path d="M9.4 14.4a3.6 3.6 0 0 0 5.2 0" />
+      </>
+    ),
+    Band: (
+      <>
+        <path d="M9 17V5.5l10-2V15" />
+        <circle cx="6" cy="17.5" r="3" />
+        <circle cx="16" cy="15.5" r="3" />
+      </>
+    ),
+    DJ: (
+      <>
+        <circle cx="10.5" cy="13.5" r="7.4" />
+        <circle cx="10.5" cy="13.5" r="1.9" />
+        <path d="M16.2 8.3 20.4 4.2" />
+      </>
+    ),
+  };
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -97,18 +123,14 @@ export function SparteIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {art === "Theater" ? (
-        <>
-          <path d="M4.5 5.5h15v5.5a7.5 7.5 0 0 1-15 0V5.5Z" />
-          <path d="M9 10h.01" />
-          <path d="M15 10h.01" />
-          <path d="M9.4 14.4a3.6 3.6 0 0 0 5.2 0" />
-        </>
+      {art ? (
+        pfade[art]
       ) : (
         <>
-          <path d="M9 17V5.5l10-2V15" />
-          <circle cx="6" cy="17.5" r="3" />
-          <circle cx="16" cy="15.5" r="3" />
+          <path d="M12 4v16" />
+          <path d="M4 12h16" />
+          <path d="m6.3 6.3 11.4 11.4" />
+          <path d="m17.7 6.3-11.4 11.4" />
         </>
       )}
     </svg>

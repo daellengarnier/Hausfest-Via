@@ -29,10 +29,14 @@ export const JUBILAEEN = [
   { zahl: "33", was: "Jahre Via Felsenau" },
 ] as const;
 
+export type Sparte = "Band" | "Theater" | "DJ";
+
 export type Act = {
   name: string;
   herkunft?: string;
-  sparte: "Band" | "Theater";
+  /** Weglassen, solange die Sparte nicht feststeht — die Karte zeigt dann
+   *  nur den Namen, statt eine falsche Zuordnung zu behaupten. */
+  sparte?: Sparte;
 };
 
 /** Bereits bestätigt. Zeiten und weitere Acts kommen laufend dazu. */
@@ -40,7 +44,11 @@ export const ACTS: Act[] = [
   { name: "Ashinoa", herkunft: "FR", sparte: "Band" },
   { name: "Reverend Deadeye & Nicotin Sue", sparte: "Band" },
   { name: "Treibend", herkunft: "BE", sparte: "Band" },
-  { name: "theater FULU", sparte: "Theater" },
+  { name: "FULU", sparte: "Theater" },
+  { name: "DJ Pantichrist", sparte: "DJ" },
+  { name: "Yotah", sparte: "DJ" },
+  { name: "Morchel", sparte: "DJ" },
+  { name: "Tino Kaufholz" },
 ];
 
 export type NavItem = { id: string; label: string };

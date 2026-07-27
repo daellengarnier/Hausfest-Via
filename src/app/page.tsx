@@ -139,7 +139,9 @@ export default function Home() {
                           </span>
                         ) : null}
                       </p>
-                      <p className="text-sm text-foam-dim">{act.sparte}</p>
+                      {act.sparte ? (
+                        <p className="text-sm text-foam-dim">{act.sparte}</p>
+                      ) : null}
                     </div>
                   </li>
                 ))}
@@ -147,19 +149,11 @@ export default function Home() {
             </Abschnitt>
 
             <Abschnitt id="miteinander" titel="Miteinander" form={0}>
-              <p>
-                Wir wollen ein Fest, an dem sich alle wohlfühlen — Kinder,
-                Nachbarinnen, alte Freunde und Leute, die zum ersten Mal da
-                sind.
-              </p>
+              <p>Wir wollen ein Fest, an dem sich alle wohlfühlen.</p>
               <p>
                 Diskriminierung, Rassismus, Sexismus und grenzüberschreitendes
                 Verhalten haben bei uns keinen Platz. Achtet aufeinander,
                 fragt im Zweifel nach, und akzeptiert ein Nein als Nein.
-              </p>
-              <p>
-                Wenn dir etwas passiert oder du etwas mitbekommst: Sag uns
-                Bescheid. Wir sind da und kümmern uns darum.
               </p>
             </Abschnitt>
 
