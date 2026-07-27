@@ -157,14 +157,13 @@ export default function Home() {
             <Abschnitt id="haus" titel="Das Haus" form={0}>
               <p>
                 Die Via Felsenau ist kein Veranstaltungslokal, sondern unser
-                Zuhause. Wir laden dich in unsere eigenen vier Wände ein — mit
-                offenen Türen vom Garten bis in den Keller.
+                Zuhause. Am 5. September stehen alle Türen offen — vom Garten
+                über die Glaspyramide und die Wohnungen bis in den Club im
+                Keller.
               </p>
               <p>
-                Darum die Bitte: Gib die Info bedacht weiter. So, wie du es auch
-                tun würdest, wenn du bei dir zuhause ein Fest schmeisst. Lieber
-                den Menschen erzählen, die wirklich zu uns passen, als der ganzen
-                Timeline.
+                Sei mit der Einladung einfach so umsichtig, wie du es bei dir
+                selbst wärst.
               </p>
               <div className="not-prose mt-8 rounded-2xl border border-white/15 bg-white/5 p-5">
                 <p className="font-display font-bold text-foam">
@@ -234,8 +233,12 @@ function TicketButton() {
     );
   }
   return (
+    // Neuer Tab: in der installierten PWA bliebe die App sonst im Ticketshop
+    // stecken — ohne Zurück-Knopf ein Sackgassen-Erlebnis.
     <a
       href={TICKET_URL}
+      target="_blank"
+      rel="noopener noreferrer"
       className="inline-block rounded-full bg-gradient-to-br from-coral to-blossom px-8 py-3.5 font-display text-lg font-bold text-night-900 shadow-lg shadow-coral/25 transition-transform hover:scale-[1.03] active:scale-100"
     >
       Ticket sichern

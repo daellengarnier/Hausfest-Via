@@ -1,9 +1,10 @@
 // Zentrale Fest-Daten. Das Programm wächst laufend — neue Acts hier
 // eintragen, dann landen sie automatisch auf der Seite.
 
-/** Ticket-Shop. Leer lassen, solange der Link noch nicht steht — die Seite
- *  zeigt dann statt des Buttons einen Hinweis. */
-export const TICKET_URL = "";
+/** Ticket-Shop bei Petzi. Leer lassen, solange der Link noch nicht steht —
+ *  die Seite zeigt dann statt des Buttons einen Hinweis. */
+export const TICKET_URL =
+  "https://www.petzi.ch/en/organiser/236127/x2nv44btSyy-vzACtazc3A/";
 
 export const FEST = {
   datum: "Samstag, 5. September",
