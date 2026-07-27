@@ -6,6 +6,9 @@
 export const TICKET_URL =
   "https://www.petzi.ch/en/organiser/236127/x2nv44btSyy-vzACtazc3A/";
 
+/** Der Shop ist passwortgeschützt. Leer lassen, wenn kein Passwort nötig ist. */
+export const TICKET_PASSWORT = "viaspinnerei";
+
 export const FEST = {
   datum: "Samstag, 5. September",
   zeit: "ab 16 Uhr",
@@ -13,17 +16,42 @@ export const FEST = {
   anlass: "10 Jahre Spinnerei · 33 Jahre Via Felsenau",
 } as const;
 
+export type FloorIconArt = "garten" | "pyramide" | "wohnung" | "club";
+
 export type Floor = {
   name: string;
   beschrieb: string;
+  icon: FloorIconArt;
 };
 
 export const FLOORS: Floor[] = [
-  { name: "Garten", beschrieb: "Draussen, für alle. Essen, Sonne, Kinderprogramm." },
-  { name: "Glaspyramide", beschrieb: "Unser Wahrzeichen — Bands und Theater darunter." },
-  { name: "Wohnungen", beschrieb: "Offene Türen, kleine Bühnen, kurze Wege." },
-  { name: "Club im Keller", beschrieb: "DJs bis in die frühen Morgenstunden." },
+  {
+    name: "Garten",
+    beschrieb: "Essen, Sonne, Kinderprogramm.",
+    icon: "garten",
+  },
+  {
+    name: "Glaspyramide",
+    beschrieb: "Bands und Theater darunter.",
+    icon: "pyramide",
+  },
+  {
+    name: "Wohnungen",
+    beschrieb: "Kleine Bühnen, kurze Wege.",
+    icon: "wohnung",
+  },
+  {
+    name: "Club im Keller",
+    beschrieb: "DJs bis in die frühen Morgenstunden.",
+    icon: "club",
+  },
 ];
+
+/** Die zwei Jubiläen — auf der Seite als grosse Zahlen statt als Satz. */
+export const JUBILAEEN = [
+  { zahl: "10", was: "Jahre Spinnerei" },
+  { zahl: "33", was: "Jahre Via Felsenau" },
+] as const;
 
 export type Act = {
   name: string;
@@ -41,9 +69,10 @@ export const ACTS: Act[] = [
 
 export type NavItem = { id: string; label: string };
 
+// Reihenfolge = Wichtigkeit: zuerst das Ticket, dann was läuft, dann das Haus.
 export const NAV: NavItem[] = [
-  { id: "willkommen", label: "Willkommen" },
-  { id: "programm", label: "Programm" },
   { id: "tickets", label: "Tickets" },
-  { id: "haus", label: "Das Haus" },
+  { id: "fest", label: "Das Fest" },
+  { id: "lineup", label: "Line-up" },
+  { id: "haus", label: "Haus" },
 ];
