@@ -29,10 +29,29 @@ Die weisse Fläche hinter dem QR ist die Ruhezone. Sie wird **nicht** graviert
 ## Masse
 
 - Scheibe: 50 mm Durchmesser
-- QR: 24.1 mm, 33 × 33 Module, **0.73 mm pro Modul**
+- QR: 27.0 mm, 33 × 33 Module, **0.82 mm pro Modul**
 - Fehlerkorrektur: Stufe H (bis 30 % der Fläche darf beschädigt sein)
 - Die SVG ist in Millimetern angelegt (1 Einheit = 1 mm). Beim Import auf
   100 % skalieren, nicht „einpassen“.
+
+Titel und Link stehen auf gerader Zeile statt auf dem Bogen — das spart
+Platz, und der QR wird dadurch grösser (0.82 statt 0.73 mm pro Modul). Die
+Grösse rechnet das Skript aus: Es misst die beiden Textzeilen und gibt dem QR
+alles, was zwischen ihnen noch in den Kreis passt.
+
+## Gestaltung
+
+Die Module sind weich verrundet und wachsen zu Bändern zusammen, einzelne
+stehen als runde Punkte. In der Mitte ist ein Feld von 11 × 11 Modulen
+freigeräumt, dort steht die gemauerte Pyramide mit dem strahlenden Auge.
+
+**Die äusseren Ringe der drei Suchmuster sind bewusst eckig.** Scanner suchen
+entlang jeder Abtastlinie das Verhältnis 1:1:3:1:1; gerundete Ringecken
+verkürzen die dunklen Abschnitte. Im Test fiel die Erkennung mit gerundeten
+Ringen vollständig aus — schon eine leichte Rundung (0.4 Modul) kostete die
+Hälfte der Leseabstände. Der innere Punkt darf dagegen voll gerundet sein,
+das kostet nichts. Wer die Ecken also „schöner“ machen will: nur den inneren
+Punkt anfassen, nicht den Ring.
 
 ## Worauf beim Lasern achten
 
@@ -46,9 +65,9 @@ Die weisse Fläche hinter dem QR ist die Ruhezone. Sie wird **nicht** graviert
   bevor die ganze Serie läuft.
 
 Der Code wurde gegen simulierten Brandrand, Holzmaserung und schwachen
-Kontrast geprüft und liess sich noch aus einem 200 × 200 px grossen Foto der
-Scheibe auslesen. Falls doch etwas schiefgeht, steht der Link unten auf der
-Scheibe zum Abtippen.
+Kontrast geprüft — mit freigeräumter Mitte und Pyramide — und liess sich noch
+aus einem 200 × 200 px grossen Foto der Scheibe auslesen. Falls doch etwas
+schiefgeht, steht der Link unten auf der Scheibe zum Abtippen.
 
 ## Neu erzeugen
 
