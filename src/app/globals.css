@@ -149,6 +149,35 @@ section[id] {
   padding: 0.1rem 0.5rem 0.5rem;
 }
 
+/* Der Ticket-Knopf atmet: Er wird leicht grösser und dabei wärmer und
+   heller, statt still dazustehen. Das Ticket ist die eine Handlung, um die
+   wir bitten — die darf sich im ruhigen Wasser bewegen.
+   Der Takt ist absichtlich langsam: ein Blinken würde nerven. */
+.ticket-puls {
+  animation: ticket-puls 2.8s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+/* Unter dem Finger bzw. Zeiger schlägt er schneller — eine Rückmeldung,
+   ohne dass eine zweite Transformation mit der Animation streitet. */
+.ticket-puls:hover,
+.ticket-puls:focus-visible {
+  animation-duration: 1.3s;
+}
+
+@keyframes ticket-puls {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: saturate(1.45) brightness(1.18)
+      drop-shadow(0 0 16px rgba(255, 122, 52, 0.45));
+  }
+}
+
 /* Act-Karten: schmalerer Rand und weniger Polster als die Textblasen. Bei
    acht Stück nebeneinander summiert sich jeder Millimeter. */
 .blasenfeld-act {
@@ -349,86 +378,22 @@ section[id] {
   -webkit-backdrop-filter: blur(3px) saturate(1.5) brightness(1.12);
 }
 
-/* Die Linse: eine Blase, die über den Titel zieht und den Teil dahinter
-   spiegelverkehrt zeigt — so, wie eine Wassertropfen-Linse das Bild kippt.
-   `backdrop-filter` kann das nicht, es verwäscht nur. Darum liegt im runden
-   Ausschnitt eine zweite, gespiegelte Kopie des Titels, exakt über der
-   echten ausgerichtet.
-
-   `--linse-x` ist als Länge angemeldet und darum animierbar. Die Hülle
-   verschiebt sich damit, die Kopie im Inneren rechnet dieselbe Verschiebung
-   wieder heraus — sonst würde der gespiegelte Titel mitwandern, statt an
-   seinem Platz zu bleiben. */
-@property --linse-x {
-  syntax: "<length>";
-  inherits: true;
-  initial-value: 0px;
-}
-
-.linsen {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  /* Ohne das schieben die durchziehenden Linsen die Seite seitlich auf und
-     es entsteht ein waagrechter Scrollbalken. */
-  overflow: hidden;
-  /* Breite des Textbereichs: max-w-2xl innerhalb von px-6. Die Kopie muss
-     genau gleich breit sein, sonst bricht sie an anderen Stellen um. */
-  --w: min(42rem, calc(100vw - 3rem));
-}
-
-.linse-huelle {
-  position: absolute;
-  left: var(--lx);
-  top: var(--ly);
-  width: var(--d);
-  height: var(--d);
-  transform: translateX(var(--linse-x));
-  animation: linse-zug var(--dauer) linear var(--verzoegerung) infinite;
-}
-
-.linse {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.linse-inhalt {
-  position: absolute;
-  left: calc(-1 * var(--lx));
-  top: calc(-1 * var(--ly));
-  width: var(--w);
-  transform: scaleX(-1) translateX(calc(var(--linse-x) * -1));
-  transform-origin: calc(var(--lx) + var(--d) / 2)
-    calc(var(--ly) + var(--d) / 2);
-}
-
-/* Die gemalte Seifenhaut liegt über dem Ausschnitt, unbeschnitten, damit die
-   Blase ihre gemalte Form behält. */
-.linse-haut {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.34;
-}
-
-@keyframes linse-zug {
-  from {
-    --linse-x: -45vw;
-  }
-  to {
-    --linse-x: 115vw;
-  }
-}
-
 /* Ein Fisch, der an Ort bleibt: kein Durchziehen, nur wippen, schauen und
    leuchten. `--dauer` steuert wie bei den anderen das Wippen. */
 .fisch-still {
   display: block;
   position: absolute;
+}
+
+/* Der Bewohner der gemalten Höhle. Masse und Ort in vw, weil das
+   Hintergrundbild auf die volle Fensterbreite gezogen wird: So sitzt er in
+   jeder Breite gleich in der Höhle — dieselbe Rechnung wie beim Molchauge. */
+.hoehlen-fisch {
+  left: 63vw;
+  top: calc(var(--bild-oben) + 361.5vw);
+  width: 26vw;
+  transform: translate(-50%, -50%);
+  z-index: -1;
 }
 
 .fisch-still img {
@@ -604,7 +569,8 @@ section[id] {
   .fisch,
   .fisch-wippe,
   .fisch-pupille,
-  .laterne {
+  .laterne,
+  .ticket-puls {
     animation: none;
   }
   .blubber {

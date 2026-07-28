@@ -15,12 +15,69 @@ sie nicht mit ausgeliefert werden) und lassen sich jederzeit neu ableiten.
 
 import pathlib
 
+import cv2
 import numpy as np
 from PIL import Image, ImageEnhance
 
 WURZEL = pathlib.Path(__file__).resolve().parents[2]
 QUELLEN = WURZEL / "art"
 HINTERGRUND = QUELLEN / "App-Hintergrund_lang_Molch-oben.png"
+
+# Die zwei gemalten Laternenfische in der Höhle, je als Ellipse über dem
+# Körper und einer dicken Linie über der Angel. Koordinaten in Bildpixeln
+# der Vorlage (768 px breit).
+HOEHLEN_FISCHE = {
+    "koerper": [((450, 2765), (95, 70)), ((548, 2815), (44, 42))],
+    "angeln": [((355, 2748), (398, 2700), 30), ((506, 2795), (530, 2790), 26)],
+}
+
+
+def vorlage() -> Image.Image:
+    """Die gemalte Vorlage, aus der Höhle sind die zwei Laternenfische
+    entfernt.
+
+    In der Höhle am Fuss des Bildes hingen zwei gemalte Anglerfische. Sie
+    sollen dort weg — an ihrer Stelle sitzt auf der Seite ein beweglicher
+    Fisch, der sich umschaut. Zwei starre und ein lebendiger Fisch in
+    derselben Höhle wären einer zu viel.
+
+    Wegretuschieren geht hier gut: Die Höhle ist innen fast schwarz und
+    ohne Struktur. Das Loch wird zuerst aus der Umgebung gefüllt und dann
+    zum dunkelsten Ton der Höhle hin gezogen, damit kein heller Schleier
+    stehen bleibt, wo vorher ein Fisch war.
+    """
+    im = np.asarray(Image.open(HINTERGRUND).convert("RGB")).copy()
+    y0, y1 = 2600, 2950
+
+    maske = np.zeros(im.shape[:2], np.uint8)
+    for mitte, achsen in HOEHLEN_FISCHE["koerper"]:
+        cv2.ellipse(maske, mitte, achsen, 0, 0, 360, 255, -1)
+    for anfang, ende, dicke in HOEHLEN_FISCHE["angeln"]:
+        cv2.line(maske, anfang, ende, 255, dicke)
+        cv2.circle(maske, anfang, dicke // 2, 255, -1)
+    maske = cv2.dilate(maske, np.ones((9, 9), np.uint8))
+
+    feld, mk = im[y0:y1], maske[y0:y1]
+    gefuellt = cv2.inpaint(feld, mk, 12, cv2.INPAINT_NS).astype(np.float32)
+
+    # Der dunkelste Viertel des Rings um die Maske ist die Höhlenfarbe.
+    ring = (cv2.dilate(mk, np.ones((41, 41), np.uint8)) > 0) & (mk == 0)
+    umfeld = feld[ring]
+    helligkeit = umfeld.sum(1)
+    hoehlenton = np.median(
+        umfeld[helligkeit <= np.percentile(helligkeit, 25)], axis=0
+    )
+
+    # Nur der Kern wird eingedunkelt; am Rand bleibt der gefüllte Übergang,
+    # sonst zeichnete sich die Maske als dunkler Fleck ab.
+    kern = cv2.erode(mk, np.ones((25, 25), np.uint8))
+    kern = cv2.GaussianBlur(kern.astype(np.float32) / 255, (0, 0), 9)[..., None]
+    gefuellt = gefuellt * (1 - 0.9 * kern) + hoehlenton * 0.9 * kern
+    gefuellt = cv2.GaussianBlur(gefuellt, (0, 0), 5)
+
+    saum = cv2.GaussianBlur(mk.astype(np.float32) / 255, (0, 0), 5)[..., None]
+    im[y0:y1] = (feld * (1 - saum) + gefuellt * saum).clip(0, 255).astype("uint8")
+    return Image.fromarray(im)
 
 
 def hintergrund() -> None:
@@ -38,7 +95,7 @@ def hintergrund() -> None:
     """
     ordner = WURZEL / "public/art"
     ordner.mkdir(parents=True, exist_ok=True)
-    im = Image.open(HINTERGRUND).convert("RGB")
+    im = vorlage()
 
     ziel = ordner / "hintergrund.webp"
     im.save(ziel, "WEBP", quality=74, method=6)
@@ -216,33 +273,6 @@ def icons() -> None:
         print(f"  {name}: {groesse}px")
 
 
-def deko() -> None:
-    """Ein Stück Bewuchs aus dem Bild — Pilze und Seegras — als freigestelltes
-    Deko-Element. Es wächst später unten über den Rand einer Textblase.
-
-    Freistellen von Hand wäre bei dem Gewusel undankbar; stattdessen werden
-    die Ränder weich ausgeblendet. Auf dem dunklen Grund der Seite verschwindet
-    der Übergang, weil die Vorlage dort ohnehin fast schwarz ist.
-    """
-    im = Image.open(HINTERGRUND).convert("RGB").crop((300, 2270, 720, 2650))
-    breite, hoehe = im.size
-
-    maske = Image.new("L", (breite, hoehe), 255)
-    punkte = maske.load()
-    rand_x, rand_o = breite * 0.22, hoehe * 0.42
-    for x in range(breite):
-        fx = min(1.0, x / rand_x, (breite - 1 - x) / rand_x)
-        for y in range(hoehe):
-            fy = min(1.0, y / rand_o)
-            punkte[x, y] = int(255 * min(fx, fy) ** 1.4)
-
-    fertig = im.convert("RGBA")
-    fertig.putalpha(maske)
-    ziel = WURZEL / "public/art/sprites/deko_bewuchs.webp"
-    fertig.save(ziel, "WEBP", quality=82, method=6)
-    print(f"  {ziel.name}: {breite}x{hoehe}, {ziel.stat().st_size / 1024:.0f} KB")
-
-
 def favicon() -> None:
     """Der Molch allein, eng beschnitten. Ein Favicon ist 16 bis 32 px gross —
     da wäre die ganze Blasenszene nur noch Matsch, ein einzelnes Motiv liest
@@ -265,6 +295,5 @@ if __name__ == "__main__":
     hintergrund()
     rahmen()
     sprites()
-    deko()
     icons()
     favicon()

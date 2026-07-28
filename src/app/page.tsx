@@ -26,6 +26,12 @@ export default function Home() {
       <span aria-hidden="true" className="molch-auge">
         <span className="molch-pupille" />
       </span>
+      {/* In der gemalten Höhle weiter unten hingen zwei starre Fische. Die
+          sind aus dem Bild raus; stattdessen hängt hier einer ab, der sich
+          umschaut und dessen Laterne pulst. Er sitzt — wie das Molchauge —
+          in vw am Bild fest, damit er in jeder Fensterbreite in der Höhle
+          bleibt. */}
+      <FischStill art={0} gespiegelt className="hoehlen-fisch" />
       <Blubber />
       <SiteNav />
 
@@ -92,7 +98,7 @@ export default function Home() {
             Illustration, getragen von ihrem Schatten. */}
         <div className="tief mx-auto max-w-2xl">
           <div className="py-4">
-            <Abschnitt id="willkommen" titel="Willkommen" form={0} deko>
+            <Abschnitt id="willkommen" titel="Willkommen" form={0}>
               <p className="font-display text-xl font-bold text-foam sm:text-2xl">
                 Schön, hast du hierhin gefunden!
               </p>
@@ -207,7 +213,6 @@ function Abschnitt({
   titel,
   form,
   blase = "",
-  deko = false,
   children,
 }: {
   id: string;
@@ -215,8 +220,6 @@ function Abschnitt({
   form: 0 | 1 | 2;
   /** Welche gemalte Blase den Text rahmt. */
   blase?: string;
-  /** Lässt Bildelemente unten rechts über den Rand der Blase wachsen. */
-  deko?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -233,36 +236,7 @@ function Abschnitt({
       >
         {children}
       </div>
-
-      {deko ? <BoxDeko /> : null}
     </section>
-  );
-}
-
-/** Bewuchs und ein Fisch, die unten rechts über den Rand der Textblase
- *  hinausragen. Dadurch wirkt die Blase wie eine Ebene weiter hinten, in die
- *  das Wasser drumherum hineinwächst.
- *
- *  Der Bewuchs stammt aus dem Hintergrundbild selbst — Pilze und Seegras,
- *  mit weich ausgeblendeten Rändern ausgeschnitten. Der Fisch ist derselbe
- *  wie die durchziehenden, er bleibt hier nur an Ort und schaut sich um. */
-function BoxDeko() {
-  return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute -bottom-4 right-0 z-10 w-52 sm:w-64"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/art/sprites/deko_bewuchs.webp"
-        alt=""
-        className="absolute -bottom-8 right-0 w-52 sm:w-64"
-      />
-      <FischStill
-        gespiegelt
-        className="absolute -bottom-2 right-4 w-24 sm:w-28"
-      />
-    </div>
   );
 }
 
@@ -346,7 +320,7 @@ function TicketButton() {
       href={TICKET_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="blasenfeld blasenfeld-ticket inline-flex flex-col items-center text-center transition-transform hover:scale-[1.03] active:scale-100"
+      className="blasenfeld blasenfeld-ticket ticket-puls inline-flex flex-col items-center text-center"
     >
       <span className="font-display text-lg font-bold text-foam">
         Ticket sichern
