@@ -37,6 +37,8 @@ const BLASEN: Blase[] = [
   { datei: "blase_04", groesse: 78, links: 46, dauer: 43, verzoegerung: -33, drift: 20, deckkraft: 0.35 },
 ];
 
+/** Die Fische schwimmen voll deckend — nur die Blasen sind durchscheinend,
+ *  so wie sich Seifenblasen eben verhalten. */
 type Fisch = {
   datei: string;
   groesse: number;
@@ -44,14 +46,13 @@ type Fisch = {
   oben: number;
   dauer: number;
   verzoegerung: number;
-  deckkraft: number;
   /** true = schwimmt nach links */
   gespiegelt?: boolean;
 };
 
 const FISCHE: Fisch[] = [
-  { datei: "anglerfisch_02", groesse: 150, oben: 26, dauer: 115, verzoegerung: -18, deckkraft: 0.5 },
-  { datei: "anglerfisch_04", groesse: 108, oben: 68, dauer: 148, verzoegerung: -84, deckkraft: 0.42, gespiegelt: true },
+  { datei: "anglerfisch_02", groesse: 150, oben: 26, dauer: 115, verzoegerung: -18 },
+  { datei: "anglerfisch_04", groesse: 108, oben: 68, dauer: 148, verzoegerung: -84, gespiegelt: true },
 ];
 
 export default function Blubber() {
@@ -87,7 +88,6 @@ export default function Blubber() {
             {
               top: `${f.oben}%`,
               width: f.groesse,
-              opacity: f.deckkraft,
               "--dauer": `${f.dauer}s`,
               "--verzoegerung": `${f.verzoegerung}s`,
             } as React.CSSProperties
