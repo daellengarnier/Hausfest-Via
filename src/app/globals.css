@@ -53,10 +53,12 @@ section[id] {
   inset: 0;
   z-index: -2;
   background-color: var(--color-night-900);
-  background-image: url("/art/hintergrund.webp");
-  background-size: 100% auto;
-  background-position: center top;
-  background-repeat: repeat-y;
+  /* Zwei Ebenen: oben das Bild einmal ganz, darunter die Höhlenkachel, die
+     sich endlos fortsetzt. Zuerst genannt heisst zuoberst gezeichnet. */
+  background-image: url("/art/hintergrund.webp"), url("/art/tiefe.webp");
+  background-size: 100% auto, 100% auto;
+  background-position: center top, center top;
+  background-repeat: no-repeat, repeat-y;
 }
 
 /* Bewusst kein seitliches Kacheln auf breiten Fenstern: Links und rechts
@@ -86,6 +88,51 @@ section[id] {
   text-shadow: none;
 }
 
+/* Gemalte Seifenblasen als Textfelder.
+   Über border-image zerlegt: Die vier Ecken bleiben unangetastet, die Ränder
+   dazwischen werden gedehnt. So passt sich dieselbe Blase jeder Textlänge an,
+   ohne dass ihre Rundungen verzerren. `fill` malt auch das dunkle Innere,
+   das ist der Grund, auf dem der Text sitzt. */
+.blasenfeld {
+  border-style: solid;
+  border-width: 30px 26px;
+  border-image-source: url("/art/rahmen/textfeld_01.webp");
+  border-image-slice: 128 fill;
+  border-image-repeat: stretch;
+  padding: 0.25rem 0.75rem 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .blasenfeld {
+    border-width: 40px 38px;
+    padding: 0.5rem 1.25rem 1.25rem;
+  }
+}
+
+.blasenfeld-hoch {
+  border-image-source: url("/art/rahmen/textfeld_02.webp");
+  border-image-slice: 150 fill;
+}
+
+.blasenfeld-rund {
+  border-image-source: url("/art/rahmen/textfeld_03.webp");
+  border-image-slice: 150 fill;
+}
+
+.blasenfeld-flach {
+  border-image-source: url("/art/rahmen/textfeld_04.webp");
+  border-image-slice: 96 fill;
+}
+
+/* Der Ticket-Knopf: dieselbe gemalte Blase, in Orange gedreht — so hebt er
+   sich aus der türkisen Umgebung heraus, ohne aus der Bildwelt zu fallen. */
+.blasenfeld-ticket {
+  border-image-source: url("/art/rahmen/textfeld_ticket.webp");
+  border-image-slice: 96 fill;
+  border-width: 26px 34px;
+  padding: 0.1rem 0.5rem 0.5rem;
+}
+
 /* Handgezeichnete Trennlinie zwischen den Abschnitten. */
 .ink-rule {
   height: 2px;
@@ -103,15 +150,28 @@ section[id] {
    und das Scrollen flüssig bleibt.
    --------------------------------------------------------------------- */
 
-.blubber {
+/* Zwei Ebenen: Die Blasen steigen hinter dem Inhalt auf, die Laternenfische
+   ziehen davor durch — sie schwimmen also über Text und Karten hinweg.
+   Unter der Navigation bleiben sie trotzdem, damit die Wegweiser oben immer
+   lesbar sind. Beide Ebenen nehmen keine Klicks an. */
+.blubber,
+.blubber-vorn {
   position: fixed;
   inset: 0;
-  z-index: -1;
   overflow: hidden;
   pointer-events: none;
 }
 
-.blubber img {
+.blubber {
+  z-index: -1;
+}
+
+.blubber-vorn {
+  z-index: 40;
+}
+
+.blubber img,
+.blubber-vorn img {
   display: block;
   width: 100%;
   height: auto;
@@ -160,7 +220,39 @@ section[id] {
 
 .fisch-wippe {
   display: block;
+  position: relative;
   animation: wippen calc(var(--dauer) / 6) ease-in-out infinite alternate;
+}
+
+/* Die Laterne am Fisch: ein weiches Licht, das langsam heller und wieder
+   dunkler wird. `screen` addiert das Licht zum Bild, statt es zuzudecken —
+   der gemalte Leuchtkörper bleibt also sichtbar und wird nur verstärkt. */
+.laterne {
+  position: absolute;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    circle,
+    rgba(222, 255, 252, 0.85) 0%,
+    rgba(150, 240, 255, 0.42) 22%,
+    rgba(90, 200, 235, 0.16) 46%,
+    transparent 70%
+  );
+  animation: leuchten var(--takt) ease-in-out infinite alternate;
+}
+
+@keyframes leuchten {
+  from {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.88);
+  }
+  to {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.14);
+  }
 }
 
 @keyframes schwimmen {

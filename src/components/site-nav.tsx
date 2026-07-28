@@ -35,7 +35,10 @@ export default function SiteNav() {
   return (
     <nav
       aria-label="Abschnitte"
-      className="sticky top-0 z-50 border-b border-white/10 bg-night-900/70 backdrop-blur-md"
+      // Kein durchgehender Balken: Der würde den oberen Bildrand zudecken,
+      // wo die Flosse des Molchs sitzt. Die einzelnen Knöpfe bringen ihren
+      // eigenen Hintergrund mit und bleiben so trotzdem lesbar.
+      className="sticky top-0 z-50"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <ul className="mx-auto flex max-w-3xl items-center justify-center gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-4 sm:py-3">
@@ -46,10 +49,10 @@ export default function SiteNav() {
               <a
                 href={`#${n.id}`}
                 aria-current={ist ? "true" : undefined}
-                className={`block rounded-full border px-3 py-1.5 text-[0.8125rem] whitespace-nowrap transition-colors sm:px-4 sm:text-sm ${
+                className={`block rounded-full border px-3 py-1.5 text-[0.8125rem] whitespace-nowrap backdrop-blur-md transition-colors sm:px-4 sm:text-sm ${
                   ist
-                    ? "border-sky/70 bg-sky/20 text-foam"
-                    : "border-white/15 text-foam-dim hover:border-white/35 hover:text-foam"
+                    ? "border-sky/70 bg-sky/35 text-foam"
+                    : "border-white/25 bg-night-900/45 text-foam hover:border-white/50"
                 }`}
               >
                 {n.label}

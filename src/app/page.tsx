@@ -36,7 +36,7 @@ export default function Home() {
 
           {/* Wann, wo und warum in einem Block — gläsern, damit das Bild
               durchscheint und die Angaben trotzdem zusammenbleiben. */}
-          <div className="mt-8 inline-flex flex-col items-center rounded-3xl border border-white/25 bg-white/10 px-6 py-5 backdrop-blur-md sm:px-8">
+          <div className="blasenfeld blasenfeld-rund mt-8 inline-flex flex-col items-center">
             <p className="font-display text-xl font-bold text-foam sm:text-2xl">
               {FEST.datum}
             </p>
@@ -79,7 +79,7 @@ export default function Home() {
         <div className="tief mx-auto max-w-2xl">
           <div className="py-4">
             <Abschnitt id="willkommen" titel="Willkommen" form={0}>
-              <p className="font-hand text-2xl text-sun">
+              <p className="font-display text-xl font-bold text-foam sm:text-2xl">
                 Schön, hast du hierhin gefunden!
               </p>
               <p>
@@ -142,7 +142,7 @@ export default function Home() {
               </p>
             </Abschnitt>
 
-            <div className="mt-10 rounded-2xl border border-white/25 bg-white/10 p-5 backdrop-blur-md">
+            <div className="blasenfeld blasenfeld-flach mt-10">
               <p className="font-display font-bold text-foam">
                 Als App installieren
               </p>
@@ -162,7 +162,7 @@ export default function Home() {
 
       <footer className="tief relative px-6 py-12 text-center">
         <Coral form={1} className="mx-auto h-8 w-8 text-blossom/60" />
-        <p className="mt-3 font-hand text-2xl text-foam">
+        <p className="mt-3 font-display text-2xl font-bold text-foam">
           Bis zum 5. September!
         </p>
       </footer>
@@ -275,12 +275,14 @@ function TicketButton() {
       href={TICKET_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="kein-saum inline-flex flex-col items-center rounded-3xl bg-gradient-to-br from-coral to-blossom px-8 py-4 text-night-900 shadow-lg shadow-coral/30 transition-transform hover:scale-[1.03] active:scale-100"
+      className="blasenfeld blasenfeld-ticket inline-flex flex-col items-center text-center transition-transform hover:scale-[1.03] active:scale-100"
     >
-      <span className="font-display text-lg font-bold">Ticket sichern</span>
+      <span className="font-display text-lg font-bold text-foam">
+        Ticket sichern
+      </span>
       {TICKET_PASSWORT ? (
-        <span className="mt-0.5 text-sm text-night-900/80">
-          Passwort: <strong className="font-bold">{TICKET_PASSWORT}</strong>
+        <span className="mt-0.5 text-sm text-foam/85">
+          Passwort: <strong className="font-bold text-foam">{TICKET_PASSWORT}</strong>
         </span>
       ) : null}
     </a>
