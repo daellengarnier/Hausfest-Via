@@ -1,8 +1,17 @@
-// Simpler Service Worker: cached die App-Shell beim ersten Besuch,
-// serviert später auch offline (Fallback auf Cache wenn Netzwerk fehlschlägt).
-// Bei App-Updates automatisch aktivieren.
+// Service Worker: hält die App offline lauffähig, ohne veraltete Inhalte
+// festzuhalten.
+//
+// Zwei Strategien, weil sich die beiden Arten von Anfragen unterschiedlich
+// verhalten:
+//
+//   * Seitenaufrufe  -> zuerst Netz, Cache nur als Fallback. Vorher lag hier
+//     Cache-first, und damit blieb die einmal gespeicherte Seite hängen: neue
+//     Inhalte wurden erst nach einem Wechsel von CACHE_NAME sichtbar. Genau
+//     das ist passiert.
+//   * Statische Dateien (JS, CSS, Bilder, Fonts) -> zuerst Cache. Deren Namen
+//     enthalten einen Hash, sie ändern sich also nie unter derselben URL.
 
-const CACHE_NAME = "hausfest-via-v4";
+const CACHE_NAME = "hausfest-via-v5";
 const SHELL = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
@@ -21,26 +30,42 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+function cachen(request, response) {
+  if (response.ok && response.type === "basic") {
+    const clone = response.clone();
+    caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+  }
+  return response;
+}
+
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
 
-  // Nur same-origin cachen. Externe Assets (Fonts, Analytics) unangetastet.
+  // Nur same-origin. Externe Assets (Ticketshop, Karten) unangetastet.
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // Seitenaufrufe: immer das Aktuelle zeigen, solange Netz da ist.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => cachen(request, response))
+        .catch(() =>
+          caches
+            .match(request)
+            .then((cached) => cached || caches.match("/"))
+        )
+    );
+    return;
+  }
+
+  // Alles andere: aus dem Cache, sonst aus dem Netz und dabei ablegen.
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
       return fetch(request)
-        .then((response) => {
-          // Nur erfolgreiche same-origin-Responses cachen.
-          if (response.ok && response.type === "basic") {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
+        .then((response) => cachen(request, response))
         .catch(() => cached || Response.error());
     })
   );
