@@ -36,7 +36,7 @@ export default function Home() {
 
           {/* Wann, wo und warum in einem Block — gläsern, damit das Bild
               durchscheint und die Angaben trotzdem zusammenbleiben. */}
-          <div className="blasenfeld blasenfeld-rund mt-8 inline-flex flex-col items-center">
+          <div className="blasenfeld blasenfeld-rund mt-44 inline-flex flex-col items-center sm:mt-28">
             <p className="font-display text-xl font-bold text-foam sm:text-2xl">
               {FEST.datum}
             </p>
@@ -58,7 +58,10 @@ export default function Home() {
             <ul className="mt-4 flex items-start justify-center gap-7 sm:gap-10">
               {JUBILAEEN.map((j) => (
                 <li key={j.zahl} className="flex w-24 flex-col items-center">
-                  <Bubble className="h-14 w-14 sm:h-16 sm:w-16">
+                  <Bubble
+                    sprite={j.blase}
+                    className="h-16 w-16 sm:h-20 sm:w-20"
+                  >
                     <span className="font-display text-2xl font-extrabold text-foam sm:text-3xl">
                       {j.zahl}
                     </span>
@@ -92,13 +95,13 @@ export default function Home() {
                 Es erwarten dich Kinderprogramm, Essen, Bands, Theater und DJs
                 — und das bis in die frühen Morgenstunden.
               </p>
-              <p>
-                Wir laden dich in unsere privaten vier Wände ein. Darum bitten
-                wir dich, die Info bedacht weiterzugeben.
-              </p>
             </Abschnitt>
 
-            <Abschnitt id="tickets" titel="Tickets" form={1}>
+            {/* Bewusst leer: Hier liegt eine der schönsten Stellen der
+                Illustration, die soll frei bleiben. */}
+            <div aria-hidden="true" className="h-[42vh] sm:h-[38vh]" />
+
+            <Abschnitt id="tickets" titel="Tickets" form={1} blase="blasenfeld-rund">
               <p>
                 Wir bitten dich ganz fest, ein Ticket zu kaufen. Wir kochen und
                 kaufen für alle ein, die kommen — mit deinem Ticket wissen wir,
@@ -133,12 +136,16 @@ export default function Home() {
               </ul>
             </Abschnitt>
 
-            <Abschnitt id="miteinander" titel="Miteinander" form={0}>
+            <Abschnitt id="miteinander" titel="Miteinander" form={0} blase="blasenfeld-rund">
               <p>Wir wollen ein Fest, an dem sich alle wohlfühlen.</p>
               <p>
                 Diskriminierung, Rassismus, Sexismus und grenzüberschreitendes
                 Verhalten haben bei uns keinen Platz. Achtet aufeinander,
                 fragt im Zweifel nach, und akzeptiert ein Nein als Nein.
+              </p>
+              <p>
+                Wir laden dich in unsere privaten vier Wände ein. Darum bitten
+                wir dich, die Info bedacht weiterzugeben.
               </p>
             </Abschnitt>
 
@@ -175,11 +182,14 @@ function Abschnitt({
   id,
   titel,
   form,
+  blase = "",
   children,
 }: {
   id: string;
   titel: string;
   form: 0 | 1 | 2;
+  /** Welche gemalte Blase den Text rahmt. */
+  blase?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -188,7 +198,12 @@ function Abschnitt({
       <h2 className="mt-7 font-display text-3xl font-extrabold text-foam sm:text-4xl">
         {titel}
       </h2>
-      <div className="mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-foam">
+      {/* Der Text sitzt in einer Blase: Auf der bunten Illustration war er
+          sonst mühsam zu lesen, und ein dunkler Kasten würde das Bild
+          zudecken. Die Blase gehört zur Bildwelt und trägt die Schrift. */}
+      <div
+        className={`blasenfeld ${blase} mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-foam`}
+      >
         {children}
       </div>
     </section>
@@ -199,7 +214,7 @@ function Abschnitt({
 function ActKopf({ act }: { act: Act }) {
   return (
     <>
-      <Bubble className="h-11 w-11 shrink-0">
+      <Bubble sprite="blase_klein_05" className="h-12 w-12 shrink-0">
         <SparteIcon art={act.sparte} className="h-5 w-5 text-foam" />
       </Bubble>
       <div className="min-w-0 flex-1 text-left">
@@ -223,24 +238,24 @@ function ActKopf({ act }: { act: Act }) {
  *  gebaut mit <details>, damit es ohne JavaScript funktioniert und für
  *  Tastatur und Screenreader von Haus aus stimmt. */
 function ActKarte({ act }: { act: Act }) {
-  const rahmen = "rounded-2xl border border-white/25 bg-white/10 backdrop-blur-md";
+  const rahmen = "blasenfeld blasenfeld-flach";
 
   if (!act.beschrieb) {
     return (
-      <div className={`flex items-center gap-4 p-4 ${rahmen}`}>
+      <div className={`flex items-center gap-4 ${rahmen}`}>
         <ActKopf act={act} />
       </div>
     );
   }
 
   return (
-    <details className={`group ${rahmen} open:bg-white/10`}>
-      <summary className="flex cursor-pointer list-none items-center gap-4 rounded-2xl p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky [&::-webkit-details-marker]:hidden">
+    <details className={`group ${rahmen}`}>
+      <summary className="flex cursor-pointer list-none items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky [&::-webkit-details-marker]:hidden">
         <ActKopf act={act} />
         <Pfeil className="h-5 w-5 shrink-0 text-foam-dim transition-transform group-open:rotate-180" />
       </summary>
 
-      <div className="space-y-3 border-t border-white/10 px-4 pb-4 pt-3 text-[0.9375rem] leading-relaxed text-foam/85">
+      <div className="mt-3 space-y-3 border-t border-white/15 pt-3 text-[0.9375rem] leading-relaxed text-foam/90">
         {act.beschrieb.map((absatz) => (
           <p key={absatz}>{absatz}</p>
         ))}

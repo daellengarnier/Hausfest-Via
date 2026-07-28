@@ -211,6 +211,69 @@ section[id] {
   }
 }
 
+/* Quallen ziehen senkrecht durch — die einen steigen, die anderen sinken.
+   Langsamer und weiter als die Blasen, damit es ruhig bleibt. */
+.qualle {
+  position: absolute;
+  left: 0;
+  will-change: transform;
+}
+
+.qualle-hoch {
+  bottom: 0;
+  animation: qualle-steigen var(--dauer) linear var(--verzoegerung) infinite;
+}
+
+.qualle-runter {
+  top: 0;
+  animation: qualle-sinken var(--dauer) linear var(--verzoegerung) infinite;
+}
+
+.qualle-pendel {
+  display: block;
+  animation: qualle-wiegen calc(var(--dauer) / 5) ease-in-out infinite alternate;
+}
+
+@keyframes qualle-steigen {
+  from {
+    transform: translate3d(0, 40vh, 0);
+  }
+  to {
+    transform: translate3d(0, -150vh, 0);
+  }
+}
+
+@keyframes qualle-sinken {
+  from {
+    transform: translate3d(0, -60vh, 0);
+  }
+  to {
+    transform: translate3d(0, 140vh, 0);
+  }
+}
+
+@keyframes qualle-wiegen {
+  from {
+    transform: translateX(-18px) rotate(-3deg);
+  }
+  to {
+    transform: translateX(18px) rotate(3deg);
+  }
+}
+
+/* Blasen, die vor dem Inhalt vorbeiziehen: Was hinter ihnen liegt, wird
+   verwaschen und aufgehellt — so, wie man durch eine Seifenhaut schaut.
+   Eine echte Lichtbrechung kann CSS nicht, aber `backdrop-filter` auf einer
+   runden Fläche kommt dem Eindruck sehr nahe. Nur wenige Blasen bekommen
+   das, die Wirkung ist teuer zu rechnen. */
+.blase-glas {
+  position: absolute;
+  inset: 11%;
+  border-radius: 50%;
+  backdrop-filter: blur(3px) saturate(1.5) brightness(1.12);
+  -webkit-backdrop-filter: blur(3px) saturate(1.5) brightness(1.12);
+}
+
 /* Laternenfische ziehen waagrecht durchs Bild und wippen dabei leicht. */
 .fisch {
   position: absolute;

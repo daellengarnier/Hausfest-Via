@@ -25,8 +25,8 @@ export const FEST = {
 
 /** Die zwei Jubiläen — auf der Seite als grosse Zahlen statt als Satz. */
 export const JUBILAEEN = [
-  { zahl: "10", was: "Jahre Spinnerei" },
-  { zahl: "33", was: "Jahre Via Felsenau" },
+  { zahl: "10", was: "Jahre Spinnerei", blase: "blase_klein_01" },
+  { zahl: "33", was: "Jahre Via Felsenau", blase: "blase_klein_07" },
 ] as const;
 
 export type Sparte = "Band" | "Theater" | "DJ";

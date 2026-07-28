@@ -38,6 +38,15 @@ const BLASEN: Blase[] = [
   { datei: "blase_04", groesse: 78, links: 46, dauer: 43, verzoegerung: -33, drift: 20, deckkraft: 0.35 },
 ];
 
+/** Diese drei ziehen vor dem Inhalt vorbei und verziehen dabei den Text
+ *  dahinter — man schaut sozusagen durch die Seifenhaut. Bewusst wenige:
+ *  Der Effekt kostet Rechenzeit, und zu viele nähmen die Ruhe raus. */
+const BLASEN_VORN: Blase[] = [
+  { datei: "blase_02", groesse: 124, links: 18, dauer: 44, verzoegerung: -14, drift: 22, deckkraft: 0.55 },
+  { datei: "blase_klein_03", groesse: 62, links: 58, dauer: 31, verzoegerung: -23, drift: 15, deckkraft: 0.5 },
+  { datei: "blase_04", groesse: 92, links: 84, dauer: 51, verzoegerung: -40, drift: 26, deckkraft: 0.45 },
+];
+
 /** Die Fische schwimmen voll deckend — nur die Blasen sind durchscheinend,
  *  so wie sich Seifenblasen eben verhalten. */
 type Fisch = {
@@ -60,25 +69,66 @@ const FISCHE: Fisch[] = [
     datei: "anglerfisch_02",
     groesse: 150,
     oben: 26,
-    dauer: 115,
+    dauer: 68,
     verzoegerung: -18,
-    laterne: { x: 0.87, y: 0.17, weite: 52, takt: 4.5 },
+    laterne: { x: 0.87, y: 0.17, weite: 52, takt: 2.4 },
   },
   {
     datei: "anglerfisch_04",
     groesse: 108,
     oben: 68,
-    dauer: 148,
-    verzoegerung: -84,
+    dauer: 92,
+    verzoegerung: -54,
     gespiegelt: true,
-    laterne: { x: 0.83, y: 0.155, weite: 48, takt: 6.2 },
+    laterne: { x: 0.83, y: 0.155, weite: 48, takt: 3.3 },
   },
+];
+
+/** Quallen ziehen senkrecht durchs Bild — die einen steigen auf, die anderen
+ *  sinken. Sie sind gross und ruhig unterwegs, darum bleiben sie hinter dem
+ *  Inhalt und leicht durchscheinend. */
+type Qualle = {
+  datei: string;
+  groesse: number;
+  /** Abstand von links in % */
+  links: number;
+  dauer: number;
+  verzoegerung: number;
+  deckkraft: number;
+  richtung: "hoch" | "runter";
+};
+
+const QUALLEN: Qualle[] = [
+  { datei: "qualle_01", groesse: 108, links: 12, dauer: 78, verzoegerung: -22, deckkraft: 0.6, richtung: "hoch" },
+  { datei: "qualle_02", groesse: 88, links: 74, dauer: 96, verzoegerung: -61, deckkraft: 0.5, richtung: "runter" },
+  { datei: "qualle_03", groesse: 122, links: 42, dauer: 118, verzoegerung: -95, deckkraft: 0.45, richtung: "hoch" },
 ];
 
 export default function Blubber() {
   return (
     <>
       <div className="blubber" aria-hidden="true">
+        {QUALLEN.map((q) => (
+          <span
+            key={q.datei}
+            className={`qualle qualle-${q.richtung}`}
+            style={
+              {
+                left: `${q.links}%`,
+                width: q.groesse,
+                opacity: q.deckkraft,
+                "--dauer": `${q.dauer}s`,
+                "--verzoegerung": `${q.verzoegerung}s`,
+              } as React.CSSProperties
+            }
+          >
+            <span className="qualle-pendel">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/art/sprites/${q.datei}.webp`} alt="" loading="lazy" />
+            </span>
+          </span>
+        ))}
+
         {BLASEN.map((b) => (
           <span
             key={b.datei}
@@ -103,8 +153,37 @@ export default function Blubber() {
       </div>
 
       {/* Eigene Ebene vor dem Inhalt: Die Fische ziehen über Text und Karten
-          hinweg. */}
+          hinweg, und ein paar Blasen wandern davor durch und verziehen dabei,
+          was hinter ihnen liegt. */}
       <div className="blubber-vorn" aria-hidden="true">
+        {BLASEN_VORN.map((b) => (
+          <span
+            key={b.datei}
+            className="blase"
+            style={
+              {
+                left: `${b.links}%`,
+                width: b.groesse,
+                opacity: b.deckkraft,
+                "--dauer": `${b.dauer}s`,
+                "--verzoegerung": `${b.verzoegerung}s`,
+                "--drift": `${b.drift}px`,
+              } as React.CSSProperties
+            }
+          >
+            <span className="blase-pendel relative block">
+              <span className="blase-glas" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/art/sprites/${b.datei}.webp`}
+                alt=""
+                loading="lazy"
+                className="relative"
+              />
+            </span>
+          </span>
+        ))}
+
         {FISCHE.map((f) => (
           <span
             key={f.datei}

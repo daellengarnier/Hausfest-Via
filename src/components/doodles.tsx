@@ -155,23 +155,30 @@ export function SparteIcon({
   );
 }
 
-/** Seifenblase als Rahmen für kleine Inhalte (Zahlen, Icons). */
+/** Eine gemalte Seifenblase als Rahmen für kleine Inhalte (Zahlen, Icons).
+ *  `sprite` wählt eine der freigestellten Blasen — so bekommt jede Zahl ihre
+ *  eigene, statt dass überall dieselbe Form sitzt. */
 export function Bubble({
   children,
+  sprite = "blase_klein_01",
   className = "",
 }: {
   children: React.ReactNode;
+  sprite?: string;
   className?: string;
 }) {
   return (
     <span
-      className={`relative inline-flex items-center justify-center rounded-full border border-white/60 bg-gradient-to-br from-white/35 via-sky/20 to-blossom/20 shadow-[inset_0_2px_10px_rgba(255,255,255,0.45)] ${className}`}
+      className={`relative inline-flex items-center justify-center ${className}`}
     >
-      <span
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`/art/sprites/${sprite}.webp`}
+        alt=""
         aria-hidden="true"
-        className="absolute left-[22%] top-[18%] h-1.5 w-2.5 -rotate-[35deg] rounded-full bg-white/90"
+        className="absolute inset-0 h-full w-full"
       />
-      {children}
+      <span className="relative">{children}</span>
     </span>
   );
 }
