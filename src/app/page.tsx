@@ -27,16 +27,44 @@ export default function Home() {
       {/* Titel — die Illustration trägt den Kopf der Seite ohne jede
           Abdunklung; die Schatten an der Schrift erledigen die Lesbarkeit. */}
       <header className="relative px-6 pb-12 pt-12 text-center sm:pb-16 sm:pt-16">
-        <div className="tief relative mx-auto max-w-2xl">
-          <h1 className="font-display text-5xl font-extrabold tracking-tight text-foam sm:text-7xl">
-            Hausfest
-            <br className="sm:hidden" />
-            <span className="sm:ml-4">Via1</span>
+        <div className="relative mx-auto max-w-2xl">
+          <h1 className="titel-leuchten font-display font-extrabold leading-[0.88] tracking-tight text-foam">
+            <span className="block text-[3.4rem] sm:text-8xl">Hausfest</span>
+            <span className="mt-1 block text-[3.9rem] text-mint sm:mt-2 sm:text-9xl">
+              Via1
+            </span>
           </h1>
+
+          {/* Die zwei Jubiläen schweben als Blasen um den Molch, statt in der
+              Datumsbox zu sitzen — dort war der Kopf sonst überladen. */}
+          <ul aria-label="Was wir feiern" className="tief">
+            {JUBILAEEN.map((j, i) => (
+              <li
+                key={j.zahl}
+                className={
+                  i === 0
+                    ? "absolute left-1 top-[8.5rem] flex w-24 flex-col items-center sm:left-8 sm:top-52"
+                    : "absolute right-0 top-[12.2rem] flex w-24 flex-col items-center sm:right-6 sm:top-72"
+                }
+              >
+                <Bubble
+                  sprite={j.blase}
+                  className="h-[4.6rem] w-[4.6rem] sm:h-24 sm:w-24"
+                >
+                  <span className="font-display text-2xl font-extrabold text-foam sm:text-3xl">
+                    {j.zahl}
+                  </span>
+                </Bubble>
+                <span className="mt-1 text-center text-[0.7rem] leading-tight text-foam sm:text-sm">
+                  {j.was}
+                </span>
+              </li>
+            ))}
+          </ul>
 
           {/* Wann, wo und warum in einem Block — gläsern, damit das Bild
               durchscheint und die Angaben trotzdem zusammenbleiben. */}
-          <div className="blasenfeld blasenfeld-rund mt-44 inline-flex flex-col items-center sm:mt-28">
+          <div className="blasenfeld blasenfeld-rund tief mt-56 inline-flex flex-col items-center sm:mt-64">
             <p className="font-display text-xl font-bold text-foam sm:text-2xl">
               {FEST.datum}
             </p>
@@ -52,26 +80,6 @@ export default function Home() {
               Im Kalender speichern
             </a>
 
-            <div className="ink-rule mt-5 w-full" />
-
-            {/* Die zwei Jubiläen als Zahlen — spart einen ganzen Satz. */}
-            <ul className="mt-4 flex items-start justify-center gap-7 sm:gap-10">
-              {JUBILAEEN.map((j) => (
-                <li key={j.zahl} className="flex w-24 flex-col items-center">
-                  <Bubble
-                    sprite={j.blase}
-                    className="h-16 w-16 sm:h-20 sm:w-20"
-                  >
-                    <span className="font-display text-2xl font-extrabold text-foam sm:text-3xl">
-                      {j.zahl}
-                    </span>
-                  </Bubble>
-                  <span className="mt-2 text-center text-xs leading-tight text-foam-dim sm:text-sm">
-                    {j.was}
-                  </span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </header>
@@ -81,7 +89,7 @@ export default function Home() {
             Illustration, getragen von ihrem Schatten. */}
         <div className="tief mx-auto max-w-2xl">
           <div className="py-4">
-            <Abschnitt id="willkommen" titel="Willkommen" form={0}>
+            <Abschnitt id="willkommen" titel="Willkommen" form={0} deko>
               <p className="font-display text-xl font-bold text-foam sm:text-2xl">
                 Schön, hast du hierhin gefunden!
               </p>
@@ -99,7 +107,7 @@ export default function Home() {
 
             {/* Bewusst leer: Hier liegt eine der schönsten Stellen der
                 Illustration, die soll frei bleiben. */}
-            <div aria-hidden="true" className="h-[42vh] sm:h-[38vh]" />
+            <div aria-hidden="true" className="h-[16vh] sm:h-[20vh]" />
 
             <Abschnitt id="tickets" titel="Tickets" form={1} blase="blasenfeld-rund">
               <p>
@@ -127,7 +135,7 @@ export default function Home() {
                 Tippe auf einen Act, um mehr zu erfahren.
               </p>
 
-              <ul className="not-prose mt-6 space-y-3">
+              <ul className="not-prose mt-5 space-y-1">
                 {ACTS.map((act) => (
                   <li key={act.name}>
                     <ActKarte act={act} />
@@ -183,6 +191,7 @@ function Abschnitt({
   titel,
   form,
   blase = "",
+  deko = false,
   children,
 }: {
   id: string;
@@ -190,10 +199,12 @@ function Abschnitt({
   form: 0 | 1 | 2;
   /** Welche gemalte Blase den Text rahmt. */
   blase?: string;
+  /** Lässt Bildelemente unten rechts über den Rand der Blase wachsen. */
+  deko?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-24 py-9 first:pt-0">
+    <section id={id} className="relative scroll-mt-24 py-9 first:pt-0">
       <CoralRule form={form} />
       <h2 className="mt-7 font-display text-3xl font-extrabold text-foam sm:text-4xl">
         {titel}
@@ -206,7 +217,41 @@ function Abschnitt({
       >
         {children}
       </div>
+
+      {deko ? <BoxDeko /> : null}
     </section>
+  );
+}
+
+/** Ein paar Bildelemente, die unten rechts über den Rand der Textblase
+ *  hinausragen. Dadurch wirkt die Blase wie eine Ebene weiter hinten,
+ *  in die das Wasser drumherum hineinwächst. Rein dekorativ, nimmt keine
+ *  Klicks an. */
+function BoxDeko() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute bottom-2 right-0 z-10 w-44 sm:w-56"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/art/sprites/qualle_02.webp"
+        alt=""
+        className="absolute -bottom-6 right-6 w-16 opacity-90 sm:w-20"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/art/sprites/blase_klein_03.webp"
+        alt=""
+        className="absolute -bottom-2 right-24 w-12 opacity-80 sm:w-14"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/art/sprites/anglerfisch_04.webp"
+        alt=""
+        className="absolute -bottom-10 -right-2 w-24 sm:w-28"
+      />
+    </div>
   );
 }
 
@@ -214,8 +259,8 @@ function Abschnitt({
 function ActKopf({ act }: { act: Act }) {
   return (
     <>
-      <Bubble sprite="blase_klein_05" className="h-12 w-12 shrink-0">
-        <SparteIcon art={act.sparte} className="h-5 w-5 text-foam" />
+      <Bubble sprite="blase_klein_05" className="h-10 w-10 shrink-0">
+        <SparteIcon art={act.sparte} className="h-4 w-4 text-foam" />
       </Bubble>
       <div className="min-w-0 flex-1 text-left">
         <p className="font-display font-bold text-foam">
@@ -238,11 +283,11 @@ function ActKopf({ act }: { act: Act }) {
  *  gebaut mit <details>, damit es ohne JavaScript funktioniert und für
  *  Tastatur und Screenreader von Haus aus stimmt. */
 function ActKarte({ act }: { act: Act }) {
-  const rahmen = "blasenfeld blasenfeld-flach";
+  const rahmen = "blasenfeld blasenfeld-act";
 
   if (!act.beschrieb) {
     return (
-      <div className={`flex items-center gap-4 ${rahmen}`}>
+      <div className={`flex items-center gap-3 ${rahmen}`}>
         <ActKopf act={act} />
       </div>
     );
@@ -250,7 +295,7 @@ function ActKarte({ act }: { act: Act }) {
 
   return (
     <details className={`group ${rahmen}`}>
-      <summary className="flex cursor-pointer list-none items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky [&::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky [&::-webkit-details-marker]:hidden">
         <ActKopf act={act} />
         <Pfeil className="h-5 w-5 shrink-0 text-foam-dim transition-transform group-open:rotate-180" />
       </summary>

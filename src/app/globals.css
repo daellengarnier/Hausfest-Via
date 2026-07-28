@@ -133,6 +133,34 @@ section[id] {
   padding: 0.1rem 0.5rem 0.5rem;
 }
 
+/* Act-Karten: schmalerer Rand und weniger Polster als die Textblasen. Bei
+   acht Stück nebeneinander summiert sich jeder Millimeter. */
+.blasenfeld-act {
+  border-image-source: url("/art/rahmen/textfeld_04.webp");
+  border-image-slice: 96 fill;
+  border-width: 16px 22px;
+  padding: 0 0.35rem 0.15rem;
+}
+
+@media (min-width: 640px) {
+  .blasenfeld-act {
+    border-width: 20px 28px;
+    padding: 0 0.6rem 0.25rem;
+  }
+}
+
+/* Der Titel: die Schrift bekommt einen Lichtsaum in Neon-Mint, wie ihn die
+   Korallen im Bild haben — darunter liegt weiterhin der dunkle Saum, sonst
+   verschwimmt sie auf dem bunten Grund. */
+.titel-leuchten {
+  text-shadow:
+    0 0 3px rgba(0, 4, 30, 1),
+    0 2px 6px rgba(0, 4, 30, 1),
+    0 0 18px rgba(131, 252, 197, 0.55),
+    0 0 38px rgba(111, 227, 224, 0.45),
+    0 0 70px rgba(0, 4, 30, 0.9);
+}
+
 /* Handgezeichnete Trennlinie zwischen den Abschnitten. */
 .ink-rule {
   height: 2px;
@@ -257,10 +285,48 @@ section[id] {
   -webkit-backdrop-filter: blur(3px) saturate(1.5) brightness(1.12);
 }
 
+/* Über dem Titel darf es kräftig zugehen: Dort sollen die Blasen die
+   Schrift deutlich verziehen, nicht nur anhauchen. Zwei Ringe übereinander —
+   der äussere verwäscht weich, der innere staucht Farbe und Kontrast — das
+   kommt einer Lichtbrechung so nah, wie CSS es kann. */
+.blase-glas-stark {
+  backdrop-filter: blur(7px) saturate(2.2) contrast(1.25) brightness(1.15);
+  -webkit-backdrop-filter: blur(7px) saturate(2.2) contrast(1.25)
+    brightness(1.15);
+}
+
+.blase-glas-kern {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  backdrop-filter: blur(4px) hue-rotate(18deg) saturate(1.6);
+  -webkit-backdrop-filter: blur(4px) hue-rotate(18deg) saturate(1.6);
+}
+
 /* Laternenfische ziehen waagrecht durchs Bild und wippen dabei leicht. */
+/* Fische sind antippbar — sie flitzen dann kurz davon. Darum heben sie die
+   `pointer-events: none` der Ebene für sich auf. */
 .fisch {
   position: absolute;
   animation: schwimmen var(--dauer) linear var(--verzoegerung) infinite;
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Gespiegelte Fische schauen nach links — dann müssen sie auch nach links
+   schwimmen. Vorher liefen alle nach rechts, die gespiegelten also rückwärts. */
+.fisch-links {
+  animation-name: schwimmen-links;
+}
+
+@keyframes schwimmen-links {
+  from {
+    transform: translate3d(140vw, 0, 0);
+  }
+  to {
+    transform: translate3d(-40vw, 0, 0);
+  }
 }
 
 .fisch-wippe {
@@ -287,6 +353,56 @@ section[id] {
   }
 }
 
+/* Das Auge des Fisches. Die Iris deckt die gemalte ab — bei der Grösse, in
+   der die Fische erscheinen, sind das keine 15 px, da genügt ein Verlauf.
+   Darin wandert die Pupille langsam hin und her, mit Pausen dazwischen:
+   Ein gleichmässiges Pendeln sähe mechanisch aus, ein Blick verweilt. */
+.fisch-auge {
+  position: absolute;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 42% 38%,
+    #b9c9ac 0%,
+    #8fa68b 55%,
+    #5c7360 82%,
+    #33403a 100%
+  );
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+.fisch-pupille {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #0a1216;
+  box-shadow: 0.6px -0.6px 0 0.2px rgba(255, 255, 255, 0.75);
+  animation: schauen var(--takt) ease-in-out infinite;
+}
+
+@keyframes schauen {
+  0%,
+  16% {
+    transform: translate(-50%, -50%);
+  }
+  26%,
+  44% {
+    transform: translate(-50%, -50%) translate(52%, -14%);
+  }
+  54%,
+  72% {
+    transform: translate(-50%, -50%) translate(-56%, 8%);
+  }
+  82%,
+  100% {
+    transform: translate(-50%, -50%) translate(8%, 16%);
+  }
+}
+
 /* Die Laterne am Fisch: ein weiches Licht, das schneller heller und wieder
    dunkler wird. `screen` addiert das Licht zum Bild, statt es zuzudecken —
    der gemalte Leuchtkörper bleibt sichtbar und wird nur verstärkt. */
@@ -305,6 +421,33 @@ section[id] {
     transparent 70%
   );
   animation: leuchten var(--takt) ease-in-out infinite alternate;
+}
+
+/* Der Disco-Fisch: Seine Laterne wechselt im Takt die Farbe. Der Farbwechsel
+   läuft über einen eigenen Filter, damit das Pulsieren aus `leuchten`
+   unangetastet bleibt und sich beides überlagert. */
+.laterne-disco {
+  animation:
+    leuchten var(--takt) ease-in-out infinite alternate,
+    disco calc(var(--takt) * 2.6) linear infinite;
+}
+
+@keyframes disco {
+  0% {
+    filter: hue-rotate(0deg) saturate(3.5);
+  }
+  25% {
+    filter: hue-rotate(90deg) saturate(4.5);
+  }
+  50% {
+    filter: hue-rotate(180deg) saturate(3.5);
+  }
+  75% {
+    filter: hue-rotate(280deg) saturate(4.5);
+  }
+  100% {
+    filter: hue-rotate(360deg) saturate(3.5);
+  }
 }
 
 @keyframes leuchten {
@@ -326,6 +469,7 @@ section[id] {
   .qualle-wiege,
   .fisch,
   .fisch-wippe,
+  .fisch-pupille,
   .laterne {
     animation: none;
   }
