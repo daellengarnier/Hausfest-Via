@@ -44,18 +44,46 @@ section[id] {
   scroll-margin-top: 5.5rem;
 }
 
-/* Die gemalte Vorlage liegt als eigene, am Viewport fixierte Ebene hinter
-   dem Inhalt. Bewusst ein positioniertes Element statt background-attachment:
-   fixed — letzteres ruckelt auf iOS. */
+/* Die gemalte Vorlage liegt hinter dem Inhalt und scrollt mit: Man bewegt
+   sich durch die Bildlandschaft, statt auf einen stehenden Hintergrund zu
+   schauen. Das Bild füllt die Breite und wiederholt sich nach unten — die
+   Kachel ist gespiegelt aufgebaut, darum ist die Naht unsichtbar. */
 .fest-canvas {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: -2;
   background-color: var(--color-night-900);
   background-image: url("/art/hintergrund.webp");
-  background-size: cover;
+  background-size: 100% auto;
   background-position: center top;
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
+}
+
+/* Bewusst kein seitliches Kacheln auf breiten Fenstern: Links und rechts
+   passt das Bild nicht an sich selbst an, das gäbe eine sichtbare
+   senkrechte Kante quer durch die Seite. Lieber über die volle Breite
+   ziehen — die Vorlage ist mit 768 px schmal, das kostet dort etwas
+   Schärfe, wirkt aber als Ganzes. */
+
+/* Schrift liegt direkt auf dem Bild — der Schatten trägt sie, ohne dass
+   eine Fläche die Illustration zudeckt.
+   Mehrere enge Lagen statt einer weichen: Sie legen sich als dunkler Saum
+   dicht um die Buchstaben und halten die Schrift auch über den hellen
+   Neon-Korallen, wo ein weicher Schleier nichts ausrichtet. */
+.tief {
+  text-shadow:
+    0 0 4px rgba(0, 4, 30, 1),
+    0 0 8px rgba(0, 4, 30, 0.98),
+    0 1px 3px rgba(0, 4, 30, 1),
+    0 2px 16px rgba(0, 4, 30, 0.92),
+    0 0 34px rgba(0, 4, 30, 0.8);
+}
+
+/* Auf hellen Flächen — etwa dem Ticket-Knopf — wäre der dunkle Saum
+   verschmiert statt hilfreich. */
+.tief .kein-saum,
+.kein-saum {
+  text-shadow: none;
 }
 
 /* Handgezeichnete Trennlinie zwischen den Abschnitten. */

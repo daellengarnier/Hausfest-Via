@@ -23,14 +23,28 @@ HINTERGRUND = QUELLEN / "Lang_B_Molch-oben.png"
 
 
 def hintergrund() -> None:
+    """Die Seite ist deutlich höher als das Bild, und der Hintergrund scrollt
+    mit — das Bild muss sich also wiederholen. Oben (helle Blasen) und unten
+    (dunkler Meeresgrund) passen aber nicht aneinander, eine schlichte
+    Wiederholung gäbe eine harte Kante.
+
+    Darum wird die Kachel aus dem Bild und seiner senkrechten Spiegelung
+    gebaut: Unterkante trifft dann immer auf Unterkante, Oberkante auf
+    Oberkante — die Landschaft läuft nahtlos durch.
+    """
     ziel = WURZEL / "public/art/hintergrund.webp"
     ziel.parent.mkdir(parents=True, exist_ok=True)
     im = Image.open(HINTERGRUND).convert("RGB")
-    # Volle Auflösung behalten (768 px breit ist ohnehin knapp), aber als
-    # WebP: für eine gemalte Illustration mit vielen weichen Verläufen
-    # bringt das den grössten Sprung bei sichtbar gleicher Qualität.
-    im.save(ziel, "WEBP", quality=82, method=6)
-    print(f"{ziel.name}: {ziel.stat().st_size / 1024:.0f} KB")
+
+    kachel = Image.new("RGB", (im.width, im.height * 2))
+    kachel.paste(im, (0, 0))
+    kachel.paste(im.transpose(Image.FLIP_TOP_BOTTOM), (0, im.height))
+
+    # WebP: für eine gemalte Illustration mit vielen weichen Verläufen bringt
+    # das den grössten Sprung bei sichtbar gleicher Qualität.
+    kachel.save(ziel, "WEBP", quality=78, method=6)
+    print(f"{ziel.name}: {kachel.width}x{kachel.height}, "
+          f"{ziel.stat().st_size / 1024:.0f} KB")
 
 
 def sprites() -> None:

@@ -19,29 +19,24 @@ import {
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
       <div aria-hidden="true" className="fest-canvas" />
       <Blubber />
       <SiteNav />
 
-      {/* Titel — die Illustration trägt den Kopf der Seite. Der Verlauf
-          dunkelt nur so weit ab, dass die Schrift trägt, ohne die Zeichnung
-          zuzudecken; die Schatten am Text erledigen den Rest. */}
+      {/* Titel — die Illustration trägt den Kopf der Seite ohne jede
+          Abdunklung; die Schatten an der Schrift erledigen die Lesbarkeit. */}
       <header className="relative px-6 pb-12 pt-12 text-center sm:pb-16 sm:pt-16">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-night-900/60 via-night-900/35 to-night-900/70"
-        />
-        <div className="relative mx-auto max-w-2xl [text-shadow:0_2px_14px_rgba(7,21,64,0.95)]">
+        <div className="tief relative mx-auto max-w-2xl">
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-foam sm:text-7xl">
             Hausfest
             <br className="sm:hidden" />
             <span className="sm:ml-4">Via1</span>
           </h1>
 
-          {/* Wann, wo und warum in einem Block — auf eigener dunkler Fläche,
-              sonst gehen die Zahlen in der Zeichnung unter. */}
-          <div className="mt-8 inline-flex flex-col items-center rounded-3xl border border-white/25 bg-night-900/75 px-6 py-5 backdrop-blur-md sm:px-8">
+          {/* Wann, wo und warum in einem Block — gläsern, damit das Bild
+              durchscheint und die Angaben trotzdem zusammenbleiben. */}
+          <div className="mt-8 inline-flex flex-col items-center rounded-3xl border border-white/25 bg-white/10 px-6 py-5 backdrop-blur-md sm:px-8">
             <p className="font-display text-xl font-bold text-foam sm:text-2xl">
               {FEST.datum}
             </p>
@@ -78,11 +73,11 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="relative px-3 pb-12 sm:px-6">
-        {/* Die Texte sitzen auf einer eigenen Fläche, damit sie ruhig lesbar
-            bleiben — die Zeichnung läuft aussen herum weiter. */}
-        <div className="mx-auto max-w-2xl rounded-[2rem] border border-white/10 bg-night-900/88 backdrop-blur-md">
-          <div className="px-5 py-10 sm:px-10 sm:py-14">
+      <main className="relative px-5 pb-12 sm:px-6">
+        {/* Kein Kasten mehr hinter dem Text: Die Schrift liegt direkt auf der
+            Illustration, getragen von ihrem Schatten. */}
+        <div className="tief mx-auto max-w-2xl">
+          <div className="py-4">
             <Abschnitt id="willkommen" titel="Willkommen" form={0}>
               <p className="font-hand text-2xl text-sun">
                 Schön, hast du hierhin gefunden!
@@ -147,7 +142,7 @@ export default function Home() {
               </p>
             </Abschnitt>
 
-            <div className="mt-10 rounded-2xl border border-white/15 bg-white/5 p-5">
+            <div className="mt-10 rounded-2xl border border-white/25 bg-white/10 p-5 backdrop-blur-md">
               <p className="font-display font-bold text-foam">
                 Als App installieren
               </p>
@@ -165,7 +160,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="relative bg-night-900/80 px-6 py-10 text-center backdrop-blur-md">
+      <footer className="tief relative px-6 py-12 text-center">
         <Coral form={1} className="mx-auto h-8 w-8 text-blossom/60" />
         <p className="mt-3 font-hand text-2xl text-foam">
           Bis zum 5. September!
@@ -193,7 +188,7 @@ function Abschnitt({
       <h2 className="mt-7 font-display text-3xl font-extrabold text-foam sm:text-4xl">
         {titel}
       </h2>
-      <div className="mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-foam/90">
+      <div className="mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-foam">
         {children}
       </div>
     </section>
@@ -228,7 +223,7 @@ function ActKopf({ act }: { act: Act }) {
  *  gebaut mit <details>, damit es ohne JavaScript funktioniert und für
  *  Tastatur und Screenreader von Haus aus stimmt. */
 function ActKarte({ act }: { act: Act }) {
-  const rahmen = "rounded-2xl border border-white/15 bg-white/5";
+  const rahmen = "rounded-2xl border border-white/25 bg-white/10 backdrop-blur-md";
 
   if (!act.beschrieb) {
     return (
@@ -268,7 +263,7 @@ function ActKarte({ act }: { act: Act }) {
 function TicketButton() {
   if (!TICKET_URL) {
     return (
-      <p className="inline-block rounded-full border border-dashed border-white/30 bg-night-900/60 px-6 py-3 text-sm text-foam-dim">
+      <p className="inline-block rounded-full border border-dashed border-white/30 bg-night-900/60 px-6 py-3 text-sm text-foam-dim backdrop-blur-sm">
         Ticketverkauf startet in Kürze
       </p>
     );
@@ -280,7 +275,7 @@ function TicketButton() {
       href={TICKET_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex flex-col items-center rounded-3xl bg-gradient-to-br from-coral to-blossom px-8 py-4 text-night-900 shadow-lg shadow-coral/25 transition-transform hover:scale-[1.03] active:scale-100"
+      className="kein-saum inline-flex flex-col items-center rounded-3xl bg-gradient-to-br from-coral to-blossom px-8 py-4 text-night-900 shadow-lg shadow-coral/30 transition-transform hover:scale-[1.03] active:scale-100"
     >
       <span className="font-display text-lg font-bold">Ticket sichern</span>
       {TICKET_PASSWORT ? (
