@@ -4,8 +4,10 @@ import {
   Coral,
   CoralRule,
   Kalender,
+  Pfeil,
   SparteIcon,
 } from "@/components/doodles";
+import type { Act } from "@/lib/fest";
 import {
   ACTS,
   FEST,
@@ -121,32 +123,14 @@ export default function Home() {
                 Zeiten schalten wir auf, sobald sie stehen — es lohnt sich
                 also, immer wieder vorbeizuschauen.
               </p>
+              <p className="text-sm text-foam-dim">
+                Tippe auf einen Act, um mehr zu erfahren.
+              </p>
 
               <ul className="not-prose mt-6 space-y-3">
                 {ACTS.map((act) => (
-                  <li
-                    key={act.name}
-                    className="flex items-center gap-4 rounded-2xl border border-white/15 bg-white/5 p-4"
-                  >
-                    <Bubble className="h-11 w-11 shrink-0">
-                      <SparteIcon
-                        art={act.sparte}
-                        className="h-5 w-5 text-foam"
-                      />
-                    </Bubble>
-                    <div className="min-w-0">
-                      <p className="font-display font-bold text-foam">
-                        {act.name}
-                        {act.herkunft ? (
-                          <span className="ml-2 text-sm font-normal text-foam-dim">
-                            ({act.herkunft})
-                          </span>
-                        ) : null}
-                      </p>
-                      {act.sparte ? (
-                        <p className="text-sm text-foam-dim">{act.sparte}</p>
-                      ) : null}
-                    </div>
+                  <li key={act.name}>
+                    <ActKarte act={act} />
                   </li>
                 ))}
               </ul>
@@ -211,6 +195,67 @@ function Abschnitt({
         {children}
       </div>
     </section>
+  );
+}
+
+/** Kopfzeile einer Act-Karte: Blase mit Sparten-Symbol, Name, Herkunft. */
+function ActKopf({ act }: { act: Act }) {
+  return (
+    <>
+      <Bubble className="h-11 w-11 shrink-0">
+        <SparteIcon art={act.sparte} className="h-5 w-5 text-foam" />
+      </Bubble>
+      <div className="min-w-0 flex-1 text-left">
+        <p className="font-display font-bold text-foam">
+          {act.name}
+          {act.herkunft ? (
+            <span className="ml-2 text-sm font-normal text-foam-dim">
+              ({act.herkunft})
+            </span>
+          ) : null}
+        </p>
+        {act.sparte ? (
+          <p className="text-sm text-foam-dim">{act.sparte}</p>
+        ) : null}
+      </div>
+    </>
+  );
+}
+
+/** Ein Act. Wer einen Beschrieb hat, dessen Karte lässt sich aufklappen —
+ *  gebaut mit <details>, damit es ohne JavaScript funktioniert und für
+ *  Tastatur und Screenreader von Haus aus stimmt. */
+function ActKarte({ act }: { act: Act }) {
+  const rahmen = "rounded-2xl border border-white/15 bg-white/5";
+
+  if (!act.beschrieb) {
+    return (
+      <div className={`flex items-center gap-4 p-4 ${rahmen}`}>
+        <ActKopf act={act} />
+      </div>
+    );
+  }
+
+  return (
+    <details className={`group ${rahmen} open:bg-white/10`}>
+      <summary className="flex cursor-pointer list-none items-center gap-4 rounded-2xl p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky [&::-webkit-details-marker]:hidden">
+        <ActKopf act={act} />
+        <Pfeil className="h-5 w-5 shrink-0 text-foam-dim transition-transform group-open:rotate-180" />
+      </summary>
+
+      <div className="space-y-3 border-t border-white/10 px-4 pb-4 pt-3 text-[0.9375rem] leading-relaxed text-foam/85">
+        {act.beschrieb.map((absatz) => (
+          <p key={absatz}>{absatz}</p>
+        ))}
+        {act.besetzung ? (
+          <ul className="pt-1 text-sm text-foam-dim">
+            {act.besetzung.map((zeile) => (
+              <li key={zeile}>{zeile}</li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </details>
   );
 }
 

@@ -37,13 +37,47 @@ export type Act = {
   /** Weglassen, solange die Sparte nicht feststeht — die Karte zeigt dann
    *  nur den Namen, statt eine falsche Zuordnung zu behaupten. */
   sparte?: Sparte;
+  /** Ein Eintrag je Absatz. Wer einen Text hat, dessen Karte lässt sich
+   *  auf der Seite aufklappen. */
+  beschrieb?: string[];
+  /** Wer mitspielt, je Zeile „Name — Instrument“. */
+  besetzung?: string[];
 };
 
 /** Bereits bestätigt. Zeiten und weitere Acts kommen laufend dazu. */
 export const ACTS: Act[] = [
-  { name: "Ashinoa", herkunft: "FR", sparte: "Band" },
-  { name: "Reverend Deadeye & Nicotin Sue", sparte: "Band" },
-  { name: "Treibend", herkunft: "BE", sparte: "Band" },
+  {
+    name: "Ashinoa",
+    herkunft: "FR",
+    sparte: "Band",
+    beschrieb: [
+      "Mit ihrer Gründung 2015 hat die Band Ashinoa aus Lyon sich rasch einen Namen in der alternativen Musikszene gemacht. Ihre Vision: Ein musikalisches Universum, das von Krautrock und Elektronik regiert wird, durchsetzt mit rhythmischen und psychedelischen Elementen.",
+      "Ihr Engagement und ihre kreative Dynamik haben sie von lokalen Bühnen zu internationalen Auftritten und Kollaborationen mit renommierten Künstler:innen geführt. Auf ihrer musikalischen Expedition lassen sie das Bekannte hinter sich.",
+    ],
+  },
+  {
+    name: "Reverend Deadeye & Nicotin Sue",
+    sparte: "Band",
+    beschrieb: [
+      "Reverend Deadeye ist der Sohn eines Reverends, der wiederum der Sohn eines Reverends war. Seine Jugend verbrachte er mit Schlangen in den Händen und mit Auftritten bei Zelt-Erweckungen, an der Seite seiner Pfingstler-Familie in einem Navajo-Reservat in Arizona. Dieses geistliche Erbe klingt in seinen Auftritten nach.",
+      "Erwarte aber keinen Gottesdienst am Sonntagmorgen — eher eine Feuertaufe am Samstagabend, eine heilige Erweckung.",
+      "Neu mit dem Schlagzeug der Schweizer Legende Nicotin Sue. Zu zweit entfesseln die beiden wuchtige Fassungen von Lo-Fi-Blues-Hymnen mit Gospel-Einschlag, die das Publikum in eine fast mystische Erweckung treiben.",
+    ],
+  },
+  {
+    name: "Treibend",
+    herkunft: "BE",
+    sparte: "Band",
+    beschrieb: [
+      "Das Kollektiv aus Bern und Biel spielt elektro-akustische Live-Sets, die sich im ständigen Fluss befinden – immer im Moment, immer im Wandel. Mit Piano, Synthesizer, Trompete und Gesang entstehen bewegende Melodien und treibende Beats.",
+      "Treibend schafft ein Klangbild, das zugleich antreibt und träumen lässt – tanzbar, meditativ, vielschichtig.",
+    ],
+    besetzung: [
+      "Bara Bačova — Trompete, Gesang",
+      "Nicolas Engel — Keys",
+      "Florian Mühlemann — Synths, Drum Machine",
+    ],
+  },
   { name: "FULU", sparte: "Theater" },
   { name: "DJ Pantichrist", sparte: "DJ" },
   { name: "Yotah", sparte: "DJ" },
