@@ -162,14 +162,17 @@ export function Bubble({
   children,
   sprite = "blase_klein_01",
   className = "",
+  style,
 }: {
   children: React.ReactNode;
   sprite?: string;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <span
       className={`relative inline-flex items-center justify-center ${className}`}
+      style={style}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

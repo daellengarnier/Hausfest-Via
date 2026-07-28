@@ -31,6 +31,15 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* Ab welcher Höhe die gemalte Vorlage beginnt. Steht hier, weil auch das
+     Molch-Auge damit rechnet, wo im Bild es zu liegen kommt. */
+  --bild-oben: 15rem;
+}
+
+@media (min-width: 640px) {
+  html {
+    --bild-oben: 13rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -66,13 +75,6 @@ section[id] {
      füllt die Höhlenkachel — dunkel, dort steht ohnehin nur die Navigation. */
   background-position: center var(--bild-oben, 0px), center top, center top;
   background-repeat: no-repeat, no-repeat, repeat-y;
-  --bild-oben: 15rem;
-}
-
-@media (min-width: 640px) {
-  .fest-canvas {
-    --bild-oben: 13rem;
-  }
 }
 
 /* Bewusst kein seitliches Kacheln auf breiten Fenstern: Links und rechts
@@ -175,6 +177,53 @@ section[id] {
     0 0 70px rgba(0, 4, 30, 0.9);
 }
 
+/* Das Auge des Molchs. Er steckt im Hintergrundbild, ist also kein eigenes
+   Element — die Pupille liegt darum als kleine Scheibe an der Stelle, wo das
+   gemalte Auge sitzt. Das Bild füllt die Seitenbreite, seine Höhe ist damit
+   das 8.667-fache davon; die Position lässt sich also in vw ausrechnen:
+   Auge bei 57.2 % der Breite und 8.89 % der Bildhöhe. */
+.molch-auge {
+  position: absolute;
+  left: 57.2vw;
+  top: calc(var(--bild-oben) + 77.1vw);
+  width: 2.5vw;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.molch-pupille {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #150d05;
+  animation: schauen 7.4s ease-in-out infinite;
+}
+
+/* Die Jubiläums-Blasen wiegen sich leicht in ihrem Bereich, statt starr zu
+   stehen — und ihre gemalte Haut ist etwas zurückgenommen, sonst wirkt sie
+   milchig vor dem dunklen Wasser. */
+.jahresblase {
+  animation: jahr-schweben var(--takt, 9s) ease-in-out infinite alternate;
+}
+
+.jahresblase img {
+  opacity: 0.72;
+}
+
+@keyframes jahr-schweben {
+  from {
+    transform: translate3d(-6px, 7px, 0) rotate(-2deg);
+  }
+  to {
+    transform: translate3d(6px, -7px, 0) rotate(2deg);
+  }
+}
+
 /* Handgezeichnete Trennlinie zwischen den Abschnitten. */
 .ink-rule {
   height: 2px;
@@ -228,61 +277,62 @@ section[id] {
 }
 
 .blase {
-  animation: steigen var(--dauer) ease-in-out var(--verzoegerung) infinite
-    alternate;
+  animation: aufsteigen var(--dauer) linear var(--verzoegerung) infinite;
 }
 
 .blase-pendel {
   display: block;
-  animation: pendeln calc(var(--dauer) * 0.7) ease-in-out var(--verzoegerung)
+  animation: pendeln calc(var(--dauer) / 3) ease-in-out var(--verzoegerung)
     infinite alternate;
 }
 
-@keyframes steigen {
-  from {
-    transform: translate3d(0, 46px, 0);
+/* Jede Blase steigt in ihrem eigenen Winkel: `--drift` gibt den seitlichen
+   Versatz auf dem Weg nach oben, mal nach links, mal nach rechts. Am Anfang
+   und Ende der Bahn blendet sie weg — ohne das würde sie beim Neustart
+   sichtbar an ihren Ausgangspunkt springen. */
+@keyframes aufsteigen {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
   }
-  to {
-    transform: translate3d(0, -46px, 0);
+  10% {
+    opacity: var(--deck);
+  }
+  80% {
+    opacity: var(--deck);
+  }
+  100% {
+    transform: translate3d(var(--drift), var(--hoehe), 0);
+    opacity: 0;
   }
 }
 
 @keyframes pendeln {
   from {
-    transform: translateX(-14px) rotate(-4deg);
+    transform: translateX(-8px) rotate(-3deg);
   }
   to {
-    transform: translateX(14px) rotate(4deg);
+    transform: translateX(8px) rotate(3deg);
   }
 }
 
 /* Quallen wiegen sich ruhiger und weiter als die Blasen. */
 .qualle {
-  animation: qualle-treiben var(--dauer) ease-in-out var(--verzoegerung)
-    infinite alternate;
+  animation: aufsteigen var(--dauer) linear var(--verzoegerung) infinite;
 }
 
 .qualle-wiege {
   display: block;
-  animation: qualle-wiegen calc(var(--dauer) * 0.6) ease-in-out infinite
+  animation: qualle-wiegen calc(var(--dauer) / 4) ease-in-out infinite
     alternate;
-}
-
-@keyframes qualle-treiben {
-  from {
-    transform: translate3d(0, 90px, 0);
-  }
-  to {
-    transform: translate3d(0, -90px, 0);
-  }
 }
 
 @keyframes qualle-wiegen {
   from {
-    transform: translateX(-16px) rotate(-3deg);
+    transform: translateX(-12px) rotate(-2deg);
   }
   to {
-    transform: translateX(16px) rotate(3deg);
+    transform: translateX(12px) rotate(2deg);
   }
 }
 
@@ -372,6 +422,19 @@ section[id] {
   to {
     --linse-x: 115vw;
   }
+}
+
+/* Ein Fisch, der an Ort bleibt: kein Durchziehen, nur wippen, schauen und
+   leuchten. `--dauer` steuert wie bei den anderen das Wippen. */
+.fisch-still {
+  display: block;
+  position: absolute;
+}
+
+.fisch-still img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 /* Laternenfische ziehen waagrecht durchs Bild und wippen dabei leicht. */

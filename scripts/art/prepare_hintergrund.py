@@ -216,6 +216,33 @@ def icons() -> None:
         print(f"  {name}: {groesse}px")
 
 
+def deko() -> None:
+    """Ein Stück Bewuchs aus dem Bild — Pilze und Seegras — als freigestelltes
+    Deko-Element. Es wächst später unten über den Rand einer Textblase.
+
+    Freistellen von Hand wäre bei dem Gewusel undankbar; stattdessen werden
+    die Ränder weich ausgeblendet. Auf dem dunklen Grund der Seite verschwindet
+    der Übergang, weil die Vorlage dort ohnehin fast schwarz ist.
+    """
+    im = Image.open(HINTERGRUND).convert("RGB").crop((300, 2270, 720, 2650))
+    breite, hoehe = im.size
+
+    maske = Image.new("L", (breite, hoehe), 255)
+    punkte = maske.load()
+    rand_x, rand_o = breite * 0.22, hoehe * 0.42
+    for x in range(breite):
+        fx = min(1.0, x / rand_x, (breite - 1 - x) / rand_x)
+        for y in range(hoehe):
+            fy = min(1.0, y / rand_o)
+            punkte[x, y] = int(255 * min(fx, fy) ** 1.4)
+
+    fertig = im.convert("RGBA")
+    fertig.putalpha(maske)
+    ziel = WURZEL / "public/art/sprites/deko_bewuchs.webp"
+    fertig.save(ziel, "WEBP", quality=82, method=6)
+    print(f"  {ziel.name}: {breite}x{hoehe}, {ziel.stat().st_size / 1024:.0f} KB")
+
+
 def favicon() -> None:
     """Der Molch allein, eng beschnitten. Ein Favicon ist 16 bis 32 px gross —
     da wäre die ganze Blasenszene nur noch Matsch, ein einzelnes Motiv liest
@@ -238,5 +265,6 @@ if __name__ == "__main__":
     hintergrund()
     rahmen()
     sprites()
+    deko()
     icons()
     favicon()

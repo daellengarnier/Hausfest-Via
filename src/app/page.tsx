@@ -1,4 +1,4 @@
-import Blubber from "@/components/blubber";
+import Blubber, { FischStill } from "@/components/blubber";
 import SiteNav from "@/components/site-nav";
 import {
   Bubble,
@@ -21,6 +21,11 @@ export default function Home() {
   return (
     <div className="relative min-h-screen">
       <div aria-hidden="true" className="fest-canvas" />
+      {/* Der Molch schaut sich um — seine Pupille liegt als eigene kleine
+          Scheibe über dem gemalten Auge im Hintergrundbild. */}
+      <span aria-hidden="true" className="molch-auge">
+        <span className="molch-pupille" />
+      </span>
       <Blubber />
       <SiteNav />
 
@@ -29,7 +34,6 @@ export default function Home() {
       <header className="relative px-6 pb-12 pt-12 text-center sm:pb-16 sm:pt-16">
         <div className="relative mx-auto max-w-2xl">
           <TitelText />
-          <TitelLinsen />
 
           {/* Die zwei Jubiläen schweben als Blasen um den Molch, statt in der
               Datumsbox zu sitzen — dort war der Kopf sonst überladen. */}
@@ -45,7 +49,8 @@ export default function Home() {
               >
                 <Bubble
                   sprite={j.blase}
-                  className="h-[6.2rem] w-[6.2rem] sm:h-32 sm:w-32"
+                  className="jahresblase h-[6.2rem] w-[6.2rem] sm:h-32 sm:w-32"
+                  style={{ "--takt": i === 0 ? "9s" : "12s" } as React.CSSProperties}
                 >
                   <span className="flex flex-col items-center leading-none">
                     <span className="font-display text-2xl font-extrabold text-foam sm:text-4xl">
@@ -62,7 +67,7 @@ export default function Home() {
 
           {/* Wann, wo und warum in einem Block — gläsern, damit das Bild
               durchscheint und die Angaben trotzdem zusammenbleiben. */}
-          <div className="blasenfeld blasenfeld-rund tief mt-[26rem] inline-flex flex-col items-center sm:mt-[24rem]">
+          <div className="blasenfeld blasenfeld-rund tief mt-[19rem] inline-flex flex-col items-center sm:mt-[18rem]">
             <p className="font-display text-xl font-bold text-foam sm:text-2xl">
               {FEST.datum}
             </p>
@@ -196,54 +201,6 @@ function TitelText() {
   );
 }
 
-/** Blasen, die über den Titel ziehen und den Teil dahinter spiegelverkehrt
- *  zeigen — wie ein Wassertropfen, der das Bild kippt.
- *
- *  Im runden Ausschnitt liegt eine zweite, gespiegelte Kopie des Titels,
- *  genau über der echten ausgerichtet. Ein Weichzeichner könnte das nicht:
- *  `backdrop-filter` verwäscht nur, spiegeln kann es nicht.
- *
- *  Sie bleiben nicht stehen, sondern ziehen von links nach rechts durch und
- *  fangen versetzt wieder an — es kommt also immer wieder eine neue. */
-const LINSEN = [
-  { d: 98, ly: 18, dauer: 24, verzoegerung: -3, haut: "blase_01" },
-  { d: 70, ly: 84, dauer: 17, verzoegerung: -11, haut: "blase_klein_03" },
-];
-
-function TitelLinsen() {
-  return (
-    <div className="linsen" aria-hidden="true">
-      {LINSEN.map((l, i) => (
-        <span
-          key={i}
-          className="linse-huelle"
-          style={
-            {
-              "--lx": "0px",
-              "--ly": `${l.ly}px`,
-              "--d": `${l.d}px`,
-              "--dauer": `${l.dauer}s`,
-              "--verzoegerung": `${l.verzoegerung}s`,
-            } as React.CSSProperties
-          }
-        >
-          <span className="linse">
-            <span className="linse-inhalt">
-              <TitelText />
-            </span>
-          </span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="linse-haut"
-            src={`/art/sprites/${l.haut}.webp`}
-            alt=""
-          />
-        </span>
-      ))}
-    </div>
-  );
-}
-
 /** Abschnitt mit gezeichneter Trennlinie und Titel. */
 function Abschnitt({
   id,
@@ -282,33 +239,28 @@ function Abschnitt({
   );
 }
 
-/** Ein paar Bildelemente, die unten rechts über den Rand der Textblase
- *  hinausragen. Dadurch wirkt die Blase wie eine Ebene weiter hinten,
- *  in die das Wasser drumherum hineinwächst. Rein dekorativ, nimmt keine
- *  Klicks an. */
+/** Bewuchs und ein Fisch, die unten rechts über den Rand der Textblase
+ *  hinausragen. Dadurch wirkt die Blase wie eine Ebene weiter hinten, in die
+ *  das Wasser drumherum hineinwächst.
+ *
+ *  Der Bewuchs stammt aus dem Hintergrundbild selbst — Pilze und Seegras,
+ *  mit weich ausgeblendeten Rändern ausgeschnitten. Der Fisch ist derselbe
+ *  wie die durchziehenden, er bleibt hier nur an Ort und schaut sich um. */
 function BoxDeko() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute bottom-2 right-0 z-10 w-44 sm:w-56"
+      className="pointer-events-none absolute -bottom-4 right-0 z-10 w-52 sm:w-64"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/art/sprites/qualle_02.webp"
+        src="/art/sprites/deko_bewuchs.webp"
         alt=""
-        className="absolute -bottom-6 right-6 w-16 opacity-90 sm:w-20"
+        className="absolute -bottom-8 right-0 w-52 sm:w-64"
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/art/sprites/blase_klein_03.webp"
-        alt=""
-        className="absolute -bottom-2 right-24 w-12 opacity-80 sm:w-14"
-      />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/art/sprites/anglerfisch_04.webp"
-        alt=""
-        className="absolute -bottom-10 -right-2 w-24 sm:w-28"
+      <FischStill
+        gespiegelt
+        className="absolute -bottom-2 right-4 w-24 sm:w-28"
       />
     </div>
   );

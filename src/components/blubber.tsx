@@ -30,166 +30,242 @@ type Treiber = {
   /** Position im Dokument: von links in %, von oben in % */
   links: number;
   oben: number;
-  /** Dauer einer Hin- und Herbewegung in s */
+  /** Dauer eines Aufstiegs in s */
   dauer: number;
   verzoegerung: number;
   deckkraft: number;
+  /** Seitlicher Versatz auf dem Weg nach oben, in vw. Negativ = nach links.
+   *  Damit steigt jede Blase in ihrem eigenen Winkel, statt dass alle
+   *  senkrecht hochziehen. */
+  drift: number;
+  /** Wie weit sie steigt, in vh. */
+  hoehe: number;
 };
 
-/** Blasen hinter dem Inhalt, über die ganze Seitenhöhe verteilt. */
+/** Blasen hinter dem Inhalt, über die ganze Seitenhöhe verteilt.
+ *  Jede steigt in ihrem eigenen Winkel auf — mal schräg nach links, mal
+ *  nach rechts, aber immer nach oben. Die Werte sind einmal gewürfelt und
+ *  dann festgeschrieben, damit Server und Browser dasselbe rendern. */
 const BLASEN: Treiber[] = [
   {
+    datei: "blase_klein_01",
+    groesse: 49,
+    links: 70,
+    oben: 1.9,
+    dauer: 27,
+    verzoegerung: -8,
+    deckkraft: 0.4,
+    drift: 5.4,
+    hoehe: -82,
+  },
+  {
     datei: "blase_01",
-    groesse: 128,
-    links: 4,
-    oben: 3,
-    dauer: 17,
-    verzoegerung: -2,
-    deckkraft: 0.5,
-  },
-  {
-    datei: "blase_klein_02",
-    groesse: 52,
-    links: 78,
-    oben: 7,
-    dauer: 11,
-    verzoegerung: -6,
-    deckkraft: 0.45,
-  },
-  {
-    datei: "blase_03",
-    groesse: 92,
-    links: 66,
-    oben: 14,
-    dauer: 21,
-    verzoegerung: -13,
-    deckkraft: 0.4,
-  },
-  {
-    datei: "blase_klein_05",
-    groesse: 44,
-    links: 12,
-    oben: 19,
-    dauer: 9,
-    verzoegerung: -4,
-    deckkraft: 0.5,
-  },
-  {
-    datei: "blase_06",
-    groesse: 104,
-    links: 84,
-    oben: 25,
-    dauer: 19,
-    verzoegerung: -11,
-    deckkraft: 0.4,
+    groesse: 105,
+    links: 52,
+    oben: 6.3,
+    dauer: 32,
+    verzoegerung: -36,
+    deckkraft: 0.44,
+    drift: -12.5,
+    hoehe: -78,
   },
   {
     datei: "blase_klein_07",
-    groesse: 40,
-    links: 30,
-    oben: 31,
-    dauer: 13,
+    groesse: 52,
+    links: 17,
+    oben: 12.8,
+    dauer: 28,
+    verzoegerung: -35,
+    deckkraft: 0.34,
+    drift: -14.0,
+    hoehe: -85,
+  },
+  {
+    datei: "blase_03",
+    groesse: 74,
+    links: 40,
+    oben: 15.7,
+    dauer: 33,
+    verzoegerung: -40,
+    deckkraft: 0.48,
+    drift: 10.0,
+    hoehe: -62,
+  },
+  {
+    datei: "blase_klein_05",
+    groesse: 51,
+    links: 80,
+    oben: 22.5,
+    dauer: 44,
+    verzoegerung: -35,
+    deckkraft: 0.43,
+    drift: 14.8,
+    hoehe: -67,
+  },
+  {
+    datei: "blase_klein_05",
+    groesse: 41,
+    links: 13,
+    oben: 26.4,
+    dauer: 34,
     verzoegerung: -8,
-    deckkraft: 0.45,
+    deckkraft: 0.43,
+    drift: 8.5,
+    hoehe: -46,
   },
   {
     datei: "blase_02",
-    groesse: 116,
-    links: 6,
-    oben: 37,
-    dauer: 23,
-    verzoegerung: -17,
-    deckkraft: 0.45,
+    groesse: 78,
+    links: 13,
+    oben: 30.3,
+    dauer: 56,
+    verzoegerung: -29,
+    deckkraft: 0.47,
+    drift: -8.1,
+    hoehe: -68,
+  },
+  {
+    datei: "blase_klein_07",
+    groesse: 51,
+    links: 81,
+    oben: 36.3,
+    dauer: 31,
+    verzoegerung: -7,
+    deckkraft: 0.47,
+    drift: 8.1,
+    hoehe: -89,
   },
   {
     datei: "blase_klein_01",
-    groesse: 56,
-    links: 88,
-    oben: 43,
-    dauer: 12,
-    verzoegerung: -3,
-    deckkraft: 0.5,
-  },
-  {
-    datei: "blase_04",
-    groesse: 78,
-    links: 20,
-    oben: 49,
-    dauer: 16,
-    verzoegerung: -9,
-    deckkraft: 0.4,
-  },
-  {
-    datei: "blase_klein_03",
-    groesse: 48,
-    links: 72,
-    oben: 55,
-    dauer: 10,
-    verzoegerung: -5,
-    deckkraft: 0.45,
-  },
-  {
-    datei: "blase_01",
-    groesse: 96,
-    links: 82,
-    oben: 62,
-    dauer: 20,
-    verzoegerung: -14,
-    deckkraft: 0.4,
-  },
-  {
-    datei: "blase_klein_02",
-    groesse: 46,
-    links: 10,
-    oben: 68,
-    dauer: 11,
+    groesse: 50,
+    links: 47,
+    oben: 39.9,
+    dauer: 45,
     verzoegerung: -7,
-    deckkraft: 0.5,
+    deckkraft: 0.4,
+    drift: 9.3,
+    hoehe: -55,
   },
   {
     datei: "blase_03",
-    groesse: 84,
-    links: 34,
-    oben: 74,
-    dauer: 18,
-    verzoegerung: -12,
-    deckkraft: 0.4,
+    groesse: 128,
+    links: 33,
+    oben: 46.4,
+    dauer: 45,
+    verzoegerung: -33,
+    deckkraft: 0.42,
+    drift: -8.9,
+    hoehe: -86,
   },
   {
-    datei: "blase_klein_05",
-    groesse: 42,
-    links: 90,
-    oben: 80,
-    dauer: 9,
-    verzoegerung: -2,
-    deckkraft: 0.45,
+    datei: "blase_04",
+    groesse: 87,
+    links: 68,
+    oben: 50.6,
+    dauer: 47,
+    verzoegerung: -38,
+    deckkraft: 0.5,
+    drift: -12.5,
+    hoehe: -75,
   },
   {
-    datei: "blase_06",
-    groesse: 110,
-    links: 8,
-    oben: 86,
-    dauer: 22,
-    verzoegerung: -16,
-    deckkraft: 0.4,
-  },
-  {
-    datei: "blase_klein_07",
-    groesse: 50,
-    links: 60,
-    oben: 92,
-    dauer: 12,
+    datei: "blase_01",
+    groesse: 131,
+    links: 28,
+    oben: 54.0,
+    dauer: 46,
     verzoegerung: -6,
-    deckkraft: 0.45,
+    deckkraft: 0.42,
+    drift: -5.3,
+    hoehe: -84,
+  },
+  {
+    datei: "blase_01",
+    groesse: 99,
+    links: 44,
+    oben: 58.6,
+    dauer: 55,
+    verzoegerung: -46,
+    deckkraft: 0.46,
+    drift: -8.2,
+    hoehe: -61,
   },
   {
     datei: "blase_02",
-    groesse: 88,
-    links: 26,
-    oben: 96,
-    dauer: 17,
-    verzoegerung: -10,
-    deckkraft: 0.4,
+    groesse: 102,
+    links: 17,
+    oben: 64.0,
+    dauer: 38,
+    verzoegerung: -3,
+    deckkraft: 0.38,
+    drift: -12.7,
+    hoehe: -91,
+  },
+  {
+    datei: "blase_04",
+    groesse: 107,
+    links: 70,
+    oben: 67.8,
+    dauer: 48,
+    verzoegerung: -37,
+    deckkraft: 0.52,
+    drift: -15.3,
+    hoehe: -88,
+  },
+  {
+    datei: "blase_klein_02",
+    groesse: 42,
+    links: 62,
+    oben: 73.3,
+    dauer: 56,
+    verzoegerung: -24,
+    deckkraft: 0.38,
+    drift: 7.8,
+    hoehe: -82,
+  },
+  {
+    datei: "blase_01",
+    groesse: 129,
+    links: 70,
+    oben: 78.1,
+    dauer: 45,
+    verzoegerung: -30,
+    deckkraft: 0.34,
+    drift: 2.1,
+    hoehe: -90,
+  },
+  {
+    datei: "blase_klein_03",
+    groesse: 58,
+    links: 8,
+    oben: 84.2,
+    dauer: 36,
+    verzoegerung: -42,
+    deckkraft: 0.43,
+    drift: -9.0,
+    hoehe: -47,
+  },
+  {
+    datei: "blase_klein_05",
+    groesse: 56,
+    links: 29,
+    oben: 87.0,
+    dauer: 45,
+    verzoegerung: -27,
+    deckkraft: 0.47,
+    drift: 16.0,
+    hoehe: -75,
+  },
+  {
+    datei: "blase_klein_03",
+    groesse: 57,
+    links: 23,
+    oben: 93.8,
+    dauer: 46,
+    verzoegerung: -46,
+    deckkraft: 0.35,
+    drift: -8.2,
+    hoehe: -53,
   },
 ];
 
@@ -198,31 +274,37 @@ const BLASEN: Treiber[] = [
  *  kostet Rechenzeit, und zu viele nähmen die Ruhe raus. */
 const BLASEN_VORN: Treiber[] = [
   {
-    datei: "blase_02",
-    groesse: 118,
-    links: 62,
-    oben: 4,
-    dauer: 15,
-    verzoegerung: -3,
-    deckkraft: 0.55,
+    datei: "blase_03",
+    groesse: 99,
+    links: 40,
+    oben: 22,
+    dauer: 39,
+    verzoegerung: -29,
+    deckkraft: 0.52,
+    drift: 10.8,
+    hoehe: -70,
   },
   {
-    datei: "blase_klein_03",
-    groesse: 58,
-    links: 16,
-    oben: 41,
-    dauer: 11,
-    verzoegerung: -7,
-    deckkraft: 0.5,
+    datei: "blase_06",
+    groesse: 107,
+    links: 53,
+    oben: 52,
+    dauer: 40,
+    verzoegerung: -15,
+    deckkraft: 0.43,
+    drift: 3.2,
+    hoehe: -52,
   },
   {
-    datei: "blase_04",
-    groesse: 86,
-    links: 76,
-    oben: 78,
-    dauer: 18,
-    verzoegerung: -12,
-    deckkraft: 0.45,
+    datei: "blase_01",
+    groesse: 106,
+    links: 75,
+    oben: 80,
+    dauer: 42,
+    verzoegerung: -2,
+    deckkraft: 0.53,
+    drift: -11.3,
+    hoehe: -63,
   },
 ];
 
@@ -235,7 +317,9 @@ const QUALLEN: Treiber[] = [
     oben: 11,
     dauer: 26,
     verzoegerung: -6,
-    deckkraft: 0.6,
+    deckkraft: 0.85,
+    drift: 4,
+    hoehe: -30,
   },
   {
     datei: "qualle_02",
@@ -244,7 +328,9 @@ const QUALLEN: Treiber[] = [
     oben: 34,
     dauer: 31,
     verzoegerung: -19,
-    deckkraft: 0.5,
+    deckkraft: 0.78,
+    drift: -6,
+    hoehe: -26,
   },
   {
     datei: "qualle_03",
@@ -253,7 +339,9 @@ const QUALLEN: Treiber[] = [
     oben: 58,
     dauer: 35,
     verzoegerung: -27,
-    deckkraft: 0.45,
+    deckkraft: 0.72,
+    drift: 5,
+    hoehe: -34,
   },
   {
     datei: "qualle_01",
@@ -262,7 +350,9 @@ const QUALLEN: Treiber[] = [
     oben: 88,
     dauer: 29,
     verzoegerung: -11,
-    deckkraft: 0.5,
+    deckkraft: 0.8,
+    drift: -4,
+    hoehe: -28,
   },
 ];
 
@@ -294,7 +384,7 @@ const FISCHE: Fisch[] = [
   {
     datei: "anglerfisch_02",
     groesse: 150,
-    oben: 8,
+    oben: 24,
     dauer: 44,
     verzoegerung: -18,
     laterne: { x: 0.87, y: 0.17, weite: 52, takt: 2.4 },
@@ -339,9 +429,13 @@ function stil(t: Treiber): React.CSSProperties {
     left: `${t.links}%`,
     top: `${t.oben}%`,
     width: t.groesse,
-    opacity: t.deckkraft,
     "--dauer": `${t.dauer}s`,
     "--verzoegerung": `${t.verzoegerung}s`,
+    "--drift": `${t.drift}vw`,
+    "--hoehe": `${t.hoehe}vh`,
+    // Die Deckkraft steckt in der Animation: Am Anfang und Ende der Bahn
+    // blendet die Blase weg, sonst würde sie am Schluss sichtbar springen.
+    "--deck": t.deckkraft,
   } as React.CSSProperties;
 }
 
@@ -400,6 +494,56 @@ export default function Blubber() {
  *  `animation-duration` mitten im Lauf getauscht, springt der Fisch an eine
  *  andere Stelle. `updatePlaybackRate` ändert nur das Tempo, die Position
  *  bleibt — es sieht aus wie ein echter Schreck. */
+/** Der Fisch selbst: Körper, wippende Bewegung, wanderndes Auge und die
+ *  pulsende Laterne. Geteilt zwischen dem durchziehenden und dem stehenden
+ *  Fisch, damit beide gleich lebendig sind. */
+function FischKoerper({ f }: { f: Fisch }) {
+  return (
+    <span className="fisch-wippe">
+      {/* Die Spiegelung sitzt am Bild, nicht am Wipp-Element: dessen transform
+          gehört der Animation, sie würde sie überschreiben. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`/art/sprites/${f.datei}.webp`}
+        alt=""
+        loading="lazy"
+        style={f.gespiegelt ? { transform: "scaleX(-1)" } : undefined}
+      />
+      {/* Über die gemalte Iris legt sich eine eigene, in der eine Pupille hin
+          und her wandert — der Fisch schaut sich um. Beim gespiegelten Fisch
+          sitzt das Auge spiegelbildlich. */}
+      <span
+        className="fisch-auge"
+        style={
+          {
+            left: `${(f.gespiegelt ? 1 - f.auge.x : f.auge.x) * 100}%`,
+            top: `${f.auge.y * 100}%`,
+            width: `${f.auge.iris}%`,
+            "--takt": `${f.auge.takt}s`,
+          } as React.CSSProperties
+        }
+      >
+        <span className="fisch-pupille" />
+      </span>
+
+      <span
+        className={`laterne ${f.disco ? "laterne-disco" : ""}`}
+        style={
+          {
+            left: `${(f.gespiegelt ? 1 - f.laterne.x : f.laterne.x) * 100}%`,
+            top: `${f.laterne.y * 100}%`,
+            width: `${f.laterne.weite}%`,
+            "--takt": `${f.laterne.takt}s`,
+          } as React.CSSProperties
+        }
+      />
+    </span>
+  );
+}
+
+/** Ein durchziehender Fisch. Beim Antippen beschleunigt er kurz und flitzt
+ *  davon — über die Animations-API statt über eine kürzere CSS-Dauer, sonst
+ *  würde er an eine andere Stelle springen. */
 function FischBild({ f }: { f: Fisch }) {
   const flitzen = useCallback((e: React.PointerEvent<HTMLElement>) => {
     const el = e.currentTarget;
@@ -424,47 +568,52 @@ function FischBild({ f }: { f: Fisch }) {
         } as React.CSSProperties
       }
     >
-      <span className="fisch-wippe">
-        {/* Die Spiegelung sitzt am Bild, nicht am Wipp-Element: dessen
-                  transform gehört der Animation, sie würde sie überschreiben. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`/art/sprites/${f.datei}.webp`}
-          alt=""
-          loading="lazy"
-          style={f.gespiegelt ? { transform: "scaleX(-1)" } : undefined}
-        />
-        {/* Das Auge: Über die gemalte Iris legt sich eine eigene, in
-                  der eine Pupille hin und her wandert — der Fisch schaut sich
-                  um. Beim gespiegelten Fisch sitzt das Auge spiegelbildlich. */}
-        <span
-          className="fisch-auge"
-          style={
-            {
-              left: `${(f.gespiegelt ? 1 - f.auge.x : f.auge.x) * 100}%`,
-              top: `${f.auge.y * 100}%`,
-              width: `${f.auge.iris}%`,
-              "--takt": `${f.auge.takt}s`,
-            } as React.CSSProperties
-          }
-        >
-          <span className="fisch-pupille" />
-        </span>
-
-        {/* Das Leuchten der Laterne. Beim gespiegelten Fisch wandert
-                  auch der Leuchtkörper auf die andere Seite. */}
-        <span
-          className={`laterne ${f.disco ? "laterne-disco" : ""}`}
-          style={
-            {
-              left: `${(f.gespiegelt ? 1 - f.laterne.x : f.laterne.x) * 100}%`,
-              top: `${f.laterne.y * 100}%`,
-              width: `${f.laterne.weite}%`,
-              "--takt": `${f.laterne.takt}s`,
-            } as React.CSSProperties
-          }
-        />
-      </span>
+      <FischKoerper f={f} />
     </span>
   );
 }
+
+/** Zwei Fische, die an Ort bleiben und dort abhängen: Sie wippen, schauen
+ *  sich um und ihre Laterne pulst — sie ziehen nur nicht durchs Bild. Für die
+ *  Deko an den Textblasen. */
+const STILL: Fisch[] = [
+  {
+    datei: "anglerfisch_02",
+    groesse: 120,
+    oben: 0,
+    dauer: 26,
+    verzoegerung: 0,
+    laterne: { x: 0.87, y: 0.17, weite: 52, takt: 2.6 },
+    auge: { x: 0.637, y: 0.436, iris: 9.6, takt: 5.9 },
+  },
+  {
+    datei: "anglerfisch_04",
+    groesse: 120,
+    oben: 0,
+    dauer: 31,
+    verzoegerung: 0,
+    laterne: { x: 0.83, y: 0.155, weite: 48, takt: 3.6 },
+    auge: { x: 0.63, y: 0.417, iris: 11.3, takt: 7.6 },
+  },
+];
+
+export function FischStill({
+  art = 0,
+  gespiegelt = false,
+  className = "",
+}: {
+  art?: 0 | 1;
+  gespiegelt?: boolean;
+  className?: string;
+}) {
+  const f = STILL[art];
+  return (
+    <span
+      className={`fisch-still ${className}`}
+      style={{ "--dauer": `${f.dauer}s` } as React.CSSProperties}
+    >
+      <FischKoerper f={{ ...f, gespiegelt }} />
+    </span>
+  );
+}
+
