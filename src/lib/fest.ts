@@ -56,12 +56,12 @@ export const ACTS: Act[] = [
     ],
   },
   {
-    name: "Reverend Deadeye & Nicotin Sue",
+    name: "Reverend Deadeye & Nicotine Sue",
     sparte: "Band",
     beschrieb: [
       "Reverend Deadeye ist der Sohn eines Reverends, der wiederum der Sohn eines Reverends war. Seine Jugend verbrachte er mit Schlangen in den Händen und mit Auftritten bei Zelt-Erweckungen, an der Seite seiner Pfingstler-Familie in einem Navajo-Reservat in Arizona. Dieses geistliche Erbe klingt in seinen Auftritten nach.",
       "Erwarte aber keinen Gottesdienst am Sonntagmorgen — eher eine Feuertaufe am Samstagabend, eine heilige Erweckung.",
-      "Neu mit dem Schlagzeug der Schweizer Legende Nicotin Sue. Zu zweit entfesseln die beiden wuchtige Fassungen von Lo-Fi-Blues-Hymnen mit Gospel-Einschlag, die das Publikum in eine fast mystische Erweckung treiben.",
+      "Neu mit dem Schlagzeug der Schweizer Legende Nicotine Sue. Zu zweit entfesseln die beiden wuchtige Fassungen von Lo-Fi-Blues-Hymnen mit Gospel-Einschlag, die das Publikum in eine fast mystische Erweckung treiben.",
     ],
   },
   {
