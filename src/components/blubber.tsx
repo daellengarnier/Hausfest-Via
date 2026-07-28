@@ -1,66 +1,86 @@
 /**
- * Blasen und Laternenfische, die durchs Bild treiben: Die Blasen steigen
- * hinter dem Inhalt auf, die Fische ziehen davor durch.
+ * Blasen, Quallen und Laternenfische, die im Wasser der Seite treiben.
  *
- * Die Werte sind bewusst von Hand gesetzt statt zufällig: So sieht die Seite
- * bei jedem Aufruf gleich aus, Server und Browser rendern dasselbe, und die
- * Bahnen lassen sich gezielt entzerren, damit nicht alles im Gleichschritt
- * aufsteigt.
+ * Wichtig: Sie gehören zur SEITE, nicht zum Bildschirm. Ihre Ebenen sind
+ * absolut über das ganze Dokument gespannt, nicht am Viewport festgemacht —
+ * beim Scrollen wandern sie also mit nach oben, so wie ein Gegenstand, der
+ * in einer bestimmten Tiefe hängt. Zusätzlich bewegt sich jedes Objekt noch
+ * ein Stück für sich: Blasen steigen und pendeln, Quallen wiegen sich,
+ * Fische ziehen waagrecht durch.
  *
- * Negative Verzögerungen starten die Animation mitten im Lauf — sonst wäre
- * beim Öffnen der Seite erst einmal nichts zu sehen.
+ * Die Werte sind von Hand gesetzt statt zufällig: So sieht die Seite bei
+ * jedem Aufruf gleich aus, Server und Browser rendern dasselbe, und die
+ * Objekte lassen sich gezielt über die ganze Länge verteilen.
+ *
+ * Negative Verzögerungen starten die Bewegung mitten im Lauf — sonst stünde
+ * beim Öffnen alles still am Anfangspunkt.
  */
 
-type Blase = {
+type Treiber = {
   datei: string;
   /** Breite in px */
   groesse: number;
-  /** Abstand von links in % */
+  /** Position im Dokument: von links in %, von oben in % */
   links: number;
-  /** Dauer eines Aufstiegs in s */
+  oben: number;
+  /** Dauer einer Hin- und Herbewegung in s */
   dauer: number;
   verzoegerung: number;
-  /** seitlicher Ausschlag in px */
-  drift: number;
   deckkraft: number;
 };
 
-const BLASEN: Blase[] = [
-  { datei: "blase_01", groesse: 132, links: 6, dauer: 52, verzoegerung: -8, drift: 26, deckkraft: 0.5 },
-  { datei: "blase_klein_02", groesse: 54, links: 22, dauer: 34, verzoegerung: -21, drift: 16, deckkraft: 0.45 },
-  { datei: "blase_03", groesse: 96, links: 38, dauer: 61, verzoegerung: -37, drift: 32, deckkraft: 0.4 },
-  { datei: "blase_klein_05", groesse: 46, links: 52, dauer: 29, verzoegerung: -12, drift: 14, deckkraft: 0.5 },
-  { datei: "blase_02", groesse: 118, links: 66, dauer: 47, verzoegerung: -29, drift: 24, deckkraft: 0.45 },
-  { datei: "blase_klein_01", groesse: 58, links: 80, dauer: 38, verzoegerung: -4, drift: 18, deckkraft: 0.5 },
-  { datei: "blase_06", groesse: 104, links: 88, dauer: 56, verzoegerung: -44, drift: 28, deckkraft: 0.4 },
-  { datei: "blase_klein_07", groesse: 42, links: 14, dauer: 26, verzoegerung: -17, drift: 12, deckkraft: 0.45 },
-  { datei: "blase_klein_03", groesse: 50, links: 72, dauer: 33, verzoegerung: -25, drift: 15, deckkraft: 0.4 },
-  { datei: "blase_04", groesse: 78, links: 46, dauer: 43, verzoegerung: -33, drift: 20, deckkraft: 0.35 },
+/** Blasen hinter dem Inhalt, über die ganze Seitenhöhe verteilt. */
+const BLASEN: Treiber[] = [
+  { datei: "blase_01", groesse: 128, links: 4, oben: 3, dauer: 17, verzoegerung: -2, deckkraft: 0.5 },
+  { datei: "blase_klein_02", groesse: 52, links: 78, oben: 7, dauer: 11, verzoegerung: -6, deckkraft: 0.45 },
+  { datei: "blase_03", groesse: 92, links: 66, oben: 14, dauer: 21, verzoegerung: -13, deckkraft: 0.4 },
+  { datei: "blase_klein_05", groesse: 44, links: 12, oben: 19, dauer: 9, verzoegerung: -4, deckkraft: 0.5 },
+  { datei: "blase_06", groesse: 104, links: 84, oben: 25, dauer: 19, verzoegerung: -11, deckkraft: 0.4 },
+  { datei: "blase_klein_07", groesse: 40, links: 30, oben: 31, dauer: 13, verzoegerung: -8, deckkraft: 0.45 },
+  { datei: "blase_02", groesse: 116, links: 6, oben: 37, dauer: 23, verzoegerung: -17, deckkraft: 0.45 },
+  { datei: "blase_klein_01", groesse: 56, links: 88, oben: 43, dauer: 12, verzoegerung: -3, deckkraft: 0.5 },
+  { datei: "blase_04", groesse: 78, links: 20, oben: 49, dauer: 16, verzoegerung: -9, deckkraft: 0.4 },
+  { datei: "blase_klein_03", groesse: 48, links: 72, oben: 55, dauer: 10, verzoegerung: -5, deckkraft: 0.45 },
+  { datei: "blase_01", groesse: 96, links: 82, oben: 62, dauer: 20, verzoegerung: -14, deckkraft: 0.4 },
+  { datei: "blase_klein_02", groesse: 46, links: 10, oben: 68, dauer: 11, verzoegerung: -7, deckkraft: 0.5 },
+  { datei: "blase_03", groesse: 84, links: 34, oben: 74, dauer: 18, verzoegerung: -12, deckkraft: 0.4 },
+  { datei: "blase_klein_05", groesse: 42, links: 90, oben: 80, dauer: 9, verzoegerung: -2, deckkraft: 0.45 },
+  { datei: "blase_06", groesse: 110, links: 8, oben: 86, dauer: 22, verzoegerung: -16, deckkraft: 0.4 },
+  { datei: "blase_klein_07", groesse: 50, links: 60, oben: 92, dauer: 12, verzoegerung: -6, deckkraft: 0.45 },
+  { datei: "blase_02", groesse: 88, links: 26, oben: 96, dauer: 17, verzoegerung: -10, deckkraft: 0.4 },
 ];
 
-/** Diese drei ziehen vor dem Inhalt vorbei und verziehen dabei den Text
- *  dahinter — man schaut sozusagen durch die Seifenhaut. Bewusst wenige:
- *  Der Effekt kostet Rechenzeit, und zu viele nähmen die Ruhe raus. */
-const BLASEN_VORN: Blase[] = [
-  { datei: "blase_02", groesse: 124, links: 18, dauer: 44, verzoegerung: -14, drift: 22, deckkraft: 0.55 },
-  { datei: "blase_klein_03", groesse: 62, links: 58, dauer: 31, verzoegerung: -23, drift: 15, deckkraft: 0.5 },
-  { datei: "blase_04", groesse: 92, links: 84, dauer: 51, verzoegerung: -40, drift: 26, deckkraft: 0.45 },
+/** Diese ziehen VOR dem Inhalt vorbei und verziehen dabei, was hinter ihnen
+ *  liegt — man schaut durch die Seifenhaut. Bewusst wenige: Der Effekt
+ *  kostet Rechenzeit, und zu viele nähmen die Ruhe raus. */
+const BLASEN_VORN: Treiber[] = [
+  { datei: "blase_02", groesse: 118, links: 62, oben: 4, dauer: 15, verzoegerung: -3, deckkraft: 0.55 },
+  { datei: "blase_klein_03", groesse: 58, links: 16, oben: 41, dauer: 11, verzoegerung: -7, deckkraft: 0.5 },
+  { datei: "blase_04", groesse: 86, links: 76, oben: 78, dauer: 18, verzoegerung: -12, deckkraft: 0.45 },
 ];
 
-/** Die Fische schwimmen voll deckend — nur die Blasen sind durchscheinend,
- *  so wie sich Seifenblasen eben verhalten. */
+/** Quallen wiegen sich ruhiger und weiter als die Blasen. */
+const QUALLEN: Treiber[] = [
+  { datei: "qualle_01", groesse: 104, links: 14, oben: 11, dauer: 26, verzoegerung: -6, deckkraft: 0.6 },
+  { datei: "qualle_02", groesse: 86, links: 74, oben: 34, dauer: 31, verzoegerung: -19, deckkraft: 0.5 },
+  { datei: "qualle_03", groesse: 118, links: 22, oben: 58, dauer: 35, verzoegerung: -27, deckkraft: 0.45 },
+  { datei: "qualle_01", groesse: 92, links: 68, oben: 88, dauer: 29, verzoegerung: -11, deckkraft: 0.5 },
+];
+
+/** Die Fische schwimmen voll deckend — nur Blasen und Quallen sind
+ *  durchscheinend, so wie sich Seifenblasen und Quallen eben verhalten. */
 type Fisch = {
   datei: string;
   groesse: number;
-  /** Abstand von oben in % */
+  /** Position im Dokument, von oben in % */
   oben: number;
   dauer: number;
   verzoegerung: number;
   /** true = schwimmt nach links */
   gespiegelt?: boolean;
-  /** Wo der Leuchtkörper im Bild sitzt (Anteil von Breite und Höhe),
-   *  wie weit das Leuchten reicht (% der Fischbreite) und wie langsam es
-   *  atmet (s). Je Fisch ein anderer Takt, sonst blinken sie im Gleichschritt. */
+  /** Wo der Leuchtkörper im Bild sitzt (Anteil von Breite und Höhe), wie weit
+   *  das Leuchten reicht (% der Fischbreite) und wie schnell es pulst (s).
+   *  Je Fisch ein anderer Takt, sonst blinken sie im Gleichschritt. */
   laterne: { x: number; y: number; weite: number; takt: number };
 };
 
@@ -68,7 +88,7 @@ const FISCHE: Fisch[] = [
   {
     datei: "anglerfisch_02",
     groesse: 150,
-    oben: 26,
+    oben: 8,
     dauer: 68,
     verzoegerung: -18,
     laterne: { x: 0.87, y: 0.17, weite: 52, takt: 2.4 },
@@ -76,74 +96,49 @@ const FISCHE: Fisch[] = [
   {
     datei: "anglerfisch_04",
     groesse: 108,
-    oben: 68,
+    oben: 46,
     dauer: 92,
     verzoegerung: -54,
     gespiegelt: true,
     laterne: { x: 0.83, y: 0.155, weite: 48, takt: 3.3 },
   },
+  {
+    datei: "anglerfisch_02",
+    groesse: 124,
+    oben: 83,
+    dauer: 79,
+    verzoegerung: -31,
+    gespiegelt: true,
+    laterne: { x: 0.87, y: 0.17, weite: 52, takt: 2.9 },
+  },
 ];
 
-/** Quallen ziehen senkrecht durchs Bild — die einen steigen auf, die anderen
- *  sinken. Sie sind gross und ruhig unterwegs, darum bleiben sie hinter dem
- *  Inhalt und leicht durchscheinend. */
-type Qualle = {
-  datei: string;
-  groesse: number;
-  /** Abstand von links in % */
-  links: number;
-  dauer: number;
-  verzoegerung: number;
-  deckkraft: number;
-  richtung: "hoch" | "runter";
-};
-
-const QUALLEN: Qualle[] = [
-  { datei: "qualle_01", groesse: 108, links: 12, dauer: 78, verzoegerung: -22, deckkraft: 0.6, richtung: "hoch" },
-  { datei: "qualle_02", groesse: 88, links: 74, dauer: 96, verzoegerung: -61, deckkraft: 0.5, richtung: "runter" },
-  { datei: "qualle_03", groesse: 122, links: 42, dauer: 118, verzoegerung: -95, deckkraft: 0.45, richtung: "hoch" },
-];
+function stil(t: Treiber): React.CSSProperties {
+  return {
+    left: `${t.links}%`,
+    top: `${t.oben}%`,
+    width: t.groesse,
+    opacity: t.deckkraft,
+    "--dauer": `${t.dauer}s`,
+    "--verzoegerung": `${t.verzoegerung}s`,
+  } as React.CSSProperties;
+}
 
 export default function Blubber() {
   return (
     <>
       <div className="blubber" aria-hidden="true">
-        {QUALLEN.map((q) => (
-          <span
-            key={q.datei}
-            className={`qualle qualle-${q.richtung}`}
-            style={
-              {
-                left: `${q.links}%`,
-                width: q.groesse,
-                opacity: q.deckkraft,
-                "--dauer": `${q.dauer}s`,
-                "--verzoegerung": `${q.verzoegerung}s`,
-              } as React.CSSProperties
-            }
-          >
-            <span className="qualle-pendel">
+        {QUALLEN.map((q, i) => (
+          <span key={`q${i}`} className="treiber qualle" style={stil(q)}>
+            <span className="qualle-wiege">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`/art/sprites/${q.datei}.webp`} alt="" loading="lazy" />
             </span>
           </span>
         ))}
 
-        {BLASEN.map((b) => (
-          <span
-            key={b.datei}
-            className="blase"
-            style={
-              {
-                left: `${b.links}%`,
-                width: b.groesse,
-                opacity: b.deckkraft,
-                "--dauer": `${b.dauer}s`,
-                "--verzoegerung": `${b.verzoegerung}s`,
-                "--drift": `${b.drift}px`,
-              } as React.CSSProperties
-            }
-          >
+        {BLASEN.map((b, i) => (
+          <span key={`b${i}`} className="treiber blase" style={stil(b)}>
             <span className="blase-pendel">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`/art/sprites/${b.datei}.webp`} alt="" loading="lazy" />
@@ -152,25 +147,11 @@ export default function Blubber() {
         ))}
       </div>
 
-      {/* Eigene Ebene vor dem Inhalt: Die Fische ziehen über Text und Karten
-          hinweg, und ein paar Blasen wandern davor durch und verziehen dabei,
-          was hinter ihnen liegt. */}
+      {/* Eigene Ebene vor dem Inhalt: Fische ziehen über Text und Karten
+          hinweg, und ein paar Blasen verziehen, was hinter ihnen liegt. */}
       <div className="blubber-vorn" aria-hidden="true">
-        {BLASEN_VORN.map((b) => (
-          <span
-            key={b.datei}
-            className="blase"
-            style={
-              {
-                left: `${b.links}%`,
-                width: b.groesse,
-                opacity: b.deckkraft,
-                "--dauer": `${b.dauer}s`,
-                "--verzoegerung": `${b.verzoegerung}s`,
-                "--drift": `${b.drift}px`,
-              } as React.CSSProperties
-            }
-          >
+        {BLASEN_VORN.map((b, i) => (
+          <span key={`v${i}`} className="treiber blase" style={stil(b)}>
             <span className="blase-pendel relative block">
               <span className="blase-glas" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -184,9 +165,9 @@ export default function Blubber() {
           </span>
         ))}
 
-        {FISCHE.map((f) => (
+        {FISCHE.map((f, i) => (
           <span
-            key={f.datei}
+            key={`f${i}`}
             className="fisch"
             style={
               {

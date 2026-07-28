@@ -150,13 +150,15 @@ section[id] {
    und das Scrollen flüssig bleibt.
    --------------------------------------------------------------------- */
 
-/* Zwei Ebenen: Die Blasen steigen hinter dem Inhalt auf, die Laternenfische
-   ziehen davor durch — sie schwimmen also über Text und Karten hinweg.
-   Unter der Navigation bleiben sie trotzdem, damit die Wegweiser oben immer
-   lesbar sind. Beide Ebenen nehmen keine Klicks an. */
+/* Zwei Ebenen, beide über das GANZE DOKUMENT gespannt statt am Viewport
+   festgemacht: Die Objekte gehören damit zur Seite und wandern beim Scrollen
+   mit nach oben — wie etwas, das in einer bestimmten Tiefe hängt. Wären die
+   Ebenen `fixed`, klebten sie am Bildschirm und die Tiefenwirkung wäre weg.
+   Die Blasen und Quallen liegen hinter dem Inhalt, Fische und die drei
+   Glasblasen davor. Keine der Ebenen nimmt Klicks an. */
 .blubber,
 .blubber-vorn {
-  position: fixed;
+  position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
@@ -177,87 +179,68 @@ section[id] {
   height: auto;
 }
 
-/* Blasen steigen von unten auf. Die äussere Hülle übernimmt das Steigen,
-   die innere das seitliche Pendeln — zusammen ergibt das eine Bahn, die
-   nicht wie eine Schnur wirkt. */
-.blase {
+/* Jedes treibende Objekt sitzt an seinem Platz im Dokument; die Animation
+   darin bewegt es nur noch ein Stück um diesen Platz herum. */
+.treiber {
   position: absolute;
-  bottom: 0;
-  animation: steigen var(--dauer) linear var(--verzoegerung) infinite;
-  will-change: transform;
+}
+
+.blase {
+  animation: steigen var(--dauer) ease-in-out var(--verzoegerung) infinite
+    alternate;
 }
 
 .blase-pendel {
   display: block;
-  animation: pendeln calc(var(--dauer) / 4) ease-in-out var(--verzoegerung)
+  animation: pendeln calc(var(--dauer) * 0.7) ease-in-out var(--verzoegerung)
     infinite alternate;
 }
 
 @keyframes steigen {
   from {
-    transform: translate3d(0, 20vh, 0);
+    transform: translate3d(0, 46px, 0);
   }
   to {
-    transform: translate3d(0, -125vh, 0);
+    transform: translate3d(0, -46px, 0);
   }
 }
 
 @keyframes pendeln {
   from {
-    transform: translateX(calc(var(--drift) * -1)) rotate(-5deg);
+    transform: translateX(-14px) rotate(-4deg);
   }
   to {
-    transform: translateX(var(--drift)) rotate(5deg);
+    transform: translateX(14px) rotate(4deg);
   }
 }
 
-/* Quallen ziehen senkrecht durch — die einen steigen, die anderen sinken.
-   Langsamer und weiter als die Blasen, damit es ruhig bleibt. */
+/* Quallen wiegen sich ruhiger und weiter als die Blasen. */
 .qualle {
-  position: absolute;
-  left: 0;
-  will-change: transform;
+  animation: qualle-treiben var(--dauer) ease-in-out var(--verzoegerung)
+    infinite alternate;
 }
 
-.qualle-hoch {
-  bottom: 0;
-  animation: qualle-steigen var(--dauer) linear var(--verzoegerung) infinite;
-}
-
-.qualle-runter {
-  top: 0;
-  animation: qualle-sinken var(--dauer) linear var(--verzoegerung) infinite;
-}
-
-.qualle-pendel {
+.qualle-wiege {
   display: block;
-  animation: qualle-wiegen calc(var(--dauer) / 5) ease-in-out infinite alternate;
+  animation: qualle-wiegen calc(var(--dauer) * 0.6) ease-in-out infinite
+    alternate;
 }
 
-@keyframes qualle-steigen {
+@keyframes qualle-treiben {
   from {
-    transform: translate3d(0, 40vh, 0);
+    transform: translate3d(0, 90px, 0);
   }
   to {
-    transform: translate3d(0, -150vh, 0);
-  }
-}
-
-@keyframes qualle-sinken {
-  from {
-    transform: translate3d(0, -60vh, 0);
-  }
-  to {
-    transform: translate3d(0, 140vh, 0);
+    transform: translate3d(0, -90px, 0);
   }
 }
 
 @keyframes qualle-wiegen {
   from {
-    transform: translateX(-18px) rotate(-3deg);
+    transform: translateX(-16px) rotate(-3deg);
   }
   to {
-    transform: translateX(18px) rotate(3deg);
+    transform: translateX(16px) rotate(3deg);
   }
 }
 
@@ -278,7 +261,6 @@ section[id] {
 .fisch {
   position: absolute;
   animation: schwimmen var(--dauer) linear var(--verzoegerung) infinite;
-  will-change: transform;
 }
 
 .fisch-wippe {
@@ -287,9 +269,27 @@ section[id] {
   animation: wippen calc(var(--dauer) / 6) ease-in-out infinite alternate;
 }
 
-/* Die Laterne am Fisch: ein weiches Licht, das langsam heller und wieder
+@keyframes schwimmen {
+  from {
+    transform: translate3d(-40vw, 0, 0);
+  }
+  to {
+    transform: translate3d(140vw, 0, 0);
+  }
+}
+
+@keyframes wippen {
+  from {
+    transform: translateY(-10px) rotate(-2deg);
+  }
+  to {
+    transform: translateY(10px) rotate(2deg);
+  }
+}
+
+/* Die Laterne am Fisch: ein weiches Licht, das schneller heller und wieder
    dunkler wird. `screen` addiert das Licht zum Bild, statt es zuzudecken —
-   der gemalte Leuchtkörper bleibt also sichtbar und wird nur verstärkt. */
+   der gemalte Leuchtkörper bleibt sichtbar und wird nur verstärkt. */
 .laterne {
   position: absolute;
   aspect-ratio: 1;
@@ -318,30 +318,15 @@ section[id] {
   }
 }
 
-@keyframes schwimmen {
-  from {
-    transform: translate3d(-40vw, 0, 0);
-  }
-  to {
-    transform: translate3d(140vw, 0, 0);
-  }
-}
-
-@keyframes wippen {
-  from {
-    transform: translateY(-10px) rotate(-2deg);
-  }
-  to {
-    transform: translateY(10px) rotate(2deg);
-  }
-}
-
 /* Wer Bewegung reduziert haben will, bekommt ein stilles Bild. */
 @media (prefers-reduced-motion: reduce) {
   .blase,
   .blase-pendel,
+  .qualle,
+  .qualle-wiege,
   .fisch,
-  .fisch-wippe {
+  .fisch-wippe,
+  .laterne {
     animation: none;
   }
   .blubber {
