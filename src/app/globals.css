@@ -55,10 +55,24 @@ section[id] {
   background-color: var(--color-night-900);
   /* Zwei Ebenen: oben das Bild einmal ganz, darunter die Höhlenkachel, die
      sich endlos fortsetzt. Zuerst genannt heisst zuoberst gezeichnet. */
-  background-image: url("/art/hintergrund.webp"), url("/art/tiefe.webp");
-  background-size: 100% auto, 100% auto;
-  background-position: center top, center top;
-  background-repeat: no-repeat, repeat-y;
+  /* Der Verlauf in der Mitte blendet die Höhlenkachel in die Oberkante des
+     Bildes über — ohne ihn zöge sich dort eine harte Linie quer. */
+  background-image: url("/art/hintergrund.webp"),
+    linear-gradient(to bottom, #00042a 0%, #041a52 70%, #031048 100%),
+    url("/art/tiefe.webp");
+  background-size: 100% auto, 100% var(--bild-oben, 0px), 100% auto;
+  /* Das Bild beginnt erst unterhalb des Titels: Der Molch ist das
+     Hauptsymbol und soll nicht von der Schrift überdeckt werden. Oberhalb
+     füllt die Höhlenkachel — dunkel, dort steht ohnehin nur die Navigation. */
+  background-position: center var(--bild-oben, 0px), center top, center top;
+  background-repeat: no-repeat, no-repeat, repeat-y;
+  --bild-oben: 15rem;
+}
+
+@media (min-width: 640px) {
+  .fest-canvas {
+    --bild-oben: 13rem;
+  }
 }
 
 /* Bewusst kein seitliches Kacheln auf breiten Fenstern: Links und rechts
@@ -285,22 +299,79 @@ section[id] {
   -webkit-backdrop-filter: blur(3px) saturate(1.5) brightness(1.12);
 }
 
-/* Über dem Titel darf es kräftig zugehen: Dort sollen die Blasen die
-   Schrift deutlich verziehen, nicht nur anhauchen. Zwei Ringe übereinander —
-   der äussere verwäscht weich, der innere staucht Farbe und Kontrast — das
-   kommt einer Lichtbrechung so nah, wie CSS es kann. */
-.blase-glas-stark {
-  backdrop-filter: blur(7px) saturate(2.2) contrast(1.25) brightness(1.15);
-  -webkit-backdrop-filter: blur(7px) saturate(2.2) contrast(1.25)
-    brightness(1.15);
+/* Die Linse: eine Blase, die über den Titel zieht und den Teil dahinter
+   spiegelverkehrt zeigt — so, wie eine Wassertropfen-Linse das Bild kippt.
+   `backdrop-filter` kann das nicht, es verwäscht nur. Darum liegt im runden
+   Ausschnitt eine zweite, gespiegelte Kopie des Titels, exakt über der
+   echten ausgerichtet.
+
+   `--linse-x` ist als Länge angemeldet und darum animierbar. Die Hülle
+   verschiebt sich damit, die Kopie im Inneren rechnet dieselbe Verschiebung
+   wieder heraus — sonst würde der gespiegelte Titel mitwandern, statt an
+   seinem Platz zu bleiben. */
+@property --linse-x {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
 }
 
-.blase-glas-kern {
+.linsen {
   position: absolute;
-  inset: 30%;
+  inset: 0;
+  pointer-events: none;
+  /* Ohne das schieben die durchziehenden Linsen die Seite seitlich auf und
+     es entsteht ein waagrechter Scrollbalken. */
+  overflow: hidden;
+  /* Breite des Textbereichs: max-w-2xl innerhalb von px-6. Die Kopie muss
+     genau gleich breit sein, sonst bricht sie an anderen Stellen um. */
+  --w: min(42rem, calc(100vw - 3rem));
+}
+
+.linse-huelle {
+  position: absolute;
+  left: var(--lx);
+  top: var(--ly);
+  width: var(--d);
+  height: var(--d);
+  transform: translateX(var(--linse-x));
+  animation: linse-zug var(--dauer) linear var(--verzoegerung) infinite;
+}
+
+.linse {
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  backdrop-filter: blur(4px) hue-rotate(18deg) saturate(1.6);
-  -webkit-backdrop-filter: blur(4px) hue-rotate(18deg) saturate(1.6);
+  overflow: hidden;
+}
+
+.linse-inhalt {
+  position: absolute;
+  left: calc(-1 * var(--lx));
+  top: calc(-1 * var(--ly));
+  width: var(--w);
+  transform: scaleX(-1) translateX(calc(var(--linse-x) * -1));
+  transform-origin: calc(var(--lx) + var(--d) / 2)
+    calc(var(--ly) + var(--d) / 2);
+}
+
+/* Die gemalte Seifenhaut liegt über dem Ausschnitt, unbeschnitten, damit die
+   Blase ihre gemalte Form behält. */
+.linse-haut {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.34;
+}
+
+@keyframes linse-zug {
+  from {
+    --linse-x: -45vw;
+  }
+  to {
+    --linse-x: 115vw;
+  }
 }
 
 /* Laternenfische ziehen waagrecht durchs Bild und wippen dabei leicht. */

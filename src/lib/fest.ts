@@ -26,7 +26,7 @@ export const FEST = {
 /** Die zwei Jubiläen — auf der Seite als grosse Zahlen statt als Satz. */
 export const JUBILAEEN = [
   { zahl: "10", was: "Jahre Spinnerei", blase: "blase_klein_01" },
-  { zahl: "33", was: "Jahre Via Felsenau", blase: "blase_klein_07" },
+  { zahl: "33", was: "Jahre Via", blase: "blase_klein_07" },
 ] as const;
 
 export type Sparte = "Band" | "Theater" | "DJ";
@@ -71,11 +71,6 @@ export const ACTS: Act[] = [
     beschrieb: [
       "Das Kollektiv aus Bern und Biel spielt elektro-akustische Live-Sets, die sich im ständigen Fluss befinden – immer im Moment, immer im Wandel. Mit Piano, Synthesizer, Trompete und Gesang entstehen bewegende Melodien und treibende Beats.",
       "Treibend schafft ein Klangbild, das zugleich antreibt und träumen lässt – tanzbar, meditativ, vielschichtig.",
-    ],
-    besetzung: [
-      "Bara Bačova — Trompete, Gesang",
-      "Nicolas Engel — Keys",
-      "Florian Mühlemann — Synths, Drum Machine",
     ],
   },
   { name: "FULU", sparte: "Theater" },

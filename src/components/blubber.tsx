@@ -34,8 +34,6 @@ type Treiber = {
   dauer: number;
   verzoegerung: number;
   deckkraft: number;
-  /** Kräftigere Verzerrung — für die Blasen, die über den Titel ziehen. */
-  stark?: boolean;
 };
 
 /** Blasen hinter dem Inhalt, über die ganze Seitenhöhe verteilt. */
@@ -199,38 +197,6 @@ const BLASEN: Treiber[] = [
  *  liegt — man schaut durch die Seifenhaut. Bewusst wenige: Der Effekt
  *  kostet Rechenzeit, und zu viele nähmen die Ruhe raus. */
 const BLASEN_VORN: Treiber[] = [
-  // Drei direkt über dem Titel — sie ziehen über die Schrift und verziehen
-  // sie dabei kräftig.
-  {
-    datei: "blase_01",
-    groesse: 150,
-    links: 2,
-    oben: 1.1,
-    dauer: 13,
-    verzoegerung: -2,
-    deckkraft: 0.6,
-    stark: true,
-  },
-  {
-    datei: "blase_02",
-    groesse: 128,
-    links: 58,
-    oben: 0.7,
-    dauer: 17,
-    verzoegerung: -9,
-    deckkraft: 0.55,
-    stark: true,
-  },
-  {
-    datei: "blase_03",
-    groesse: 104,
-    links: 32,
-    oben: 2.1,
-    dauer: 11,
-    verzoegerung: -5,
-    deckkraft: 0.5,
-    stark: true,
-  },
   {
     datei: "blase_02",
     groesse: 118,
@@ -408,10 +374,7 @@ export default function Blubber() {
         {BLASEN_VORN.map((b, i) => (
           <span key={`v${i}`} className="treiber blase" style={stil(b)}>
             <span className="blase-pendel relative block">
-              <span
-                className={`blase-glas ${b.stark ? "blase-glas-stark" : ""}`}
-              />
-              {b.stark ? <span className="blase-glas-kern" /> : null}
+              <span className="blase-glas" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`/art/sprites/${b.datei}.webp`}

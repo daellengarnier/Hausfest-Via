@@ -28,12 +28,8 @@ export default function Home() {
           Abdunklung; die Schatten an der Schrift erledigen die Lesbarkeit. */}
       <header className="relative px-6 pb-12 pt-12 text-center sm:pb-16 sm:pt-16">
         <div className="relative mx-auto max-w-2xl">
-          <h1 className="titel-leuchten font-display font-extrabold leading-[0.88] tracking-tight text-foam">
-            <span className="block text-[3.4rem] sm:text-8xl">Hausfest</span>
-            <span className="mt-1 block text-[3.9rem] text-mint sm:mt-2 sm:text-9xl">
-              Via1
-            </span>
-          </h1>
+          <TitelText />
+          <TitelLinsen />
 
           {/* Die zwei Jubiläen schweben als Blasen um den Molch, statt in der
               Datumsbox zu sitzen — dort war der Kopf sonst überladen. */}
@@ -43,28 +39,30 @@ export default function Home() {
                 key={j.zahl}
                 className={
                   i === 0
-                    ? "absolute left-1 top-[8.5rem] flex w-24 flex-col items-center sm:left-8 sm:top-52"
-                    : "absolute right-0 top-[12.2rem] flex w-24 flex-col items-center sm:right-6 sm:top-72"
+                    ? "absolute left-0 top-[10.5rem] flex w-[6.2rem] flex-col items-center sm:left-4 sm:top-56 sm:w-32"
+                    : "absolute right-0 top-[16.5rem] flex w-[6.2rem] flex-col items-center sm:right-4 sm:top-80 sm:w-32"
                 }
               >
                 <Bubble
                   sprite={j.blase}
-                  className="h-[4.6rem] w-[4.6rem] sm:h-24 sm:w-24"
+                  className="h-[6.2rem] w-[6.2rem] sm:h-32 sm:w-32"
                 >
-                  <span className="font-display text-2xl font-extrabold text-foam sm:text-3xl">
-                    {j.zahl}
+                  <span className="flex flex-col items-center leading-none">
+                    <span className="font-display text-2xl font-extrabold text-foam sm:text-4xl">
+                      {j.zahl}
+                    </span>
+                    <span className="mt-0.5 text-[0.62rem] text-foam sm:mt-1 sm:text-xs">
+                      {j.was}
+                    </span>
                   </span>
                 </Bubble>
-                <span className="mt-1 text-center text-[0.7rem] leading-tight text-foam sm:text-sm">
-                  {j.was}
-                </span>
               </li>
             ))}
           </ul>
 
           {/* Wann, wo und warum in einem Block — gläsern, damit das Bild
               durchscheint und die Angaben trotzdem zusammenbleiben. */}
-          <div className="blasenfeld blasenfeld-rund tief mt-56 inline-flex flex-col items-center sm:mt-64">
+          <div className="blasenfeld blasenfeld-rund tief mt-[26rem] inline-flex flex-col items-center sm:mt-[24rem]">
             <p className="font-display text-xl font-bold text-foam sm:text-2xl">
               {FEST.datum}
             </p>
@@ -181,6 +179,67 @@ export default function Home() {
           Bis zum 5. September!
         </p>
       </footer>
+    </div>
+  );
+}
+
+/** Der Titel. Eigene Komponente, weil die Linsen eine identische Kopie
+ *  brauchen — sonst läge die Spiegelung nicht deckungsgleich. */
+function TitelText() {
+  return (
+    <h1 className="titel-leuchten font-display font-extrabold leading-[0.88] tracking-tight text-foam">
+      <span className="block text-[3.4rem] sm:text-8xl">Hausfest</span>
+      <span className="mt-1 block text-[3.9rem] text-mint sm:mt-2 sm:text-9xl">
+        Via1
+      </span>
+    </h1>
+  );
+}
+
+/** Blasen, die über den Titel ziehen und den Teil dahinter spiegelverkehrt
+ *  zeigen — wie ein Wassertropfen, der das Bild kippt.
+ *
+ *  Im runden Ausschnitt liegt eine zweite, gespiegelte Kopie des Titels,
+ *  genau über der echten ausgerichtet. Ein Weichzeichner könnte das nicht:
+ *  `backdrop-filter` verwäscht nur, spiegeln kann es nicht.
+ *
+ *  Sie bleiben nicht stehen, sondern ziehen von links nach rechts durch und
+ *  fangen versetzt wieder an — es kommt also immer wieder eine neue. */
+const LINSEN = [
+  { d: 98, ly: 18, dauer: 24, verzoegerung: -3, haut: "blase_01" },
+  { d: 70, ly: 84, dauer: 17, verzoegerung: -11, haut: "blase_klein_03" },
+];
+
+function TitelLinsen() {
+  return (
+    <div className="linsen" aria-hidden="true">
+      {LINSEN.map((l, i) => (
+        <span
+          key={i}
+          className="linse-huelle"
+          style={
+            {
+              "--lx": "0px",
+              "--ly": `${l.ly}px`,
+              "--d": `${l.d}px`,
+              "--dauer": `${l.dauer}s`,
+              "--verzoegerung": `${l.verzoegerung}s`,
+            } as React.CSSProperties
+          }
+        >
+          <span className="linse">
+            <span className="linse-inhalt">
+              <TitelText />
+            </span>
+          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="linse-haut"
+            src={`/art/sprites/${l.haut}.webp`}
+            alt=""
+          />
+        </span>
+      ))}
     </div>
   );
 }
