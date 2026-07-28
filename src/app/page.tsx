@@ -1,3 +1,4 @@
+import Blubber from "@/components/blubber";
 import SiteNav from "@/components/site-nav";
 import {
   Bubble,
@@ -20,6 +21,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <div aria-hidden="true" className="fest-canvas" />
+      <Blubber />
       <SiteNav />
 
       {/* Titel — die Illustration trägt den Kopf der Seite. Der Verlauf

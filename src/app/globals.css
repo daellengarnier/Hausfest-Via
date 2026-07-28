@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
-/* Farbwelt der Illustration: Tuschezeichnung auf Nachtblau, Pastellakzente. */
+/* Farbwelt der gemalten Vorlage: Tiefsee-Nachtblau, Neon-Mint, Korallenrot
+   vom Molch, Magenta von den Quallen. */
 @theme {
-  --color-night-900: #071540;
-  --color-night-800: #0a1d52;
-  --color-night-700: #102c6f;
-  --color-night-600: #17408f;
-  --color-ink: #0d2a6b;
+  --color-night-900: #00042a;
+  --color-night-800: #04102e;
+  --color-night-700: #0b2440;
+  --color-night-600: #14395c;
 
-  --color-foam: #eaf3ff;
-  --color-foam-dim: #a9c4ea;
+  --color-foam: #eafff7;
+  --color-foam-dim: #8fc4bd;
 
-  --color-coral: #ff8a6b;
-  --color-blossom: #ff9ec7;
-  --color-mint: #b6f2c0;
-  --color-sky: #8fd8ff;
-  --color-sun: #ffc36b;
+  --color-coral: #ff5a2b;
+  --color-blossom: #d97bd8;
+  --color-mint: #83fcc5;
+  --color-sky: #6fe3e0;
+  --color-sun: #b4ee5a;
 
   --font-display: var(--font-display), ui-rounded, system-ui, sans-serif;
   --font-hand: var(--font-hand), cursive;
@@ -44,18 +44,17 @@ section[id] {
   scroll-margin-top: 5.5rem;
 }
 
-/* Die Illustration liegt als eigene, am Viewport fixierte Ebene hinter dem
-   Inhalt. Bewusst ein positioniertes Element statt background-attachment:
-   fixed — letzteres ruckelt auf iOS und würde die Zeichnung über die volle
-   Dokumenthöhe strecken, sodass am Handy nur ein Ausschnitt sichtbar wäre. */
+/* Die gemalte Vorlage liegt als eigene, am Viewport fixierte Ebene hinter
+   dem Inhalt. Bewusst ein positioniertes Element statt background-attachment:
+   fixed — letzteres ruckelt auf iOS. */
 .fest-canvas {
   position: fixed;
   inset: 0;
-  z-index: -1;
-  background-color: var(--color-night-800);
-  background-image: url("/art/hero.svg");
+  z-index: -2;
+  background-color: var(--color-night-900);
+  background-image: url("/art/hintergrund.webp");
   background-size: cover;
-  background-position: center center;
+  background-position: center top;
   background-repeat: no-repeat;
 }
 
@@ -68,4 +67,101 @@ section[id] {
     transparent 22px 34px
   );
   opacity: 0.35;
+}
+
+/* ---------------------------------------------------------------------
+   Blasen und Laternenfische, die über die Seite treiben.
+   Nur transform und opacity, damit der Browser alles auf der GPU macht
+   und das Scrollen flüssig bleibt.
+   --------------------------------------------------------------------- */
+
+.blubber {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blubber img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Blasen steigen von unten auf. Die äussere Hülle übernimmt das Steigen,
+   die innere das seitliche Pendeln — zusammen ergibt das eine Bahn, die
+   nicht wie eine Schnur wirkt. */
+.blase {
+  position: absolute;
+  bottom: 0;
+  animation: steigen var(--dauer) linear var(--verzoegerung) infinite;
+  will-change: transform;
+}
+
+.blase-pendel {
+  display: block;
+  animation: pendeln calc(var(--dauer) / 4) ease-in-out var(--verzoegerung)
+    infinite alternate;
+}
+
+@keyframes steigen {
+  from {
+    transform: translate3d(0, 20vh, 0);
+  }
+  to {
+    transform: translate3d(0, -125vh, 0);
+  }
+}
+
+@keyframes pendeln {
+  from {
+    transform: translateX(calc(var(--drift) * -1)) rotate(-5deg);
+  }
+  to {
+    transform: translateX(var(--drift)) rotate(5deg);
+  }
+}
+
+/* Laternenfische ziehen waagrecht durchs Bild und wippen dabei leicht. */
+.fisch {
+  position: absolute;
+  animation: schwimmen var(--dauer) linear var(--verzoegerung) infinite;
+  will-change: transform;
+}
+
+.fisch-wippe {
+  display: block;
+  animation: wippen calc(var(--dauer) / 6) ease-in-out infinite alternate;
+}
+
+@keyframes schwimmen {
+  from {
+    transform: translate3d(-40vw, 0, 0);
+  }
+  to {
+    transform: translate3d(140vw, 0, 0);
+  }
+}
+
+@keyframes wippen {
+  from {
+    transform: translateY(-10px) rotate(-2deg);
+  }
+  to {
+    transform: translateY(10px) rotate(2deg);
+  }
+}
+
+/* Wer Bewegung reduziert haben will, bekommt ein stilles Bild. */
+@media (prefers-reduced-motion: reduce) {
+  .blase,
+  .blase-pendel,
+  .fisch,
+  .fisch-wippe {
+    animation: none;
+  }
+  .blubber {
+    display: none;
+  }
 }
