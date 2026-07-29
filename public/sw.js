@@ -11,8 +11,8 @@
 //   * Statische Dateien (JS, CSS, Bilder, Fonts) -> zuerst Cache. Deren Namen
 //     enthalten einen Hash, sie ändern sich also nie unter derselben URL.
 
-const CACHE_NAME = "hausfest-via-v23";
-const SHELL = ["/", "/manifest.webmanifest"];
+const CACHE_NAME = "hausfest-via-v24";
+const SHELL = ["/", "/en", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

@@ -1,5 +1,12 @@
 // Zentrale Fest-Daten. Das Programm wächst laufend — neue Acts hier
 // eintragen, dann landen sie automatisch auf der Seite.
+//
+// Die Seite gibt es auf Deutsch und Englisch. Alles, was Sprache trägt,
+// liegt hier als Paar `{ de, en }` — die Seite greift dann mit ihrer
+// Sprache hinein. So kann keine Übersetzung vergessen gehen: Fehlt eine,
+// meckert TypeScript.
+
+export type Sprache = "de" | "en";
 
 /** Ticket-Shop bei Petzi. Leer lassen, solange der Link noch nicht steht —
  *  die Seite zeigt dann statt des Buttons einen Hinweis. */
@@ -9,10 +16,13 @@ export const TICKET_URL =
 /** Der Shop ist passwortgeschützt. Leer lassen, wenn kein Passwort nötig ist. */
 export const TICKET_PASSWORT = "viaspinnerei";
 
+/** Für Fragen rund ums Fest. */
+export const KONTAKT_MAIL = "info@kulturspinnerei.ch";
+
 export const FEST = {
   titel: "Hausfest Via 1",
-  datum: "Samstag, 5. September",
-  zeit: "ab 16 Uhr",
+  datum: { de: "Samstag, 5. September", en: "Saturday, 5 September" },
+  zeit: { de: "ab 16 Uhr", en: "from 4 pm" },
   ort: "Via Felsenau",
   adresse: "Spinnereiweg 17, 3004 Bern",
 
@@ -25,8 +35,16 @@ export const FEST = {
 
 /** Die zwei Jubiläen — auf der Seite als grosse Zahlen statt als Satz. */
 export const JUBILAEEN = [
-  { zahl: "10", was: "Jahre Spinnerei", blase: "blase_klein_01" },
-  { zahl: "33", was: "Jahre Via", blase: "blase_klein_07" },
+  {
+    zahl: "10",
+    was: { de: "Jahre Spinnerei", en: "years of Spinnerei" },
+    blase: "blase_klein_01",
+  },
+  {
+    zahl: "33",
+    was: { de: "Jahre Via", en: "years of Via" },
+    blase: "blase_klein_07",
+  },
 ] as const;
 
 export type Sparte = "Band" | "Theater" | "DJ";
@@ -37,11 +55,9 @@ export type Act = {
   /** Weglassen, solange die Sparte nicht feststeht — die Karte zeigt dann
    *  nur den Namen, statt eine falsche Zuordnung zu behaupten. */
   sparte?: Sparte;
-  /** Ein Eintrag je Absatz. Wer einen Text hat, dessen Karte lässt sich
-   *  auf der Seite aufklappen. */
-  beschrieb?: string[];
-  /** Wer mitspielt, je Zeile „Name — Instrument“. */
-  besetzung?: string[];
+  /** Ein Eintrag je Absatz, je Sprache. Wer einen Text hat, dessen Karte
+   *  lässt sich auf der Seite aufklappen. */
+  beschrieb?: Record<Sprache, string[]>;
 };
 
 /** Bereits bestätigt. Zeiten und weitere Acts kommen laufend dazu. */
@@ -50,28 +66,45 @@ export const ACTS: Act[] = [
     name: "Ashinoa",
     herkunft: "FR",
     sparte: "Band",
-    beschrieb: [
-      "Mit ihrer Gründung 2015 hat die Band Ashinoa aus Lyon sich rasch einen Namen in der alternativen Musikszene gemacht. Ihre Vision: Ein musikalisches Universum, das von Krautrock und Elektronik regiert wird, durchsetzt mit rhythmischen und psychedelischen Elementen.",
-      "Ihr Engagement und ihre kreative Dynamik haben sie von lokalen Bühnen zu internationalen Auftritten und Kollaborationen mit renommierten Künstler:innen geführt. Auf ihrer musikalischen Expedition lassen sie das Bekannte hinter sich.",
-    ],
+    beschrieb: {
+      de: [
+        "Ashinoa ist eine französische Band, Ende 2015 in Lyon gegründet. Seit ihrer Gründung steht das Trio an vorderster Front der alternativen Szene ihrer Heimatstadt. Beeinflusst von Krautrock und elektronischer Musik erschaffen sie ein weites Universum aus psychedelischen Synthesizern und Gitarren, perkussiven Kraut-Rhythmen und galaktischen Visuals.",
+      ],
+      en: [
+        "Ashinoa is a French band born in Lyon in the closing stages of 2015. Since forming, the French three-piece has been at the forefront of the alternative scene in their home city of Lyon. Influenced by krautrock and electronic music, they create a vast universe centred around psychedelic synthesisers and guitars, percussive and kraut rhythms, and galactic visuals.",
+      ],
+    },
   },
   {
     name: "Reverend Deadeye & Nicotine Sue",
     sparte: "Band",
-    beschrieb: [
-      "Reverend Deadeye ist der Sohn eines Reverends, der wiederum der Sohn eines Reverends war. Seine Jugend verbrachte er mit Schlangen in den Händen und mit Auftritten bei Zelt-Erweckungen, an der Seite seiner Pfingstler-Familie in einem Navajo-Reservat in Arizona. Dieses geistliche Erbe klingt in seinen Auftritten nach.",
-      "Erwarte aber keinen Gottesdienst am Sonntagmorgen — eher eine Feuertaufe am Samstagabend, eine heilige Erweckung.",
-      "Neu mit dem Schlagzeug der Schweizer Legende Nicotine Sue. Zu zweit entfesseln die beiden wuchtige Fassungen von Lo-Fi-Blues-Hymnen mit Gospel-Einschlag, die das Publikum in eine fast mystische Erweckung treiben.",
-    ],
+    beschrieb: {
+      de: [
+        "Reverend Deadeye ist der Sohn eines Reverends, der wiederum der Sohn eines Reverends war. Seine Jugend verbrachte er mit Schlangen in den Händen und mit Auftritten bei Zelt-Erweckungen, an der Seite seiner Pfingstler-Familie in einem Navajo-Reservat in Arizona. Dieses geistliche Erbe klingt in seinen Auftritten nach.",
+        "Erwarte aber keinen Gottesdienst am Sonntagmorgen — eher eine Feuertaufe am Samstagabend, eine heilige Erweckung.",
+        "Neu mit dem Schlagzeug der Schweizer Legende Nicotine Sue. Zu zweit entfesseln die beiden wuchtige Fassungen von Lo-Fi-Blues-Hymnen mit Gospel-Einschlag, die das Publikum in eine fast mystische Erweckung treiben.",
+      ],
+      en: [
+        "Reverend Deadeye is the son of a reverend who was himself the son of a reverend. He spent his youth with snakes in his hands, performing at tent revivals alongside his Pentecostal family on a Navajo reservation in Arizona. That spiritual heritage still echoes through his shows.",
+        "Don't expect a Sunday-morning service, though — this is more of a Saturday-night baptism by fire, a holy awakening.",
+        "Now joined on drums by Swiss legend Nicotine Sue. Together they unleash mighty renditions of lo-fi blues hymns with a gospel edge, driving the crowd into an almost mystical revival.",
+      ],
+    },
   },
   {
     name: "Treibend",
     herkunft: "BE",
     sparte: "Band",
-    beschrieb: [
-      "Das Kollektiv aus Bern und Biel spielt elektro-akustische Live-Sets, die sich im ständigen Fluss befinden – immer im Moment, immer im Wandel. Mit Piano, Synthesizer, Trompete und Gesang entstehen bewegende Melodien und treibende Beats.",
-      "Treibend schafft ein Klangbild, das zugleich antreibt und träumen lässt – tanzbar, meditativ, vielschichtig.",
-    ],
+    beschrieb: {
+      de: [
+        "Das Kollektiv aus Bern und Biel spielt elektro-akustische Live-Sets, die sich im ständigen Fluss befinden – immer im Moment, immer im Wandel. Mit Piano, Synthesizer, Trompete und Gesang entstehen bewegende Melodien und treibende Beats.",
+        "Treibend schafft ein Klangbild, das zugleich antreibt und träumen lässt – tanzbar, meditativ, vielschichtig.",
+      ],
+      en: [
+        "The collective from Bern and Biel plays electro-acoustic live sets in constant flux — always in the moment, always shifting. Piano, synthesiser, trumpet and vocals weave into moving melodies and driving beats.",
+        "Treibend creates a sound that propels you forward and lets you dream at the same time — danceable, meditative, layered.",
+      ],
+    },
   },
   { name: "FULU", sparte: "Theater" },
   { name: "DJ Pantichrist", sparte: "DJ" },
@@ -80,12 +113,20 @@ export const ACTS: Act[] = [
   { name: "Tino Kaufholz", sparte: "DJ" },
 ];
 
-export type NavItem = { id: string; label: string };
+/** Die Sparte, wie sie auf der Karte steht — nur „Theater“ schreibt sich
+ *  auf Englisch anders. */
+export const SPARTE_LABEL: Record<Sparte, Record<Sprache, string>> = {
+  Band: { de: "Band", en: "Band" },
+  Theater: { de: "Theater", en: "Theatre" },
+  DJ: { de: "DJ", en: "DJ" },
+};
+
+export type NavItem = { id: string; label: Record<Sprache, string> };
 
 // Reihenfolge = Leserichtung der Seite.
 export const NAV: NavItem[] = [
-  { id: "willkommen", label: "Willkommen" },
-  { id: "tickets", label: "Tickets" },
-  { id: "programm", label: "Programm" },
-  { id: "miteinander", label: "Miteinander" },
+  { id: "willkommen", label: { de: "Willkommen", en: "Welcome" } },
+  { id: "tickets", label: { de: "Tickets", en: "Tickets" } },
+  { id: "programm", label: { de: "Programm", en: "Programme" } },
+  { id: "miteinander", label: { de: "Miteinander", en: "Together" } },
 ];

@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   title: "Hausfest Via 1 — 5. September",
   description:
     "10 Jahre Spinnerei, 33 Jahre Via Felsenau — wir feiern am 5. September ab 16 Uhr am Spinnereiweg 17 in Bern.",
+  // Sagt Suchmaschinen, dass / und /en dieselbe Seite in zwei Sprachen sind.
+  alternates: {
+    languages: { de: "/", en: "/en" },
+  },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Sprache } from "@/lib/fest";
 import { NAV } from "@/lib/fest";
 
 /**
  * Klebende Navigation als Blasenreihe. Der aktive Abschnitt wird beim
  * Scrollen hervorgehoben; auf schmalen Displays ist die Reihe horizontal
- * scrollbar statt umgebrochen.
+ * schiebbar statt umgebrochen.
+ *
+ * Ganz rechts der Sprachwechsel: ein Knopf, der zur jeweils anderen
+ * Fassung führt (/ ↔ /en). Ein Link statt eines Umschalters im Zustand —
+ * so hat jede Sprache ihre eigene Adresse, die sich teilen und
+ * verlinken lässt, und der Wechsel funktioniert ohne JavaScript.
  */
-export default function SiteNav() {
+export default function SiteNav({ sprache }: { sprache: Sprache }) {
   const [aktiv, setAktiv] = useState<string>(NAV[0].id);
 
   useEffect(() => {
@@ -32,6 +38,13 @@ export default function SiteNav() {
     return () => beobachter.disconnect();
   }, []);
 
+  const knopf = (ist: boolean) =>
+    `block rounded-full border px-3 py-1.5 text-[0.8125rem] whitespace-nowrap backdrop-blur-md transition-colors ${
+      ist
+        ? "border-sky/70 bg-sky/35 text-foam"
+        : "border-white/25 bg-night-900/45 text-foam hover:border-white/50"
+    }`;
+
   return (
     <nav
       aria-label="Abschnitte"
@@ -41,7 +54,7 @@ export default function SiteNav() {
       className="sticky top-0 z-50"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
-      {/* Auf schmalen Displays passen die vier Knöpfe nicht nebeneinander.
+      {/* Auf schmalen Displays passen die Knöpfe nicht nebeneinander.
           Dann lässt sich die Reihe seitlich schieben, statt dass der letzte
           abgeschnitten wird — `safe center` hält sie mittig, solange sie
           Platz hat, und rückt sie erst beim Überlaufen nach links. */}
@@ -53,17 +66,26 @@ export default function SiteNav() {
               <a
                 href={`#${n.id}`}
                 aria-current={ist ? "true" : undefined}
-                className={`block rounded-full border px-3 py-1.5 text-[0.8125rem] whitespace-nowrap backdrop-blur-md transition-colors ${
-                  ist
-                    ? "border-sky/70 bg-sky/35 text-foam"
-                    : "border-white/25 bg-night-900/45 text-foam hover:border-white/50"
-                }`}
+                className={knopf(ist)}
               >
-                {n.label}
+                {n.label[sprache]}
               </a>
             </li>
           );
         })}
+        <li className="shrink-0">
+          <a
+            href={sprache === "de" ? "/en" : "/"}
+            // hreflang sagt Browsern und Suchmaschinen, wohin der Link führt.
+            hrefLang={sprache === "de" ? "en" : "de"}
+            aria-label={
+              sprache === "de" ? "Switch to English" : "Zur deutschen Seite"
+            }
+            className={`${knopf(false)} font-bold`}
+          >
+            {sprache === "de" ? "EN" : "DE"}
+          </a>
+        </li>
       </ul>
     </nav>
   );
