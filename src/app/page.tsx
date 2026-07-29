@@ -182,11 +182,14 @@ export default function Home() {
               takt="15s"
               gras={{ art: 3, gespiegelt: true, className: "-bottom-14 -right-5 w-24" }}
             >
-              <p>Wir wollen ein Fest, an dem sich alle wohlfühlen.</p>
               <p>
-                Diskriminierung, Rassismus, Sexismus und grenzüberschreitendes
-                Verhalten haben bei uns keinen Platz. Achtet aufeinander,
-                fragt im Zweifel nach, und akzeptiert ein Nein als Nein.
+                Ein respektvoller und achtsamer Umgang miteinander ist die
+                Grundlage für ein sicheres Miteinander. Diskriminierung,
+                Rassismus, Sexismus und grenzüberschreitendes Verhalten haben
+                bei uns keinen Platz. Achte auf deine eigenen und die Grenzen
+                anderer, handle nur mit gegenseitiger Zustimmung und
+                unterstütze Menschen, die sich unwohl fühlen oder Hilfe
+                benötigen.
               </p>
               <p>
                 Wir laden dich in unsere privaten vier Wände ein. Darum bitten
