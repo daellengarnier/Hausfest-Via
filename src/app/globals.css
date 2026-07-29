@@ -355,16 +355,50 @@ section[id] {
 }
 
 /* Der Vampirtintenfisch zum Abschied: steht im Textfluss, mittig, und
-   trägt seine zwei Augen als Kinder. */
+   trägt seine zwei Augen als Kinder.
+
+   Er zieht nicht durch, er steht — aber er steht nicht still: Aussen wiegt
+   er sich langsam in der Strömung, innen atmet der Schirm. Zwei Ebenen,
+   weil beide Bewegungen auf `transform` liegen und eine Ebene nur eine
+   davon tragen kann; getrennte Takte, damit sich nie ein erkennbares
+   Muster wiederholt. */
 .vampir {
   display: block;
   position: relative;
+  animation: vampir-schweben 9.4s ease-in-out infinite alternate;
+}
+
+.vampir-atem {
+  display: block;
+  position: relative;
+  /* Der Drehpunkt liegt beim Körper unten, nicht in der Bildmitte: Der
+     Schirm öffnet sich dann nach oben und aussen, so wie er es tut. */
+  transform-origin: 50% 78%;
+  animation: vampir-atem 5.6s ease-in-out infinite alternate;
 }
 
 .vampir img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+@keyframes vampir-schweben {
+  from {
+    transform: translate3d(0, 4px, 0) rotate(-1.1deg);
+  }
+  to {
+    transform: translate3d(0, -4px, 0) rotate(1.1deg);
+  }
+}
+
+@keyframes vampir-atem {
+  from {
+    transform: scale(0.985, 1.01);
+  }
+  to {
+    transform: scale(1.03, 0.985);
+  }
 }
 
 /* Die Jubiläums-Blasen wiegen sich leicht in ihrem Bereich, statt starr zu
@@ -720,6 +754,8 @@ section[id] {
   .molch-wiege,
   .molch-pupille,
   .ticket-puls,
+  .vampir,
+  .vampir-atem,
   .blasenfeld,
   .fisch-auge,
   .jahresblase {
