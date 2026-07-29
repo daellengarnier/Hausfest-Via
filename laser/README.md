@@ -34,15 +34,22 @@ Die weisse Fläche hinter dem QR ist die Ruhezone. Sie wird **nicht** graviert
 ## Masse
 
 - Scheibe: 50 mm Durchmesser
-- QR: 27.7 mm, 33 × 33 Module, **0.84 mm pro Modul**
+- QR: 26.2 mm, 33 × 33 Module, **0.79 mm pro Modul**
 - Fehlerkorrektur: Stufe H (bis 30 % der Fläche darf beschädigt sein)
 - Die SVG ist in Millimetern angelegt (1 Einheit = 1 mm). Beim Import auf
   100 % skalieren, nicht „einpassen“.
 
 Titel und Link stehen auf gerader Zeile statt auf dem Bogen — das spart
-Platz, und der QR wird dadurch grösser (0.84 statt 0.73 mm pro Modul). Die
+Platz, und der QR wird dadurch grösser (0.79 statt 0.73 mm pro Modul). Die
 Grösse rechnet das Skript aus: Es misst die beiden Textzeilen und gibt dem QR
 alles, was zwischen ihnen noch in den Kreis passt.
+
+Schrift und QR teilen sich also denselben Platz — grössere Schrift heisst
+kleinere Module. Die aktuellen 2.55 mm (Titel) und 2.10 mm (Link) sind der
+Punkt, an dem die Schrift spürbar wächst, ohne dass der Code schlechter
+liest: Im Test gegen Brandrand, Maserung und schwachen Kontrast besteht
+diese Fassung genau dieselben Fälle wie die frühere mit kleinerer Schrift.
+Eine Stufe grösser fiel bereits ein Fall weg.
 
 ## Gestaltung
 
@@ -64,7 +71,7 @@ Punkt anfassen, nicht den Ring.
   der Rest bleibt hell. Ein invertierter Code wird von vielen Scannern nicht
   gelesen.
 - **Nicht zu tief gravieren.** Der Laser trägt breiter ab als die Vektorkante;
-  bei 0.84 mm Modulen laufen die hellen Zwischenräume sonst zu. Lieber
+  bei 0.79 mm Modulen laufen die hellen Zwischenräume sonst zu. Lieber
   schnell und hell als langsam und tief.
 - **Vorher testen.** Ein Probestück gravieren und mit dem Handy scannen,
   bevor die ganze Serie läuft.

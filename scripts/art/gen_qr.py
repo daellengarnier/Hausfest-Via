@@ -279,11 +279,20 @@ def build(titel: str, dest: pathlib.Path) -> pathlib.Path:
     # begrenzt durch die Zeilen darüber/darunter — eine Zeile darf an ihrer
     # höchsten Stelle nicht breiter sein als die Kreissehne dort — und durch
     # die eigenen Ecken, die im Kreis bleiben müssen.
-    RAND = 0.9                           # Sicherheitsabstand zur Schnittkante
-    LUFT = 1.1                           # Abstand zwischen Zeile und QR
+    RAND = 0.75                          # Sicherheitsabstand zur Schnittkante
+    LUFT = 0.85                          # Abstand zwischen Zeile und QR
     r_safe = R - RAND
 
-    titel_groesse, link_groesse = 2.35, 1.95
+    # Die Schrift kostet den QR Platz: Jede Zeile drückt ihn nach innen, weil
+    # sie an ihrer Oberkante in die Kreissehne passen muss. Darum sind Rand
+    # und Luft knapp gehalten — so trägt die grössere Schrift sich selbst.
+    #
+    # 2.55/2.10 ist der Punkt, an dem die Schrift spürbar wächst, ohne dass
+    # der Code schlechter liest: Im Test gegen Brandrand, Maserung und
+    # schwachen Kontrast besteht diese Fassung mit 0.79 mm pro Modul genau
+    # dieselben Fälle wie die frühere mit 0.84. Eine Stufe grösser (2.65)
+    # fiel bereits ein Fall weg.
+    titel_groesse, link_groesse = 2.55, 2.10
     zeilen = [(bold.width(titel, titel_groesse), titel_groesse),
               (reg.width(LINK_TEXT, link_groesse), link_groesse)]
 
