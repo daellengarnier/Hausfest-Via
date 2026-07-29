@@ -523,6 +523,45 @@ export function MolchSitzt({ className = "" }: { className?: string }) {
   );
 }
 
+/** Der Vampirtintenfisch am Fuss der Seite. Er zieht nicht durch, er
+ *  schaut einen aus dem Dunkeln an — und bewegt dabei beide Augen. Im
+ *  Gleichtakt: Zwei Augen, die unabhängig voneinander wandern, schielen.
+ *
+ *  Die zwei hellen Scheiben im Bild haben keine gemalte Pupille, darum
+ *  braucht es hier nichts zu retuschieren — die dunkle Pupille legt sich
+ *  einfach darüber. Mittelpunkt und Grösse in Anteilen des Sprites, damit
+ *  sie in jeder Anzeigegrösse sitzen. */
+const VAMPIR_AUGEN = [
+  { x: 0.422, y: 0.747, breite: 6.8, hoehe: 9.7 },
+  { x: 0.583, y: 0.751, breite: 6.7, hoehe: 9.4 },
+];
+
+export function Vampir({ className = "" }: { className?: string }) {
+  return (
+    <span className={`vampir ${className}`} aria-hidden="true">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/art/sprites/vampirtintenfisch.webp" alt="" loading="lazy" />
+      {VAMPIR_AUGEN.map((a, i) => (
+        <span
+          key={i}
+          className="molch-blick"
+          style={
+            {
+              left: `${a.x * 100}%`,
+              top: `${a.y * 100}%`,
+              width: `${a.breite}%`,
+              height: `${a.hoehe}%`,
+              "--takt": "6.8s",
+            } as React.CSSProperties
+          }
+        >
+          <span className="fisch-pupille" />
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function stil(t: Treiber): React.CSSProperties {
   return {
     left: `${t.links}%`,

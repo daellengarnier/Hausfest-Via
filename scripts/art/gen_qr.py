@@ -360,6 +360,8 @@ def build(titel: str, dest: pathlib.Path) -> pathlib.Path:
 
 
 if __name__ == "__main__":
+    # Auf dem Anhänger steht „Hausfest Via“ ohne die 1 — auf 50 mm zählt
+    # jedes Zeichen, und je kürzer die Zeile, desto grösser darf der QR
+    # werden. Auf der Seite heisst das Fest weiterhin „Hausfest Via 1“.
     out = pathlib.Path(__file__).resolve().parents[2] / "laser"
-    build("Hausfest Via 1 · 5. September", out / "hausfest-qr-50mm.svg")
-    build("Hausfest Via · 5. September", out / "hausfest-qr-50mm-ohne-1.svg")
+    build("Hausfest Via · 5. September", out / "hausfest-qr-50mm.svg")

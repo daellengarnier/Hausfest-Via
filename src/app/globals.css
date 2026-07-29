@@ -178,6 +178,28 @@ section[id] {
   padding: 0.25rem 0.75rem 0.75rem;
 }
 
+/* Die Kacheln treiben ganz leicht, als hinge jede in der Strömung. Kein
+   Schaukeln — nur ein paar Pixel, gerade so viel, dass sie nicht wie
+   angeklebt wirken. Der Takt kommt je Kachel von aussen (`--treiben`),
+   sonst atmete die ganze Seite im Gleichschritt.
+
+   Nicht für die Act-Karten (acht Stück nebeneinander wären Unruhe) und
+   nicht für den Ticket-Knopf: Der pulst schon, und zwei Animationen auf
+   derselben Eigenschaft schliessen einander aus. */
+.blasenfeld:not(.blasenfeld-act):not(.blasenfeld-ticket) {
+  animation: kachel-treiben var(--treiben, 14s) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes kachel-treiben {
+  from {
+    transform: translate3d(-2px, 3px, 0);
+  }
+  to {
+    transform: translate3d(2px, -3px, 0);
+  }
+}
+
 .blasenfeld-hoch {
   border-image-source: url("/art/rahmen/textfeld_02.webp");
   border-image-slice: 150 fill;
@@ -332,6 +354,19 @@ section[id] {
   pointer-events: none;
 }
 
+/* Der Vampirtintenfisch zum Abschied: steht im Textfluss, mittig, und
+   trägt seine zwei Augen als Kinder. */
+.vampir {
+  display: block;
+  position: relative;
+}
+
+.vampir img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* Die Jubiläums-Blasen wiegen sich leicht in ihrem Bereich, statt starr zu
    stehen — und ihre gemalte Haut ist etwas zurückgenommen, sonst wirkt sie
    milchig vor dem dunklen Wasser. */
@@ -350,17 +385,6 @@ section[id] {
   to {
     transform: translate3d(6px, -7px, 0) rotate(2deg);
   }
-}
-
-/* Handgezeichnete Trennlinie zwischen den Abschnitten. */
-.ink-rule {
-  height: 2px;
-  background: repeating-linear-gradient(
-    to right,
-    var(--color-foam-dim) 0 22px,
-    transparent 22px 34px
-  );
-  opacity: 0.35;
 }
 
 /* ---------------------------------------------------------------------
@@ -695,7 +719,10 @@ section[id] {
   .molch,
   .molch-wiege,
   .molch-pupille,
-  .ticket-puls {
+  .ticket-puls,
+  .blasenfeld,
+  .fisch-auge,
+  .jahresblase {
     animation: none;
   }
   .blubber {

@@ -17,7 +17,7 @@ import pathlib
 
 import cv2
 import numpy as np
-from PIL import Image, ImageEnhance
+from PIL import Image, ImageEnhance, ImageFilter
 
 WURZEL = pathlib.Path(__file__).resolve().parents[2]
 QUELLEN = WURZEL / "art"
@@ -30,6 +30,14 @@ RIFF = QUELLEN / "panel_1_riff oberhalb molch.png"
 HOEHLEN_FISCHE = {
     "koerper": [((450, 2765), (95, 70)), ((548, 2815), (44, 42))],
     "angeln": [((355, 2748), (398, 2700), 30), ((506, 2795), (530, 2790), 26)],
+}
+
+# Drei Stellen im Bild, an denen einzelne Pflanzen frei genug stehen, um
+# sie sauber freistellen zu können.
+SEEGRAS = {
+    "seegras_01": (214, 2926, 332, 3008),
+    "seegras_02": (470, 3020, 642, 3176),
+    "seegras_03": (55, 2995, 235, 3175),
 }
 
 # Die gemalte Pupille im Auge des Molchs. Sie wird mit der Iris zugemalt,
@@ -174,6 +182,36 @@ def riff_oben() -> None:
     bild.save(ziel, "WEBP", quality=84, method=6)
     print(f"{ziel.name}: {bild.width}x{bild.height}, "
           f"{ziel.stat().st_size / 1024:.0f} KB")
+
+
+def seegras() -> None:
+    """Drei Büschel Seegras, freigestellt aus dem Bild.
+
+    Sie wachsen auf der Seite über die Ecken der Textblasen und binden sie
+    in die Bildwelt ein — ohne sie sähen die Kacheln aus, als lägen sie
+    obenauf.
+
+    Freistellen geht hier ohne Handarbeit: Das Wasser ist tiefblau, die
+    Pflanzen sind grün. Die Differenz von Grün- und Blaukanal trennt beides
+    sauber. Was danach als loses Stück Nachbarpflanze übrig bleibt, wirft
+    `nur_hauptmotiv()` weg.
+    """
+    ordner = WURZEL / "public/art/sprites"
+    ordner.mkdir(parents=True, exist_ok=True)
+    im = Image.open(HINTERGRUND).convert("RGB")
+    for name, feld in SEEGRAS.items():
+        farbe = np.asarray(im.crop(feld)).astype(np.float32)
+        alpha = np.clip((farbe[..., 1] - farbe[..., 2] + 6) / 55, 0, 1)
+        bild = Image.fromarray(farbe.astype("uint8")).convert("RGBA")
+        bild.putalpha(
+            Image.fromarray((alpha * 255).astype("uint8"))
+            .filter(ImageFilter.GaussianBlur(0.6))
+        )
+        bild = nur_hauptmotiv(bild, anteil=0.5)
+        ziel = ordner / f"{name}.webp"
+        bild.save(ziel, "WEBP", quality=84, method=6)
+        print(f"  {ziel.name}: {bild.width}x{bild.height}, "
+              f"{ziel.stat().st_size / 1024:.0f} KB")
 
 
 def einfaerben(im: Image.Image, drehung: int, staerke: float,
@@ -357,6 +395,7 @@ if __name__ == "__main__":
     hintergrund()
     riff_oben()
     rahmen()
+    seegras()
     sprites()
     icons()
     favicon()

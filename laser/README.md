@@ -7,12 +7,11 @@ dünnes Sperrholz.
 
 | Datei | Text oben |
 | --- | --- |
-| `hausfest-qr-50mm.svg` | Hausfest Via 1 · 5. September |
-| `hausfest-qr-50mm-ohne-1.svg` | Hausfest Via · 5. September |
+| `hausfest-qr-50mm.svg` | Hausfest Via · 5. September |
 
-Die erste ist die richtige: Das Fest heisst „Hausfest Via 1“. Die zweite
-stammt aus der Zeit, als offen war, ob die 1 ein Tippfehler ist. Vor dem
-Lasern trotzdem kurz prüfen — auf Holz lässt sich das nicht korrigieren.
+Auf dem Anhänger steht „Hausfest Via“ ohne die 1 — auf 50 mm zählt jedes
+Zeichen, und je kürzer die Zeile, desto grösser darf der QR werden. Auf der
+Seite heisst das Fest weiterhin „Hausfest Via 1“.
 
 ## Ebenen
 
@@ -29,13 +28,13 @@ Die weisse Fläche hinter dem QR ist die Ruhezone. Sie wird **nicht** graviert
 ## Masse
 
 - Scheibe: 50 mm Durchmesser
-- QR: 27.0 mm, 33 × 33 Module, **0.82 mm pro Modul**
+- QR: 27.7 mm, 33 × 33 Module, **0.84 mm pro Modul**
 - Fehlerkorrektur: Stufe H (bis 30 % der Fläche darf beschädigt sein)
 - Die SVG ist in Millimetern angelegt (1 Einheit = 1 mm). Beim Import auf
   100 % skalieren, nicht „einpassen“.
 
 Titel und Link stehen auf gerader Zeile statt auf dem Bogen — das spart
-Platz, und der QR wird dadurch grösser (0.82 statt 0.73 mm pro Modul). Die
+Platz, und der QR wird dadurch grösser (0.84 statt 0.73 mm pro Modul). Die
 Grösse rechnet das Skript aus: Es misst die beiden Textzeilen und gibt dem QR
 alles, was zwischen ihnen noch in den Kreis passt.
 
@@ -59,7 +58,7 @@ Punkt anfassen, nicht den Ring.
   der Rest bleibt hell. Ein invertierter Code wird von vielen Scannern nicht
   gelesen.
 - **Nicht zu tief gravieren.** Der Laser trägt breiter ab als die Vektorkante;
-  bei 0.73 mm Modulen laufen die hellen Zwischenräume sonst zu. Lieber
+  bei 0.84 mm Modulen laufen die hellen Zwischenräume sonst zu. Lieber
   schnell und hell als langsam und tief.
 - **Vorher testen.** Ein Probestück gravieren und mit dem Handy scannen,
   bevor die ganze Serie läuft.

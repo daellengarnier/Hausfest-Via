@@ -1,11 +1,10 @@
-import Blubber, { FischStill, MolchSitzt } from "@/components/blubber";
+import Blubber, { FischStill, MolchSitzt, Vampir } from "@/components/blubber";
 import SiteNav from "@/components/site-nav";
 import {
   Bubble,
-  Coral,
-  CoralRule,
   Kalender,
   Pfeil,
+  Seegras,
   SparteIcon,
 } from "@/components/doodles";
 import type { Act } from "@/lib/fest";
@@ -105,7 +104,12 @@ export default function Home() {
             Illustration, getragen von ihrem Schatten. */}
         <div className="tief mx-auto max-w-2xl">
           <div className="py-4">
-            <Abschnitt id="willkommen" titel="Willkommen" form={0}>
+            <Abschnitt
+              id="willkommen"
+              titel="Willkommen"
+              takt="13s"
+              gras={{ art: 3, className: "-bottom-14 -left-5 w-24" }}
+            >
               <p className="font-display text-xl font-bold text-foam">
                 Schön, hast du hierhin gefunden!
               </p>
@@ -125,7 +129,13 @@ export default function Home() {
                 Illustration, die soll frei bleiben. */}
             <div aria-hidden="true" className="h-[16vh]" />
 
-            <Abschnitt id="tickets" titel="Tickets" form={1} blase="blasenfeld-rund">
+            <Abschnitt
+              id="tickets"
+              titel="Tickets"
+              blase="blasenfeld-rund"
+              takt="16s"
+              gras={{ art: 2, gespiegelt: true, className: "-bottom-16 -right-6 w-28" }}
+            >
               <p>
                 Wir bitten dich ganz fest, ein Ticket zu kaufen. Wir kochen und
                 kaufen für alle ein, die kommen — mit deinem Ticket wissen wir,
@@ -141,7 +151,12 @@ export default function Home() {
               </div>
             </Abschnitt>
 
-            <Abschnitt id="programm" titel="Programm" form={2}>
+            <Abschnitt
+              id="programm"
+              titel="Programm"
+              takt="19s"
+              gras={{ art: 1, className: "-bottom-10 -left-4 w-24" }}
+            >
               <p>
                 Diese Acts sind bestätigt. Das Line-up wächst laufend, und die
                 Zeiten schalten wir auf, sobald sie stehen — es lohnt sich
@@ -160,7 +175,13 @@ export default function Home() {
               </ul>
             </Abschnitt>
 
-            <Abschnitt id="miteinander" titel="Miteinander" form={0} blase="blasenfeld-rund">
+            <Abschnitt
+              id="miteinander"
+              titel="Miteinander"
+              blase="blasenfeld-rund"
+              takt="15s"
+              gras={{ art: 3, gespiegelt: true, className: "-bottom-14 -right-5 w-24" }}
+            >
               <p>Wir wollen ein Fest, an dem sich alle wohlfühlen.</p>
               <p>
                 Diskriminierung, Rassismus, Sexismus und grenzüberschreitendes
@@ -176,17 +197,23 @@ export default function Home() {
             {/* Der Gruss zum Schluss steht über der Installations-Kachel:
                 Er schliesst den Text ab, die Kachel ist nur noch ein
                 technischer Hinweis und soll nicht das letzte Wort haben. */}
-            <div className="mt-12 px-1 text-center">
-              <Coral form={1} className="mx-auto h-8 w-8 text-blossom/60" />
-              <p className="mt-3 font-display text-2xl font-bold text-foam">
+            <div className="mt-14 px-1 text-center">
+              {/* Der Vampirtintenfisch schaut aus dem Dunkeln heraus — das
+                  letzte Tier auf dem Weg nach unten, kurz vor dem Gruss. */}
+              <Vampir className="mx-auto w-52" />
+              <p className="mt-4 font-display text-2xl font-bold text-foam">
                 Bis zum 5. September!
               </p>
             </div>
 
-            <div className="blasenfeld blasenfeld-flach relative mt-10">
+            <div
+              className="blasenfeld blasenfeld-flach relative mt-12"
+              style={{ "--treiben": "17s" } as React.CSSProperties}
+            >
               {/* Ein Molch hat es sich auf der Kachel bequem gemacht — er
                   schaut sich um, sitzt aber still. */}
               <MolchSitzt className="-top-10 right-1 w-24" />
+              <Seegras art={1} gespiegelt className="-bottom-8 -left-3 w-20" />
               <p className="font-display font-bold text-foam">
                 Als App installieren
               </p>
@@ -224,30 +251,36 @@ function TitelText() {
 function Abschnitt({
   id,
   titel,
-  form,
   blase = "",
+  gras,
+  takt = "13s",
   children,
 }: {
   id: string;
   titel: string;
-  form: 0 | 1 | 2;
   /** Welche gemalte Blase den Text rahmt. */
   blase?: string;
+  /** Das Büschel, das über den Rand der Blase wächst. */
+  gras: React.ComponentProps<typeof Seegras>;
+  /** Wie lange die Kachel für eine Drift braucht — je Kachel anders, sonst
+   *  schaukeln alle im Gleichtakt. */
+  takt?: string;
   children: React.ReactNode;
 }) {
   return (
     <section id={id} className="relative scroll-mt-24 py-9 first:pt-0">
-      <CoralRule form={form} />
-      <h2 className="mt-7 font-display text-3xl font-extrabold text-foam">
+      <h2 className="font-display text-3xl font-extrabold text-foam">
         {titel}
       </h2>
       {/* Der Text sitzt in einer Blase: Auf der bunten Illustration war er
           sonst mühsam zu lesen, und ein dunkler Kasten würde das Bild
           zudecken. Die Blase gehört zur Bildwelt und trägt die Schrift. */}
       <div
-        className={`blasenfeld ${blase} mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-foam`}
+        className={`blasenfeld ${blase} relative mt-5 space-y-4 text-[1.0625rem] leading-relaxed text-foam`}
+        style={{ "--treiben": takt } as React.CSSProperties}
       >
         {children}
+        <Seegras {...gras} />
       </div>
     </section>
   );
