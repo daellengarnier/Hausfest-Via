@@ -36,16 +36,41 @@ html {
   --bild-oben: 15rem;
 }
 
-@media (min-width: 640px) {
-  html {
-    --bild-oben: 13rem;
-  }
+/* Die Handy-Spalte. Die Seite ist für ein Display in der Hand gezeichnet:
+   Das Bild füllt die Breite, der Molch sitzt an einer bestimmten Stelle
+   darin, die Blasen steigen quer durch. Auf einem breiten Fenster
+   auseinandergezogen zerfällt das. Darum bleibt sie überall gleich breit
+   und steht in der Mitte.
+
+   `container-type: inline-size` macht die Spalte zum Bezugsrahmen: Alles,
+   was sich anteilig zur Breite ausrichtet, rechnet in `cqw` statt in `vw`
+   und meint damit diese Spalte statt das Fenster. */
+.geraet {
+  position: relative;
+  max-width: 27rem;
+  margin-inline: auto;
+  container-type: inline-size;
+  /* Treibende Blasen ragen bauartbedingt über den Rand. Sie sind zwar in
+     ihrer Ebene beschnitten, aber die Spalte soll sich auch nicht rechnerisch
+     verbreitern lassen — `clip` statt `hidden`, damit die Seite senkrecht
+     weiter normal scrollt. */
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Die Navigationsreihe schiebt sich auf schmalen Displays seitlich — dazu
+   braucht sie aber keinen Balken quer über dem Bild. */
+.nav-reihe {
+  scrollbar-width: none;
+}
+
+.nav-reihe::-webkit-scrollbar {
+  display: none;
 }
 
 /* Ankersprünge dürfen nicht unter der klebenden Navigation landen. */
@@ -64,17 +89,45 @@ section[id] {
   background-color: var(--color-night-900);
   /* Zwei Ebenen: oben das Bild einmal ganz, darunter die Höhlenkachel, die
      sich endlos fortsetzt. Zuerst genannt heisst zuoberst gezeichnet. */
-  /* Der Verlauf in der Mitte blendet die Höhlenkachel in die Oberkante des
-     Bildes über — ohne ihn zöge sich dort eine harte Linie quer. */
-  background-image: url("/art/hintergrund.webp"),
-    linear-gradient(to bottom, #00042a 0%, #041a52 70%, #031048 100%),
-    url("/art/tiefe.webp");
-  background-size: 100% auto, 100% var(--bild-oben, 0px), 100% auto;
+  background-image: url("/art/hintergrund.webp"), url("/art/tiefe.webp");
+  background-size: 100% auto, 100% auto;
   /* Das Bild beginnt erst unterhalb des Titels: Der Molch ist das
-     Hauptsymbol und soll nicht von der Schrift überdeckt werden. Oberhalb
-     füllt die Höhlenkachel — dunkel, dort steht ohnehin nur die Navigation. */
-  background-position: center var(--bild-oben, 0px), center top, center top;
-  background-repeat: no-repeat, no-repeat, repeat-y;
+     Hauptsymbol und soll nicht von der Schrift überdeckt werden. Darüber
+     liegt der Riff-Streifen. */
+  background-position: center var(--bild-oben, 0px), center top;
+  background-repeat: no-repeat, repeat-y;
+}
+
+/* Über dem Bild stand bisher ein blauer Verlauf — eine leere Fläche genau
+   dort, wo die Seite anfängt. Jetzt wächst dort das Riff von oben herein.
+   Der Streifen endet exakt an der Oberkante des Bildes, verschiebt also
+   nichts.
+
+   Er wird auf dieselbe Breite gezogen wie das Bild und mit der Unterkante
+   dort festgemacht; oben darf er über den Rahmen hinausstehen und wird
+   abgeschnitten. Nur so liegt Spalte auf Spalte — seine untersten Zeilen
+   sind beim Aufbereiten in die obersten Zeilen des Bildes überblendet
+   worden, und der Übergang verschwindet ganz. */
+.riff-oben {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -2;
+  width: 100%;
+  /* Ein Pixel Überlappung, damit zwischen Streifen und Bild auch bei
+     krummer Skalierung keine Lücke aufreisst. */
+  height: calc(var(--bild-oben, 0px) + 1px);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.riff-oben img {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
 }
 
 /* Bewusst kein seitliches Kacheln auf breiten Fenstern: Links und rechts
@@ -116,13 +169,6 @@ section[id] {
   border-image-slice: 128 fill;
   border-image-repeat: stretch;
   padding: 0.25rem 0.75rem 0.75rem;
-}
-
-@media (min-width: 640px) {
-  .blasenfeld {
-    border-width: 40px 38px;
-    padding: 0.5rem 1.25rem 1.25rem;
-  }
 }
 
 .blasenfeld-hoch {
@@ -187,13 +233,6 @@ section[id] {
   padding: 0 0.35rem 0.15rem;
 }
 
-@media (min-width: 640px) {
-  .blasenfeld-act {
-    border-width: 20px 28px;
-    padding: 0 0.6rem 0.25rem;
-  }
-}
-
 /* Der Titel: die Schrift bekommt einen Lichtsaum in Neon-Mint, wie ihn die
    Korallen im Bild haben — darunter liegt weiterhin der dunkle Saum, sonst
    verschwimmt sie auf dem bunten Grund. */
@@ -208,15 +247,21 @@ section[id] {
 
 /* Das Auge des Molchs. Er steckt im Hintergrundbild, ist also kein eigenes
    Element — die Pupille liegt darum als kleine Scheibe an der Stelle, wo das
-   gemalte Auge sitzt. Das Bild füllt die Seitenbreite, seine Höhe ist damit
-   das 8.667-fache davon; die Position lässt sich also in vw ausrechnen:
-   Auge bei 57.2 % der Breite und 8.89 % der Bildhöhe. */
+   gemalte Auge sitzt. Das Bild füllt die Spaltenbreite, seine Höhe ist damit
+   das 8.667-fache davon; die Position lässt sich also in cqw ausrechnen:
+   Auge bei 56.8 % der Breite und 8.92 % der Bildhöhe.
+
+   Der Kasten hat die Form der gemalten Iris — breit und flach, kein Kreis.
+   Nur so bleibt die Pupille beim Umherschauen im Augapfel: Ein runder
+   Kasten liess sie oben und unten heraustreten. Die gemalte Pupille ist
+   beim Aufbereiten mit Iris zugemalt worden (`MOLCH_PUPILLE`), sonst
+   stünde neben der beweglichen noch eine zweite. */
 .molch-auge {
   position: absolute;
-  left: 57.2vw;
-  top: calc(var(--bild-oben) + 77.1vw);
-  width: 2.5vw;
-  aspect-ratio: 1;
+  left: 56.8cqw;
+  top: calc(var(--bild-oben) + 77.34cqw);
+  width: 2.08cqw;
+  height: 1.7cqw;
   transform: translate(-50%, -50%);
   z-index: -1;
   pointer-events: none;
@@ -226,11 +271,58 @@ section[id] {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 44%;
-  aspect-ratio: 1;
+  width: 56%;
+  height: 62%;
   border-radius: 50%;
   background: #150d05;
-  animation: schauen 7.4s ease-in-out infinite;
+  animation: molch-schauen var(--takt, 7.4s) ease-in-out infinite;
+}
+
+/* Dieselbe Pupille noch einmal für die Molche, die als eigenes Tier durchs
+   Bild ziehen: Ihr Auge ist im Sprite gemalt, die Pupille liegt darüber.
+   Masse in % des Sprites — so sitzt sie in jeder Grösse richtig. */
+.molch-blick {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Ein Molch, der durchs Bild zieht. Er liegt auf der hinteren Ebene und
+   braucht darum keine eigene Tiefenangabe — nur seine Bahn und ein ruhiges
+   Wiegen, deutlich langsamer als bei den Fischen. */
+.molch,
+.molch-sitzt {
+  position: absolute;
+  display: block;
+}
+
+.molch {
+  left: 0;
+  animation: schwimmen var(--dauer) linear var(--verzoegerung) infinite;
+}
+
+.molch-links {
+  animation-name: schwimmen-links;
+}
+
+.molch-wiege {
+  display: block;
+  position: relative;
+  animation: wippen calc(var(--dauer) / 14) ease-in-out infinite alternate;
+}
+
+.molch img,
+.molch-sitzt img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Der zusammengerollte Molch auf einer Kachel: Er schwimmt nicht, er sitzt
+   und schaut sich um. */
+.molch-sitzt {
+  position: absolute;
+  pointer-events: none;
 }
 
 /* Die Jubiläums-Blasen wiegen sich leicht in ihrem Bereich, statt starr zu
@@ -385,13 +477,13 @@ section[id] {
   position: absolute;
 }
 
-/* Der Bewohner der gemalten Höhle. Masse und Ort in vw, weil das
+/* Der Bewohner der gemalten Höhle. Masse und Ort in cqw, weil das
    Hintergrundbild auf die volle Fensterbreite gezogen wird: So sitzt er in
    jeder Breite gleich in der Höhle — dieselbe Rechnung wie beim Molchauge. */
 .hoehlen-fisch {
-  left: 63vw;
-  top: calc(var(--bild-oben) + 361.5vw);
-  width: 26vw;
+  left: 63cqw;
+  top: calc(var(--bild-oben) + 361.5cqw);
+  width: 26cqw;
   transform: translate(-50%, -50%);
   z-index: -1;
 }
@@ -421,10 +513,10 @@ section[id] {
 
 @keyframes schwimmen-links {
   from {
-    transform: translate3d(140vw, 0, 0);
+    transform: translate3d(140cqw, 0, 0);
   }
   to {
-    transform: translate3d(-40vw, 0, 0);
+    transform: translate3d(-40cqw, 0, 0);
   }
 }
 
@@ -436,10 +528,10 @@ section[id] {
 
 @keyframes schwimmen {
   from {
-    transform: translate3d(-40vw, 0, 0);
+    transform: translate3d(-40cqw, 0, 0);
   }
   to {
-    transform: translate3d(140vw, 0, 0);
+    transform: translate3d(140cqw, 0, 0);
   }
 }
 
@@ -499,6 +591,29 @@ section[id] {
   82%,
   100% {
     transform: translate(-50%, -50%) translate(8%, 16%);
+  }
+}
+
+/* Die Molche schauen zurückhaltender: Ihr Auge ist ein flaches Oval, in dem
+   viel weniger Weg bleibt als in der runden Iris der Fische. Die Ausschläge
+   sind so bemessen, dass die Pupille auch am Anschlag noch ganz im Augapfel
+   liegt. */
+@keyframes molch-schauen {
+  0%,
+  18% {
+    transform: translate(-50%, -50%);
+  }
+  28%,
+  46% {
+    transform: translate(-50%, -50%) translate(26%, -12%);
+  }
+  56%,
+  74% {
+    transform: translate(-50%, -50%) translate(-28%, 6%);
+  }
+  84%,
+  100% {
+    transform: translate(-50%, -50%) translate(6%, 14%);
   }
 }
 
@@ -570,6 +685,9 @@ section[id] {
   .fisch-wippe,
   .fisch-pupille,
   .laterne,
+  .molch,
+  .molch-wiege,
+  .molch-pupille,
   .ticket-puls {
     animation: none;
   }

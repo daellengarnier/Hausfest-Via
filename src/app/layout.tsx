@@ -68,7 +68,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-night-900 font-display text-foam antialiased">
-        {children}
+        {/* Die Seite ist fürs Handy gebaut — Bild, Molchauge und Höhlenfisch
+            sitzen anteilig zur Breite. Auf dem Desktop läuft sie darum nicht
+            auseinander, sondern steht als Handy-Spalte in der Mitte. Alle
+            Masse beziehen sich über `cqw` auf diese Spalte, nicht aufs
+            Fenster — so sieht sie überall gleich aus. */}
+        <div className="geraet">{children}</div>
       </body>
     </html>
   );

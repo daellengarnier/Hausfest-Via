@@ -22,6 +22,7 @@ from PIL import Image, ImageEnhance
 WURZEL = pathlib.Path(__file__).resolve().parents[2]
 QUELLEN = WURZEL / "art"
 HINTERGRUND = QUELLEN / "App-Hintergrund_lang_Molch-oben.png"
+RIFF = QUELLEN / "panel_1_riff oberhalb molch.png"
 
 # Die zwei gemalten Laternenfische in der Höhle, je als Ellipse über dem
 # Körper und einer dicken Linie über der Angel. Koordinaten in Bildpixeln
@@ -31,10 +32,13 @@ HOEHLEN_FISCHE = {
     "angeln": [((355, 2748), (398, 2700), 30), ((506, 2795), (530, 2790), 26)],
 }
 
+# Die gemalte Pupille im Auge des Molchs. Sie wird mit der Iris zugemalt,
+# damit die bewegliche Pupille der Seite nicht neben einer zweiten sitzt.
+MOLCH_PUPILLE = ((438, 594), (6, 4))
+
 
 def vorlage() -> Image.Image:
-    """Die gemalte Vorlage, aus der Höhle sind die zwei Laternenfische
-    entfernt.
+    """Die gemalte Vorlage, um zwei Stellen bereinigt.
 
     In der Höhle am Fuss des Bildes hingen zwei gemalte Anglerfische. Sie
     sollen dort weg — an ihrer Stelle sitzt auf der Seite ein beweglicher
@@ -45,8 +49,21 @@ def vorlage() -> Image.Image:
     ohne Struktur. Das Loch wird zuerst aus der Umgebung gefüllt und dann
     zum dunkelsten Ton der Höhle hin gezogen, damit kein heller Schleier
     stehen bleibt, wo vorher ein Fisch war.
+
+    Dieselbe Technik füllt die gemalte Pupille des Molchs mit seiner Iris.
+    Über dem Auge liegt auf der Seite eine bewegliche Pupille; ohne das
+    Zumalen sässe sie neben der gemalten und der Molch schielte.
     """
     im = np.asarray(Image.open(HINTERGRUND).convert("RGB")).copy()
+    auge, achsen = MOLCH_PUPILLE
+    rand = 24
+    fenster = im[auge[1] - rand:auge[1] + rand, auge[0] - rand:auge[0] + rand]
+    mk_auge = np.zeros(fenster.shape[:2], np.uint8)
+    cv2.ellipse(mk_auge, (rand, rand), achsen, 0, 0, 360, 255, -1)
+    im[auge[1] - rand:auge[1] + rand, auge[0] - rand:auge[0] + rand] = cv2.inpaint(
+        fenster, mk_auge, 4, cv2.INPAINT_TELEA
+    )
+
     y0, y1 = 2600, 2950
 
     maske = np.zeros(im.shape[:2], np.uint8)
@@ -113,6 +130,50 @@ def hintergrund() -> None:
     tiefe.save(ziel_tiefe, "WEBP", quality=74, method=6)
     print(f"{ziel_tiefe.name}: {tiefe.width}x{tiefe.height}, "
           f"{ziel_tiefe.stat().st_size / 1024:.0f} KB")
+
+
+def riff_oben() -> None:
+    """Der Streifen über dem Molch.
+
+    Über dem Bild lag bisher ein blauer Verlauf — eine Fläche ohne Inhalt,
+    genau dort, wo die Seite beginnt. Stattdessen steht dort jetzt der obere
+    Rand des Riff-Panels: dunkles Wasser mit Korallenästen, die von oben
+    hereinwachsen. Ruhig genug, dass Navigation und Titel darauf lesbar
+    bleiben.
+
+    Der Streifen wird auf der Seite genauso breit gezogen wie das Bild —
+    768 px Vorlage auf die volle Spaltenbreite. Damit liegt Spalte auf
+    Spalte, und die unterste Zeile des Streifens kann Pixel für Pixel in
+    die oberste Zeile des Bildes überblendet werden. Eine Naht gibt es dann
+    nicht mehr, weil an der Nahtstelle beide Bilder dasselbe zeigen.
+
+    Nur die obersten 330 Zeilen des Panels sind ruhiges Wasser mit
+    Korallen; darunter beginnen Quallen und Pilze, die weiter unten auf der
+    Seite ohnehin vorkommen. Für die nötige Höhe wird der saubere Teil
+    darum nach oben gespiegelt fortgesetzt statt tiefer geschnitten. Der
+    obere Teil ist auf den meisten Breiten ohnehin abgeschnitten.
+    """
+    kanzel = np.asarray(Image.open(RIFF).convert("RGB"))[:330].astype(np.float32)
+    # Verdoppelt, damit der Streifen auch auf schmalen Displays noch über
+    # die volle Höhe reicht: Bei 320 px Breite deckt er 275 px ab, gebraucht
+    # werden 240. Die Spiegelachse liegt weit oben und ist auf den meisten
+    # Breiten abgeschnitten.
+    streifen = np.concatenate([kanzel[::-1], kanzel])
+
+    # Überblendet wird in die obersten Zeilen des Bildes, nach oben
+    # gespiegelt: Die letzte Zeile des Streifens ist dann genau die erste
+    # Zeile des Bildes, die vorletzte die zweite und so weiter. So läuft die
+    # Malerei über die Naht hinweg weiter, statt an ihr zu kippen.
+    kopf = np.asarray(Image.open(HINTERGRUND).convert("RGB"))[:130].astype(np.float32)
+    saum = kopf.shape[0]
+    lauf = (np.linspace(0, 1, saum) ** 1.3)[:, None, None]
+    streifen[-saum:] = streifen[-saum:] * (1 - lauf) + kopf[::-1] * lauf
+
+    ziel = WURZEL / "public/art/riff_oben.webp"
+    bild = Image.fromarray(streifen.clip(0, 255).astype("uint8"))
+    bild.save(ziel, "WEBP", quality=84, method=6)
+    print(f"{ziel.name}: {bild.width}x{bild.height}, "
+          f"{ziel.stat().st_size / 1024:.0f} KB")
 
 
 def einfaerben(im: Image.Image, drehung: int, staerke: float,
@@ -230,7 +291,8 @@ def sprites() -> None:
     ordner.mkdir(parents=True, exist_ok=True)
     gesamt = 0
     for quelle in sorted(QUELLEN.glob("*.png")):
-        if quelle == HINTERGRUND or quelle.name.startswith("textfeld_"):
+        # Die grossen Vorlagen sind keine Sprites — sie haben eigene Wege.
+        if quelle in (HINTERGRUND, RIFF) or quelle.name.startswith("textfeld_"):
             continue
         im = Image.open(quelle).convert("RGBA")
         # Reste zuerst entfernen, dann verkleinern: Beim Verkleinern entsteht
@@ -293,6 +355,7 @@ def favicon() -> None:
 
 if __name__ == "__main__":
     hintergrund()
+    riff_oben()
     rahmen()
     sprites()
     icons()

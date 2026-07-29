@@ -41,7 +41,11 @@ export default function SiteNav() {
       className="sticky top-0 z-50"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
-      <ul className="mx-auto flex max-w-3xl items-center justify-center gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-4 sm:py-3">
+      {/* Auf schmalen Displays passen die vier Knöpfe nicht nebeneinander.
+          Dann lässt sich die Reihe seitlich schieben, statt dass der letzte
+          abgeschnitten wird — `safe center` hält sie mittig, solange sie
+          Platz hat, und rückt sie erst beim Überlaufen nach links. */}
+      <ul className="nav-reihe mx-auto flex items-center justify-[safe_center] gap-1.5 overflow-x-auto px-2 py-2.5">
         {NAV.map((n) => {
           const ist = aktiv === n.id;
           return (
@@ -49,7 +53,7 @@ export default function SiteNav() {
               <a
                 href={`#${n.id}`}
                 aria-current={ist ? "true" : undefined}
-                className={`block rounded-full border px-3 py-1.5 text-[0.8125rem] whitespace-nowrap backdrop-blur-md transition-colors sm:px-4 sm:text-sm ${
+                className={`block rounded-full border px-3 py-1.5 text-[0.8125rem] whitespace-nowrap backdrop-blur-md transition-colors ${
                   ist
                     ? "border-sky/70 bg-sky/35 text-foam"
                     : "border-white/25 bg-night-900/45 text-foam hover:border-white/50"

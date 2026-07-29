@@ -34,7 +34,7 @@ type Treiber = {
   dauer: number;
   verzoegerung: number;
   deckkraft: number;
-  /** Seitlicher Versatz auf dem Weg nach oben, in vw. Negativ = nach links.
+  /** Seitlicher Versatz auf dem Weg nach oben, in cqw. Negativ = nach links.
    *  Damit steigt jede Blase in ihrem eigenen Winkel, statt dass alle
    *  senkrecht hochziehen. */
   drift: number;
@@ -424,6 +424,105 @@ const FISCHE: Fisch[] = [
   },
 ];
 
+/** Ein Molch, der durchs Bild zieht.
+ *
+ *  Der Molch ist das Wappentier des Fests — er steckt gross im
+ *  Hintergrundbild. Hier schwimmt er noch einmal als eigenes Tier vorbei,
+ *  aber weit hinten und ruhig: Er soll auffallen, wenn man hinschaut, und
+ *  nicht stören, wenn man liest. Darum liegt er auf der hinteren Ebene und
+ *  ist halb durchsichtig, wie etwas, das eine Wasserschicht weiter weg ist.
+ */
+type Molch = {
+  datei: string;
+  /** Breite in cqw — anteilig zur Spalte, wie alles am Bild. */
+  breite: number;
+  oben: number;
+  dauer: number;
+  verzoegerung: number;
+  deckkraft: number;
+  /** true = schwimmt nach links, das Bild wird gespiegelt */
+  gespiegelt?: boolean;
+  /** Mittelpunkt des gemalten Auges (Anteil von Breite und Höhe), Grösse der
+   *  Iris in % der Molchbreite bzw. -höhe und der Takt eines Blickwechsels. */
+  auge: { x: number; y: number; w: number; h: number; takt: number };
+};
+
+/* Die beiden schwimmen dort durch, wo zwischen den Textblasen offenes
+   Wasser bleibt — sonst zögen sie hinter einer Blase vorbei und niemand
+   sähe sie. */
+const MOLCHE: Molch[] = [
+  {
+    datei: "molch_01",
+    breite: 34,
+    oben: 33,
+    dauer: 96,
+    verzoegerung: -22,
+    deckkraft: 0.74,
+    auge: { x: 0.9128, y: 0.8604, w: 3.4, h: 4.5, takt: 8.2 },
+  },
+  {
+    datei: "molch_02",
+    breite: 30,
+    oben: 75.5,
+    dauer: 118,
+    verzoegerung: -74,
+    deckkraft: 0.66,
+    gespiegelt: true,
+    auge: { x: 0.9317, y: 0.5744, w: 3.1, h: 5.1, takt: 9.6 },
+  },
+];
+
+/** Der zusammengerollte Molch, der auf einer Kachel sitzt statt zu schwimmen.
+ *  Wird von der Seite aus gesetzt, darum als eigene Komponente. */
+const MOLCH_SITZT: Molch = {
+  datei: "molch_03",
+  breite: 0,
+  oben: 0,
+  dauer: 0,
+  verzoegerung: 0,
+  deckkraft: 1,
+  auge: { x: 0.0889, y: 0.5532, w: 4.4, h: 5.4, takt: 7.8 },
+};
+
+function MolchKoerper({ m }: { m: Molch }) {
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`/art/sprites/${m.datei}.webp`}
+        alt=""
+        loading="lazy"
+        style={m.gespiegelt ? { transform: "scaleX(-1)" } : undefined}
+      />
+      {/* Auch der Molch schaut sich um — dieselbe wandernde Pupille wie bei
+          den Fischen, nur flacher, weil sein Auge ein Oval ist. */}
+      <span
+        className="molch-blick"
+        style={
+          {
+            left: `${(m.gespiegelt ? 1 - m.auge.x : m.auge.x) * 100}%`,
+            top: `${m.auge.y * 100}%`,
+            width: `${m.auge.w}%`,
+            height: `${m.auge.h}%`,
+            "--takt": `${m.auge.takt}s`,
+          } as React.CSSProperties
+        }
+      >
+        <span className="molch-pupille" />
+      </span>
+    </>
+  );
+}
+
+/** Der sitzende Molch für eine Kachel. Er schwimmt nicht, er schaut nur. */
+export function MolchSitzt({ className = "" }: { className?: string }) {
+  return (
+    <span className={`molch-sitzt ${className}`} aria-hidden="true">
+      <MolchKoerper m={MOLCH_SITZT} />
+    </span>
+  );
+}
+
 function stil(t: Treiber): React.CSSProperties {
   return {
     left: `${t.links}%`,
@@ -431,7 +530,7 @@ function stil(t: Treiber): React.CSSProperties {
     width: t.groesse,
     "--dauer": `${t.dauer}s`,
     "--verzoegerung": `${t.verzoegerung}s`,
-    "--drift": `${t.drift}vw`,
+    "--drift": `${t.drift}cqw`,
     "--hoehe": `${t.hoehe}vh`,
     // Die Deckkraft steckt in der Animation: Am Anfang und Ende der Bahn
     // blendet die Blase weg, sonst würde sie am Schluss sichtbar springen.
@@ -443,6 +542,27 @@ export default function Blubber() {
   return (
     <>
       <div className="blubber" aria-hidden="true">
+        {/* Die Molche ganz hinten, hinter Quallen und Blasen. */}
+        {MOLCHE.map((m, i) => (
+          <span
+            key={`m${i}`}
+            className={`molch ${m.gespiegelt ? "molch-links" : ""}`}
+            style={
+              {
+                top: `${m.oben}%`,
+                width: `${m.breite}cqw`,
+                opacity: m.deckkraft,
+                "--dauer": `${m.dauer}s`,
+                "--verzoegerung": `${m.verzoegerung}s`,
+              } as React.CSSProperties
+            }
+          >
+            <span className="molch-wiege">
+              <MolchKoerper m={m} />
+            </span>
+          </span>
+        ))}
+
         {QUALLEN.map((q, i) => (
           <span key={`q${i}`} className="treiber qualle" style={stil(q)}>
             <span className="qualle-wiege">

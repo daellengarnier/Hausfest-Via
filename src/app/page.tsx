@@ -1,4 +1,4 @@
-import Blubber, { FischStill } from "@/components/blubber";
+import Blubber, { FischStill, MolchSitzt } from "@/components/blubber";
 import SiteNav from "@/components/site-nav";
 import {
   Bubble,
@@ -21,6 +21,13 @@ export default function Home() {
   return (
     <div className="relative min-h-screen">
       <div aria-hidden="true" className="fest-canvas" />
+      {/* Über der Bildoberkante wächst das Riff weiter, statt dass dort ein
+          leerer blauer Balken steht. Der Streifen endet genau da, wo das
+          Bild beginnt — an den Positionen darunter ändert sich nichts. */}
+      <div aria-hidden="true" className="riff-oben">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/art/riff_oben.webp" alt="" />
+      </div>
       {/* Der Molch schaut sich um — seine Pupille liegt als eigene kleine
           Scheibe über dem gemalten Auge im Hintergrundbild. */}
       <span aria-hidden="true" className="molch-auge">
@@ -29,7 +36,7 @@ export default function Home() {
       {/* In der gemalten Höhle weiter unten hingen zwei starre Fische. Die
           sind aus dem Bild raus; stattdessen hängt hier einer ab, der sich
           umschaut und dessen Laterne pulst. Er sitzt — wie das Molchauge —
-          in vw am Bild fest, damit er in jeder Fensterbreite in der Höhle
+          in cqw am Bild fest, damit er in jeder Spaltenbreite in der Höhle
           bleibt. */}
       <FischStill art={0} gespiegelt className="hoehlen-fisch" />
       <Blubber />
@@ -37,7 +44,7 @@ export default function Home() {
 
       {/* Titel — die Illustration trägt den Kopf der Seite ohne jede
           Abdunklung; die Schatten an der Schrift erledigen die Lesbarkeit. */}
-      <header className="relative px-6 pb-12 pt-12 text-center sm:pb-16 sm:pt-16">
+      <header className="relative px-6 pb-12 pt-12 text-center">
         <div className="relative mx-auto max-w-2xl">
           <TitelText />
 
@@ -49,20 +56,20 @@ export default function Home() {
                 key={j.zahl}
                 className={
                   i === 0
-                    ? "absolute left-0 top-[10.5rem] flex w-[6.2rem] flex-col items-center sm:left-4 sm:top-56 sm:w-32"
-                    : "absolute right-0 top-[16.5rem] flex w-[6.2rem] flex-col items-center sm:right-4 sm:top-80 sm:w-32"
+                    ? "absolute left-0 top-[10.5rem] flex w-[6.2rem] flex-col items-center"
+                    : "absolute right-0 top-[16.5rem] flex w-[6.2rem] flex-col items-center"
                 }
               >
                 <Bubble
                   sprite={j.blase}
-                  className="jahresblase h-[6.2rem] w-[6.2rem] sm:h-32 sm:w-32"
+                  className="jahresblase h-[6.2rem] w-[6.2rem]"
                   style={{ "--takt": i === 0 ? "9s" : "12s" } as React.CSSProperties}
                 >
                   <span className="flex flex-col items-center leading-none">
-                    <span className="font-display text-2xl font-extrabold text-foam sm:text-4xl">
+                    <span className="font-display text-2xl font-extrabold text-foam">
                       {j.zahl}
                     </span>
-                    <span className="mt-0.5 text-[0.62rem] text-foam sm:mt-1 sm:text-xs">
+                    <span className="mt-0.5 text-[0.62rem] text-foam">
                       {j.was}
                     </span>
                   </span>
@@ -73,8 +80,8 @@ export default function Home() {
 
           {/* Wann, wo und warum in einem Block — gläsern, damit das Bild
               durchscheint und die Angaben trotzdem zusammenbleiben. */}
-          <div className="blasenfeld blasenfeld-rund tief mt-[19rem] inline-flex flex-col items-center sm:mt-[18rem]">
-            <p className="font-display text-xl font-bold text-foam sm:text-2xl">
+          <div className="blasenfeld blasenfeld-rund tief mt-[19rem] inline-flex flex-col items-center">
+            <p className="font-display text-xl font-bold text-foam">
               {FEST.datum}
             </p>
             <p className="text-foam-dim">{FEST.zeit}</p>
@@ -93,13 +100,13 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="relative px-5 pb-12 sm:px-6">
+      <main className="relative px-5 pb-12">
         {/* Kein Kasten mehr hinter dem Text: Die Schrift liegt direkt auf der
             Illustration, getragen von ihrem Schatten. */}
         <div className="tief mx-auto max-w-2xl">
           <div className="py-4">
             <Abschnitt id="willkommen" titel="Willkommen" form={0}>
-              <p className="font-display text-xl font-bold text-foam sm:text-2xl">
+              <p className="font-display text-xl font-bold text-foam">
                 Schön, hast du hierhin gefunden!
               </p>
               <p>
@@ -116,7 +123,7 @@ export default function Home() {
 
             {/* Bewusst leer: Hier liegt eine der schönsten Stellen der
                 Illustration, die soll frei bleiben. */}
-            <div aria-hidden="true" className="h-[16vh] sm:h-[20vh]" />
+            <div aria-hidden="true" className="h-[16vh]" />
 
             <Abschnitt id="tickets" titel="Tickets" form={1} blase="blasenfeld-rund">
               <p>
@@ -166,7 +173,10 @@ export default function Home() {
               </p>
             </Abschnitt>
 
-            <div className="blasenfeld blasenfeld-flach mt-10">
+            <div className="blasenfeld blasenfeld-flach relative mt-10">
+              {/* Ein Molch hat es sich auf der Kachel bequem gemacht — er
+                  schaut sich um, sitzt aber still. */}
+              <MolchSitzt className="-top-10 right-1 w-24" />
               <p className="font-display font-bold text-foam">
                 Als App installieren
               </p>
@@ -199,8 +209,8 @@ export default function Home() {
 function TitelText() {
   return (
     <h1 className="titel-leuchten font-display font-extrabold leading-[0.88] tracking-tight text-foam">
-      <span className="block text-[3.4rem] sm:text-8xl">Hausfest</span>
-      <span className="mt-1 block text-[3.9rem] text-mint sm:mt-2 sm:text-9xl">
+      <span className="block text-[3.4rem]">Hausfest</span>
+      <span className="mt-1 block text-[3.9rem] text-mint">
         Via1
       </span>
     </h1>
@@ -225,7 +235,7 @@ function Abschnitt({
   return (
     <section id={id} className="relative scroll-mt-24 py-9 first:pt-0">
       <CoralRule form={form} />
-      <h2 className="mt-7 font-display text-3xl font-extrabold text-foam sm:text-4xl">
+      <h2 className="mt-7 font-display text-3xl font-extrabold text-foam">
         {titel}
       </h2>
       {/* Der Text sitzt in einer Blase: Auf der bunten Illustration war er
