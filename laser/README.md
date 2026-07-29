@@ -5,9 +5,15 @@ dünnes Sperrholz.
 
 ## Dateien
 
-| Datei | Text oben |
+| Datei | wofür |
 | --- | --- |
-| `hausfest-qr-50mm.svg` | Hausfest Via · 5. September |
+| `hausfest-qr-50mm.svg` | die Vorlage, für die Lasersoftware |
+| `hausfest-qr-50mm.pdf` | dieselbe Zeichnung als PDF, 50 × 50 mm — für alles, was kein SVG frisst |
+| `hausfest-qr-50mm.png` | 1181 × 1181 px (600 dpi), weisser Grund — für Vorschau und Druck |
+
+Alle drei tragen oben „Hausfest Via · 5. September“ und unten den Link.
+SVG und PDF sind Vektor, im PNG steckt der Schnittkreis nur noch als rote
+Linie im Bild.
 
 Auf dem Anhänger steht „Hausfest Via“ ohne die 1 — auf 50 mm zählt jedes
 Zeichen, und je kürzer die Zeile, desto grösser darf der QR werden. Auf der
@@ -73,9 +79,12 @@ schiefgeht, steht der Link unten auf der Scheibe zum Abtippen.
 Nach einer Textänderung (oder wenn die URL wechselt):
 
 ```bash
-pip install segno fonttools
+pip install segno fonttools cairosvg
 python3 scripts/art/gen_qr.py
 ```
+
+`cairosvg` braucht es nur für PDF und PNG — ohne das Paket entsteht
+trotzdem die SVG.
 
 Die Schriften kommen aus `src/app/fonts/` und stecken als Pfade in der SVG —
 die Datei ist also auf jedem Rechner identisch, ganz ohne Font-Installation.

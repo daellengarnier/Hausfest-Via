@@ -359,9 +359,41 @@ def build(titel: str, dest: pathlib.Path) -> pathlib.Path:
     return dest
 
 
+def ausgeben(svg: pathlib.Path) -> None:
+    """PDF und PNG neben die SVG legen.
+
+    Nicht jede Lasersoftware und nicht jede Druckerei nimmt SVG. Das PDF ist
+    dieselbe Vektorzeichnung in 50 × 50 mm — Schnittlinie bleibt rot und
+    dünn. Das PNG ist für alles, was nur ein Bild will; 600 dpi, damit die
+    feinen Module auch gedruckt sauber stehen.
+
+    `cairosvg` ist optional: Fehlt es, entsteht trotzdem die SVG.
+    """
+    try:
+        import cairosvg
+    except ImportError:
+        print("  (cairosvg fehlt — nur SVG erzeugt)")
+        return
+
+    pdf = svg.with_suffix(".pdf")
+    cairosvg.svg2pdf(url=str(svg), write_to=str(pdf))
+    print(f"{pdf.name}: {pdf.stat().st_size / 1024:.0f} KB")
+
+    # 50 mm bei 600 dpi. Weisser Grund statt durchsichtig: Der QR braucht
+    # seine helle Ruhezone, sonst liest ihn auf dunklem Grund kein Scanner.
+    kante = round(D / 25.4 * 600)
+    png = svg.with_suffix(".png")
+    cairosvg.svg2png(
+        url=str(svg), write_to=str(png),
+        output_width=kante, output_height=kante, background_color="white",
+    )
+    print(f"{png.name}: {kante}x{kante} px (600 dpi), "
+          f"{png.stat().st_size / 1024:.0f} KB")
+
+
 if __name__ == "__main__":
     # Auf dem Anhänger steht „Hausfest Via“ ohne die 1 — auf 50 mm zählt
     # jedes Zeichen, und je kürzer die Zeile, desto grösser darf der QR
     # werden. Auf der Seite heisst das Fest weiterhin „Hausfest Via 1“.
     out = pathlib.Path(__file__).resolve().parents[2] / "laser"
-    build("Hausfest Via · 5. September", out / "hausfest-qr-50mm.svg")
+    ausgeben(build("Hausfest Via · 5. September", out / "hausfest-qr-50mm.svg"))
