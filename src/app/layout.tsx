@@ -21,7 +21,7 @@ const hand = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Hausfest Via1 — 5. September",
+  title: "Hausfest Via 1 — 5. September",
   description:
     "10 Jahre Spinnerei, 33 Jahre Via Felsenau — wir feiern am 5. September ab 16 Uhr am Spinnereiweg 17 in Bern.",
   manifest: "/manifest.webmanifest",

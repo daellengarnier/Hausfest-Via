@@ -32,8 +32,15 @@ body {
 html {
   scroll-behavior: smooth;
   /* Ab welcher Höhe die gemalte Vorlage beginnt. Steht hier, weil auch das
-     Molch-Auge damit rechnet, wo im Bild es zu liegen kommt. */
-  --bild-oben: 15rem;
+     Molch-Auge und der Höhlenfisch damit rechnen, wo im Bild sie zu liegen
+     kommen.
+
+     Seit der Riff-Streifen nahtlos in die Bildoberkante übergeht, ist das
+     keine sichtbare Kante mehr, sondern nur noch der Griff, mit dem sich
+     die ganze Bildwelt höher oder tiefer schieben lässt. Der Molch sitzt
+     damit gut 300 px unter diesem Wert — hoch genug, dass sein Kopf über
+     der Datumskachel bleibt. */
+  --bild-oben: 11rem;
 }
 
 /* Die Handy-Spalte. Die Seite ist für ein Display in der Hand gezeichnet:

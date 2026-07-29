@@ -7,12 +7,12 @@ dünnes Sperrholz.
 
 | Datei | Text oben |
 | --- | --- |
-| `hausfest-qr-50mm.svg` | Hausfest Via1 · 5. September |
+| `hausfest-qr-50mm.svg` | Hausfest Via 1 · 5. September |
 | `hausfest-qr-50mm-ohne-1.svg` | Hausfest Via · 5. September |
 
-Zwei Varianten, weil in der Vorgabe „Via1“ stand — falls das ein Tippfehler
-war, ist die zweite Datei die richtige. Vor dem Lasern kurz prüfen: auf Holz
-lässt sich das nicht mehr korrigieren.
+Die erste ist die richtige: Das Fest heisst „Hausfest Via 1“. Die zweite
+stammt aus der Zeit, als offen war, ob die 1 ein Tippfehler ist. Vor dem
+Lasern trotzdem kurz prüfen — auf Holz lässt sich das nicht korrigieren.
 
 ## Ebenen
 

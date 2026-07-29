@@ -56,8 +56,8 @@ export default function Home() {
                 key={j.zahl}
                 className={
                   i === 0
-                    ? "absolute left-0 top-[10.5rem] flex w-[6.2rem] flex-col items-center"
-                    : "absolute right-0 top-[16.5rem] flex w-[6.2rem] flex-col items-center"
+                    ? "absolute left-0 top-[8.5rem] flex w-[6.2rem] flex-col items-center"
+                    : "absolute right-0 top-[14.5rem] flex w-[6.2rem] flex-col items-center"
                 }
               >
                 <Bubble
@@ -173,6 +173,16 @@ export default function Home() {
               </p>
             </Abschnitt>
 
+            {/* Der Gruss zum Schluss steht über der Installations-Kachel:
+                Er schliesst den Text ab, die Kachel ist nur noch ein
+                technischer Hinweis und soll nicht das letzte Wort haben. */}
+            <div className="mt-12 px-1 text-center">
+              <Coral form={1} className="mx-auto h-8 w-8 text-blossom/60" />
+              <p className="mt-3 font-display text-2xl font-bold text-foam">
+                Bis zum 5. September!
+              </p>
+            </div>
+
             <div className="blasenfeld blasenfeld-flach relative mt-10">
               {/* Ein Molch hat es sich auf der Kachel bequem gemacht — er
                   schaut sich um, sitzt aber still. */}
@@ -193,13 +203,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      <footer className="tief relative px-6 py-12 text-center">
-        <Coral form={1} className="mx-auto h-8 w-8 text-blossom/60" />
-        <p className="mt-3 font-display text-2xl font-bold text-foam">
-          Bis zum 5. September!
-        </p>
-      </footer>
     </div>
   );
 }
@@ -211,7 +214,7 @@ function TitelText() {
     <h1 className="titel-leuchten font-display font-extrabold leading-[0.88] tracking-tight text-foam">
       <span className="block text-[3.4rem]">Hausfest</span>
       <span className="mt-1 block text-[3.9rem] text-mint">
-        Via1
+        Via 1
       </span>
     </h1>
   );

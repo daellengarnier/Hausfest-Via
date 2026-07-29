@@ -361,5 +361,5 @@ def build(titel: str, dest: pathlib.Path) -> pathlib.Path:
 
 if __name__ == "__main__":
     out = pathlib.Path(__file__).resolve().parents[2] / "laser"
-    build("Hausfest Via1 · 5. September", out / "hausfest-qr-50mm.svg")
+    build("Hausfest Via 1 · 5. September", out / "hausfest-qr-50mm.svg")
     build("Hausfest Via · 5. September", out / "hausfest-qr-50mm-ohne-1.svg")

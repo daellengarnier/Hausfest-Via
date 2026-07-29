@@ -10,7 +10,7 @@ export const TICKET_URL =
 export const TICKET_PASSWORT = "viaspinnerei";
 
 export const FEST = {
-  titel: "Hausfest Via1",
+  titel: "Hausfest Via 1",
   datum: "Samstag, 5. September",
   zeit: "ab 16 Uhr",
   ort: "Via Felsenau",

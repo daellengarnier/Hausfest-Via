@@ -28,7 +28,7 @@ export async function GET() {
   const zeilen = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Hausfest Via1//DE",
+    "PRODID:-//Hausfest Via 1//DE",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
