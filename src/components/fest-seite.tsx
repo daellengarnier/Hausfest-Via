@@ -35,8 +35,8 @@ const TEXTE = {
     en: "On 5 September from 4 pm we're opening the doors to our house — all of them at once. The party spreads across several floors: the garden, our glass pyramid, the flats and the club in the basement.",
   },
   willkommen2: {
-    de: "Es erwarten dich Kinderprogramm, Essen, Bands, Theater und DJs — und das bis in die frühen Morgenstunden.",
-    en: "Expect a kids' programme, food, bands, theatre and DJs — well into the early hours.",
+    de: "Es erwarten dich ein wunderschöner Ort, Essen, Bands, Theater und DJs — und das bis in die frühen Morgenstunden.",
+    en: "Expect a beautiful place, food, bands, theatre and DJs — well into the early hours.",
   },
 
   tickets1: {
