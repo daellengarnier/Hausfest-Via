@@ -178,26 +178,88 @@ section[id] {
   padding: 0.25rem 0.75rem 0.75rem;
 }
 
-/* Die Kacheln treiben ganz leicht, als hinge jede in der Strömung. Kein
-   Schaukeln — nur ein paar Pixel, gerade so viel, dass sie nicht wie
-   angeklebt wirken. Der Takt kommt je Kachel von aussen (`--treiben`),
-   sonst atmete die ganze Seite im Gleichschritt.
+/* Alle Kacheln treiben ganz leicht, als hinge jede im Wasser. Kein
+   Schaukeln — ein paar Pixel und ein Hauch Neigung, gerade so viel, dass
+   sie nicht wie angeklebt wirken. Der Takt kommt je Kachel von aussen
+   (`--treiben`), sonst atmete die ganze Seite im Gleichschritt.
 
-   Nicht für die Act-Karten (acht Stück nebeneinander wären Unruhe) und
-   nicht für den Ticket-Knopf: Der pulst schon, und zwei Animationen auf
-   derselben Eigenschaft schliessen einander aus. */
-.blasenfeld:not(.blasenfeld-act):not(.blasenfeld-ticket) {
+   Ausgenommen ist nur der Ticket-Knopf selbst: Der pulst schon, und zwei
+   Animationen auf derselben Eigenschaft schliessen einander aus — sein
+   Schweben trägt darum eine Hülle (`.ticket-schwebe`). */
+.blasenfeld:not(.blasenfeld-ticket) {
   animation: kachel-treiben var(--treiben, 14s) ease-in-out infinite alternate;
   will-change: transform;
 }
 
 @keyframes kachel-treiben {
   from {
-    transform: translate3d(-2px, 3px, 0);
+    transform: translate3d(-2px, 3px, 0) rotate(-0.2deg);
   }
   to {
-    transform: translate3d(2px, -3px, 0);
+    transform: translate3d(2px, -3px, 0) rotate(0.2deg);
   }
+}
+
+/* Die Act-Karten schweben einzeln: Jede dritte bzw. vierte startet an
+   einer anderen Stelle ihres Bogens und braucht unterschiedlich lang —
+   so wiegt sich der Stapel durcheinander statt im Gleichschritt. */
+li:nth-child(2n) .blasenfeld-act {
+  animation-duration: 17s;
+  animation-delay: -6s;
+}
+
+li:nth-child(3n) .blasenfeld-act {
+  animation-duration: 12s;
+  animation-delay: -3s;
+}
+
+li:nth-child(4n + 1) .blasenfeld-act {
+  animation-delay: -9s;
+}
+
+/* Die Hülle um den Ticket-Knopf: schwebt, während der Knopf darin pulst.
+   Zwei Elemente, weil beide Bewegungen auf `transform` liegen. */
+.ticket-schwebe {
+  display: inline-flex;
+  animation: kachel-treiben 11s ease-in-out infinite alternate;
+}
+
+/* Die Ticket-Späher: vier Fische, die beim Hinscrollen zum Knopf schiessen
+   und davor warten. Die Bewegung ist eine Transition auf dem Versatz —
+   schnell heran, weich abgebremst (steile Kurve am Anfang, flach am Ende). */
+.ticket-fische {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tf {
+  position: absolute;
+  width: 3.4rem;
+  transition: transform 0.55s cubic-bezier(0.15, 0.85, 0.25, 1);
+}
+
+/* Warteposition erreicht. */
+.tf-da {
+  transform: none;
+}
+
+/* Ruhelage: weit ausserhalb der Spalte — die schneidet seitlich ab, dort
+   sind sie unsichtbar und bereit für den nächsten Auftritt. */
+.tf-links {
+  transform: translate3d(-120cqw, 0, 0);
+}
+
+.tf-rechts {
+  transform: translate3d(120cqw, 0, 0);
+}
+
+/* Der Fisch im Späher füllt seine Hülle, statt absolut auf der Seite zu
+   liegen. */
+.tf .tf-fisch {
+  position: relative;
+  display: block;
+  width: 100%;
 }
 
 .blasenfeld-hoch {
@@ -754,6 +816,8 @@ section[id] {
   .molch-wiege,
   .molch-pupille,
   .ticket-puls,
+  .ticket-schwebe,
+  .tf,
   .vampir,
   .vampir-atem,
   .blasenfeld,
@@ -763,5 +827,9 @@ section[id] {
   }
   .blubber {
     display: none;
+  }
+  .tf {
+    transition: none;
+    transform: none;
   }
 }

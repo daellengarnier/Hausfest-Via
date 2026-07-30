@@ -1,5 +1,6 @@
 import Blubber, { FischStill, MolchSitzt, Vampir } from "@/components/blubber";
 import SiteNav from "@/components/site-nav";
+import TicketFische from "@/components/ticket-fische";
 import {
   Bubble,
   Kalender,
@@ -219,7 +220,10 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
             >
               <p>{t("tickets1")}</p>
               <p>{t("tickets2")}</p>
-              <div className="not-prose mt-7 flex justify-center">
+              <div className="not-prose relative mt-7 flex justify-center">
+                {/* Vier Fische schiessen herbei, wenn man hier ankommt, und
+                    warten neben dem Knopf — zwei je Seite. */}
+                <TicketFische />
                 <TicketButton sprache={sprache} />
               </div>
             </Abschnitt>
@@ -447,23 +451,27 @@ function TicketButton({ sprache }: { sprache: Sprache }) {
     );
   }
   return (
-    // Neuer Tab: in der installierten PWA bliebe die App sonst im Ticketshop
-    // stecken — ohne Zurück-Knopf ein Sackgassen-Erlebnis.
-    <a
-      href={TICKET_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="blasenfeld blasenfeld-ticket ticket-puls inline-flex flex-col items-center text-center"
-    >
-      <span className="font-display text-lg font-bold text-foam">
-        {TEXTE.ticketKnopf[sprache]}
-      </span>
-      {TICKET_PASSWORT ? (
-        <span className="mt-0.5 text-sm text-foam/85">
-          {TEXTE.ticketPasswort[sprache]}:{" "}
-          <strong className="font-bold text-foam">{TICKET_PASSWORT}</strong>
+    // Die Hülle schwebt, der Knopf darin pulst — zwei Elemente, weil beide
+    // Bewegungen auf `transform` liegen und sich sonst überschrieben.
+    <span className="ticket-schwebe">
+      {/* Neuer Tab: in der installierten PWA bliebe die App sonst im
+          Ticketshop stecken — ohne Zurück-Knopf ein Sackgassen-Erlebnis. */}
+      <a
+        href={TICKET_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="blasenfeld blasenfeld-ticket ticket-puls inline-flex flex-col items-center text-center"
+      >
+        <span className="font-display text-lg font-bold text-foam">
+          {TEXTE.ticketKnopf[sprache]}
         </span>
-      ) : null}
-    </a>
+        {TICKET_PASSWORT ? (
+          <span className="mt-0.5 text-sm text-foam/85">
+            {TEXTE.ticketPasswort[sprache]}:{" "}
+            <strong className="font-bold text-foam">{TICKET_PASSWORT}</strong>
+          </span>
+        ) : null}
+      </a>
+    </span>
   );
 }
