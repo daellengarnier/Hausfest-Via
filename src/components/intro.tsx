@@ -85,6 +85,11 @@ export default function Intro({ sprache }: { sprache: Sprache }) {
         onClick={zuenden}
         aria-label={TEXT.knopf[sprache]}
       >
+        {/* Zwei Ebenen wie bei den schwimmenden Fischen: Der Knopf trägt
+            den Abgang, die Hülle darin das Treiben. So läuft das Treiben
+            beim Wegschwimmen einfach weiter, statt hart auf null zu
+            springen — das war vorher der Ruck. */}
+        <span className="intro-wippe">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/art/sprites/anglerfisch_02.webp" alt="" />
         {/* Das Auge wandert schon im Dunkeln — er ist wach, nur das Licht
@@ -108,6 +113,7 @@ export default function Intro({ sprache }: { sprache: Sprache }) {
         {/* Die Laterne: aus, bis gezündet wird. Sitzt an derselben Stelle
             wie bei den schwimmenden Fischen. */}
         <span className="intro-laterne" />
+        </span>
       </button>
 
       <p className="intro-hinweis">{TEXT.hinweis[sprache]}</p>

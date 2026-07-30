@@ -675,7 +675,15 @@ li:nth-child(4n + 1) .blasenfeld-act {
   background: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  animation: intro-treiben 5.5s ease-in-out infinite alternate;
+}
+
+/* Das Treiben im Dunkeln: eine kleine Runde statt blossem Auf und Ab —
+   er dreht sich leicht, steigt, sackt, wie ein Tier, das wartet. Liegt
+   auf einer eigenen Hülle und läuft darum auch während des Abgangs
+   weiter. */
+.intro-wippe {
+  display: block;
+  animation: intro-treiben 7.5s ease-in-out infinite;
 }
 
 /* Der Abgang: Mit brennender Laterne schwimmt er nach rechts oben aus dem
@@ -696,7 +704,7 @@ li:nth-child(4n + 1) .blasenfeld-act {
   }
 }
 
-.intro-fisch img {
+.intro-wippe img {
   display: block;
   width: 100%;
   height: auto;
@@ -705,16 +713,23 @@ li:nth-child(4n + 1) .blasenfeld-act {
   transition: filter 0.5s ease;
 }
 
-.intro-hell .intro-fisch img {
+.intro-hell .intro-wippe img {
   filter: brightness(1.05);
 }
 
 @keyframes intro-treiben {
-  from {
-    transform: translate3d(0, -7px, 0) rotate(-1deg);
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
-  to {
-    transform: translate3d(0, 7px, 0) rotate(1deg);
+  27% {
+    transform: translate3d(9px, -11px, 0) rotate(-2.4deg);
+  }
+  52% {
+    transform: translate3d(-3px, -17px, 0) rotate(0.8deg);
+  }
+  76% {
+    transform: translate3d(-10px, -6px, 0) rotate(2.4deg);
   }
 }
 
