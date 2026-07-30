@@ -68,6 +68,10 @@ const TEXTE = {
     en: "Treating each other with respect and care is the foundation of a safe time together. Discrimination, racism, sexism and boundary-crossing behaviour have no place here. Mind your own boundaries and those of others, act only with mutual consent, and support people who feel uncomfortable or need help.",
   },
   miteinander2: {
+    de: "Unser Haus ist leider nicht vollständig barrierefrei. Wir sind jedoch motiviert, gemeinsam individuelle Lösungen zu finden. Melde dich gerne bei uns, damit wir besprechen können, was du für deinen Besuch benötigst.",
+    en: "Unfortunately, our house is not fully accessible. But we're motivated to find individual solutions together — do get in touch so we can talk about what you need for your visit.",
+  },
+  miteinander3: {
     de: "Wir laden dich in unsere privaten vier Wände ein. Darum bitten wir dich, die Info bedacht weiterzugeben.",
     en: "We're inviting you into our own four walls — so please pass this info on thoughtfully.",
   },
@@ -247,6 +251,7 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
             >
               <p>{t("miteinander1")}</p>
               <p>{t("miteinander2")}</p>
+              <p>{t("miteinander3")}</p>
             </Abschnitt>
 
             {/* Der Gruss zum Schluss steht über der Installations-Kachel:
