@@ -15,7 +15,9 @@ und Schrift.
     python3 scripts/art/gen_qr_plakat.py <pfad-zum-plakat.pdf>
 """
 
+import math
 import pathlib
+import random
 import sys
 
 import segno
@@ -29,6 +31,79 @@ URL = gen_qr.URL
 
 # Das weisse Quadrat im Plakat, in pt gemessen (72 pt = 1 Zoll).
 FELD = (339.0, 769.5, 78.5, 78.0)
+
+# Über diesen Rand hinaus darf der Farbfleck ins Bild hineinlasieren.
+RAND_PT = 10.0
+
+
+def fleck_pfad(hb: float, hh: float, ausbuchtung: float,
+               samen: int = 7) -> str:
+    """Ein wackliger, geschlossener Umriss um das Feld — wie der Rand
+    eines Wasserfarbflecks.
+
+    Er beginnt auf dem Feldrand (`hb`/`hh` = halbe Feldmasse) und buchtet
+    nur nach AUSSEN aus: Nach innen dürfte er nicht, dort liegt das
+    weisse Quadrat der Vorlage, das ganz zugedeckt werden muss. Fester
+    Seed, damit jedes Erzeugen denselben Fleck malt.
+    """
+    rng = random.Random(samen)
+    ecken = 3.0                     # mm Eckrundung des Grundrechtecks
+    # Punkte gleichmässig dem Umfang entlang, je mit Auswärts-Versatz.
+    punkte = []
+    n = 30
+    umfang = 4 * (hb + hh - 2 * ecken) + 2 * math.pi * ecken
+    lauf = rng.uniform(0, umfang)
+    for i in range(n):
+        s = (i / n) * umfang
+        # Position auf dem gerundeten Rechteck bei Bogenlänge s
+        seiten = [
+            (2 * (hb - ecken), lambda u: (-hb + ecken + u, -hh), (0, -1)),
+            (math.pi / 2 * ecken, None, None),                       # Ecke or
+            (2 * (hh - ecken), lambda u: (hb, -hh + ecken + u), (1, 0)),
+            (math.pi / 2 * ecken, None, None),                       # Ecke ur
+            (2 * (hb - ecken), lambda u: (hb - ecken - u, hh), (0, 1)),
+            (math.pi / 2 * ecken, None, None),                       # Ecke ul
+            (2 * (hh - ecken), lambda u: (-hb, hh - ecken - u), (-1, 0)),
+            (math.pi / 2 * ecken, None, None),                       # Ecke ol
+        ]
+        mitte_ecken = [(hb - ecken, -hh + ecken), (hb - ecken, hh - ecken),
+                       (-hb + ecken, hh - ecken), (-hb + ecken, -hh + ecken)]
+        rest, ecke_nr = s, 0
+        for laenge, ort, normale in seiten:
+            if rest > laenge:
+                rest -= laenge
+                if ort is None:
+                    ecke_nr += 1
+                continue
+            if ort is not None:
+                x, y = ort(rest)
+                nx, ny = normale
+            else:
+                cx, cy = mitte_ecken[ecke_nr]
+                start = [-math.pi / 2, 0, math.pi / 2, math.pi][ecke_nr]
+                a = start + rest / ecken
+                nx, ny = math.cos(a), math.sin(a)
+                x, y = cx + ecken * nx, cy + ecken * ny
+            d = ausbuchtung * (0.35 + 0.65 * rng.random())
+            punkte.append((x + nx * d, y + ny * d))
+            break
+
+    # Catmull-Rom durch die Punkte, als kubische Beziers — rundet die
+    # Zacken zu weichen Wellen.
+    teile = [f"M{punkte[0][0]:.2f} {punkte[0][1]:.2f}"]
+    m = len(punkte)
+    for i in range(m):
+        p0 = punkte[(i - 1) % m]
+        p1 = punkte[i]
+        p2 = punkte[(i + 1) % m]
+        p3 = punkte[(i + 2) % m]
+        c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+        c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+        teile.append(
+            f"C{c1[0]:.2f} {c1[1]:.2f} {c2[0]:.2f} {c2[1]:.2f} "
+            f"{p2[0]:.2f} {p2[1]:.2f}"
+        )
+    return "".join(teile) + "Z"
 
 
 def qr_svg(dest: pathlib.Path) -> None:
@@ -49,8 +124,11 @@ def qr_svg(dest: pathlib.Path) -> None:
     matrix = [[bool(m) for m in row] for row in qr.matrix]
     n = len(matrix)
 
-    breite = FELD[2] / 72 * 25.4     # das ganze weisse Feld, in mm
-    hoehe = FELD[3] / 72 * 25.4
+    feld_b = FELD[2] / 72 * 25.4     # das weisse Feld, in mm
+    feld_h = FELD[3] / 72 * 25.4
+    rand = RAND_PT / 72 * 25.4       # so weit darf der Fleck hinauslasieren
+    breite = feld_b + 2 * rand       # Zeichenfläche
+    hoehe = feld_h + 2 * rand
     seite = 27.0                     # Kantenlänge des QR samt Ruhezone
     mod = seite / (n + 4)            # 2 Module Ruhezone je Seite
     qr_size = mod * n
@@ -72,6 +150,13 @@ def qr_svg(dest: pathlib.Path) -> None:
     )
 
     hb, hh = breite / 2, hoehe / 2
+    fb, fh = feld_b / 2, feld_h / 2
+    # Drei Umrisse: Der innerste deckt das weisse Feld sicher ab, die zwei
+    # äusseren lasieren halbtransparent darüber hinaus — so franst die
+    # Kante aus, statt hart abzuschliessen.
+    kern = fleck_pfad(fb + 0.3, fh + 0.3, ausbuchtung=1.6, samen=7)
+    saum1 = fleck_pfad(fb + 0.9, fh + 0.9, ausbuchtung=2.2, samen=19)
+    saum2 = fleck_pfad(fb + 1.5, fh + 1.5, ausbuchtung=2.8, samen=42)
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
      width="{breite:.3f}mm" height="{hoehe:.3f}mm"
      viewBox="{-hb:.3f} {-hh:.3f} {breite:.3f} {hoehe:.3f}">
@@ -115,9 +200,16 @@ def qr_svg(dest: pathlib.Path) -> None:
     .gravur .linie {{ fill: none; stroke: #000;
                       stroke-linecap: round; stroke-linejoin: round; }}
   </style>
-  <rect x="{-hb:.3f}" y="{-hh:.3f}" width="{breite:.3f}" height="{hoehe:.3f}"
-        fill="url(#wasser)"/>
-  {"".join(f'<rect x="{-hb:.3f}" y="{-hh:.3f}" width="{breite:.3f}" height="{hoehe:.3f}" fill="url(#' + w + ')"/>' for w in ("tuerkis", "lilie", "blau", "gruen", "pink"))}
+  <!-- Ausgefranster Rand: zwei halbtransparente Säume, dann der volle
+       Fleck. Die Wäsche selbst ist in den Kern-Umriss geschnitten. -->
+  <path d="{saum2}" fill="#8fcdc6" opacity="0.28"/>
+  <path d="{saum1}" fill="#9dd4cd" opacity="0.5"/>
+  <clipPath id="fleck"><path d="{kern}"/></clipPath>
+  <g clip-path="url(#fleck)">
+    <rect x="{-hb:.3f}" y="{-hh:.3f}" width="{breite:.3f}" height="{hoehe:.3f}"
+          fill="url(#wasser)"/>
+    {"".join(f'<rect x="{-hb:.3f}" y="{-hh:.3f}" width="{breite:.3f}" height="{hoehe:.3f}" fill="url(#' + w + ')"/>' for w in ("tuerkis", "lilie", "blau", "gruen", "pink"))}
+  </g>
   <g class="gravur">
     {"".join(gravur)}
   </g>
@@ -144,8 +236,10 @@ def einsetzen(plakat: pathlib.Path, svg: pathlib.Path,
     doc = fitz.open(plakat)
     seite = doc[0]
     x, y, b, h = FELD
-    # Die SVG hat exakt die Masse des Felds — sie deckt das Weiss ganz ab.
-    rect = fitz.Rect(x, y, x + b, y + h)
+    # Die SVG ist um den Lasier-Rand grösser als das Feld — mittig gesetzt
+    # deckt ihr Kern das Weiss ab, die Säume greifen ins Bild hinaus.
+    r = RAND_PT
+    rect = fitz.Rect(x - r, y - r, x + b + r, y + h + r)
     ueberlage = fitz.open(qr_pdf)
     seite.show_pdf_page(rect, ueberlage, 0)
     doc.save(dest, garbage=3, deflate=True)

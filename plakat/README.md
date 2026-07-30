@@ -13,8 +13,12 @@ in A3 gestochen scharf. Sein Grund ist keine weisse
 Fläche, sondern eine Aquarell-Wäsche aus der Palette des Plakats
 (per k-means gemessen): Teich-Türkis als Grundton, darüber weiche Wolken
 aus sattem Türkis, dem Gelbgrün der Seerosenblätter, Wasserblau und
-einem Hauch Lilien-Pink. Scanner brauchen Kontrast, nicht Weiss; die
-Lesbarkeit ist mit dem farbigen Grund unverändert geprüft.
+einem Hauch Lilien-Pink. Statt einer harten Quadratkante hat der Fleck
+einen welligen, ausgefransten Umriss, der leicht über das weisse Feld
+der Vorlage hinaus in den Teich lasiert — das Quadrat der Vorlage ist
+vollständig zugedeckt (die Wellen buchten nur nach aussen). Scanner
+brauchen Kontrast, nicht Weiss; die Lesbarkeit ist mit dem farbigen
+Grund unverändert geprüft.
 
 ## Worauf er zeigt
 
