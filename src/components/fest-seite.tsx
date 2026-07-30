@@ -72,7 +72,10 @@ const TEXTE = {
     en: "We're inviting you into our own four walls — so please pass this info on thoughtfully.",
   },
 
-  gruss: { de: "Bis zum 5. September!", en: "See you on 5 September!" },
+  gruss: {
+    de: "Wir sehen uns am 5. September. Wir freuen uns!",
+    en: "See you on 5 September. We can't wait!",
+  },
   kontaktFrage: {
     de: "Fragen? Melde dich bei uns:",
     en: "Questions? Get in touch:",
