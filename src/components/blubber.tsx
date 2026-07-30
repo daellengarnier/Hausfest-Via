@@ -381,6 +381,19 @@ type Fisch = {
 };
 
 const FISCHE: Fisch[] = [
+  // Der Empfangsfisch: zieht ganz oben durch, wo Titel und Molch stehen —
+  // klein und langsam, damit er den Kopf der Seite belebt, ohne ihn zu
+  // stören.
+  {
+    datei: "anglerfisch_04",
+    groesse: 92,
+    oben: 5,
+    dauer: 67,
+    verzoegerung: -39,
+    gespiegelt: true,
+    laterne: { x: 0.83, y: 0.155, weite: 46, takt: 3.7 },
+    auge: { x: 0.63, y: 0.417, iris: 11.3, takt: 6.7 },
+  },
   {
     datei: "anglerfisch_02",
     groesse: 150,
