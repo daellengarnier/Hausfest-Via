@@ -3,14 +3,14 @@
 Das Plakat bringt ein weisses Quadrat mit (unter dem «TICKETS»-Schild);
 dieses Skript erzeugt den passenden QR und setzt ihn dort hinein:
 
-  * plakat/qr_petzi.svg        — der QR allein, quadratisch, in mm
+  * plakat/qr_seite.svg        — der QR allein, quadratisch, in mm
   * plakat/ViaFest_A3_mit_QR.pdf — das Plakat mit eingesetztem QR (Vektor)
 
-Anders als der Anhänger zeigt dieser QR direkt auf den Petzi-Ticketshop —
-das Plakat wirbt ja genau dafür. Der Link ist lang, darum wird der Code
-dichter (Version 7, 45×45 Module statt 33×33). Auf Papier gedruckt ist
-das unkritisch; die Mitte bleibt trotzdem frei für die Pyramide, die
-Fehlerkorrektur H trägt das.
+Er zeigt wie der Anhänger auf die Hausfest-Seite: Der Petzi-Shop ist
+passwortgeschützt, und das Passwort steht nur dort — beim Ticket-Knopf.
+Ein QR direkt in den Shop liesse die Leute vor einem Passwortfeld
+stehen. Gleicher Code wie auf dem Anhänger (33×33), nur ohne Scheibe
+und Schrift.
 
     python3 scripts/art/gen_qr_plakat.py <pfad-zum-plakat.pdf>
 """
@@ -22,7 +22,10 @@ import segno
 
 import gen_qr
 
-TICKET_URL = "https://www.petzi.ch/en/organiser/236127/x2nv44btSyy-vzACtazc3A/"
+# Der QR zeigt auf die Hausfest-Seite, nicht direkt auf Petzi: Der Shop
+# ist passwortgeschützt, und das Passwort steht nur auf der Seite — beim
+# Ticket-Knopf. Wer am Plakat scannt, bekommt so beides zusammen.
+URL = gen_qr.URL
 
 # Das weisse Quadrat im Plakat, in pt gemessen (72 pt = 1 Zoll).
 FELD = (339.0, 769.5, 78.5, 78.0)
@@ -31,7 +34,7 @@ FELD = (339.0, 769.5, 78.5, 78.0)
 def qr_svg(dest: pathlib.Path) -> float:
     """Der QR als quadratische SVG in mm, Stil wie auf dem Anhänger:
     weiche Module, eckige Suchringe, Pyramide mit Auge in der Mitte."""
-    qr = segno.make(TICKET_URL, error="h", boost_error=True)
+    qr = segno.make(URL, error="h", boost_error=True)
     matrix = [[bool(m) for m in row] for row in qr.matrix]
     n = len(matrix)
 
@@ -40,9 +43,7 @@ def qr_svg(dest: pathlib.Path) -> float:
     qr_size = mod * n
     x0 = y0 = -qr_size / 2
 
-    # Mitte freiräumen. 11 Module wie auf dem Anhänger — bei 45×45 ist das
-    # ein kleinerer Anteil, die Pyramide wird also relativ kleiner, aber
-    # die Fehlerkorrektur hat mehr Luft.
+    # Mitte freiräumen, 11 Module wie auf dem Anhänger.
     loch = gen_qr.LOCH_MODULE
     von = (n - loch) // 2
     for r in range(von, von + loch):
@@ -61,7 +62,7 @@ def qr_svg(dest: pathlib.Path) -> float:
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
      width="{seite}mm" height="{seite}mm"
      viewBox="{-halb} {-halb} {seite} {seite}">
-  <title>Hausfest Via — QR zum Ticketshop</title>
+  <title>Hausfest Via — QR zur Fest-Seite</title>
   <style>
     .gravur {{ fill: #000; stroke: none; }}
     .gravur .hell {{ fill: #fff; }}
@@ -111,7 +112,7 @@ def einsetzen(plakat: pathlib.Path, svg: pathlib.Path,
 
 if __name__ == "__main__":
     out = pathlib.Path(__file__).resolve().parents[2] / "plakat"
-    svg = out / "qr_petzi.svg"
+    svg = out / "qr_seite.svg"
     qr_svg(svg)
     plakat = (
         pathlib.Path(sys.argv[1]) if len(sys.argv) > 1
