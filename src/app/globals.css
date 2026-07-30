@@ -231,12 +231,17 @@ li:nth-child(4n + 1) .blasenfeld-act {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* Vor Kachel und Knopf: Die Fische warten VOR dem Ticket, nichts soll
+     sie verdecken. */
+  z-index: 20;
 }
 
 .tf {
   position: absolute;
-  width: 3.4rem;
-  transition: transform 0.55s cubic-bezier(0.15, 0.85, 0.25, 1);
+  /* Breite und Tempo setzt jeder Fisch selbst — unterschiedlich gross,
+     unterschiedlich schnell. */
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.15, 0.85, 0.25, 1);
 }
 
 /* Warteposition erreicht. */
@@ -260,6 +265,38 @@ li:nth-child(4n + 1) .blasenfeld-act {
   position: relative;
   display: block;
   width: 100%;
+}
+
+/* Am Posten angekommen, blinken die Laternen richtig: viel schnellerer
+   Takt und ein hartes Ein/Aus statt des ruhigen Atmens — vier kleine
+   Warnlichter rund ums Ticket. Leicht verschiedene Takte, sonst blinkt
+   es im Chor. */
+.tf-da .laterne {
+  animation-name: tf-blinken;
+  animation-duration: 0.55s;
+}
+
+.tf-da:nth-child(2) .laterne {
+  animation-duration: 0.7s;
+}
+
+.tf-da:nth-child(3) .laterne {
+  animation-duration: 0.62s;
+}
+
+.tf-da:nth-child(4) .laterne {
+  animation-duration: 0.78s;
+}
+
+@keyframes tf-blinken {
+  from {
+    opacity: 0.12;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
 }
 
 .blasenfeld-hoch {
