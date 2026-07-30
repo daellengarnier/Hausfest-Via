@@ -35,11 +35,13 @@ def qr_svg(dest: pathlib.Path) -> None:
     """Der QR als SVG in mm, Stil wie auf dem Anhänger: weiche Module,
     eckige Suchringe, Pyramide mit Auge in der Mitte.
 
-    Der Grund ist nicht weiss, sondern ein heller Wasserton in der Farbe
-    des Teichs rundherum (dort gemessen) — so sitzt der Code im Bild,
-    statt als weisses Loch darin zu stehen. Ein leichter Verlauf zum Rand
-    lässt ihn wie lasiert wirken. Hell genug bleibt er: QR-Scanner
-    brauchen Kontrast zwischen Modulen und Grund, nicht Weiss.
+    Der Grund ist keine weisse Fläche, sondern eine Aquarell-Wäsche aus
+    der Palette des Plakats: Teich-Türkis als Grundton, darüber weiche
+    Wolken aus sattem Türkis, dem Gelbgrün der Seerosenblätter, kühlem
+    Wasserblau und einem Hauch Lilien-Pink (Farben per k-means aus dem
+    Bild gemessen). Alles bleibt hell genug: QR-Scanner brauchen
+    Kontrast zwischen Modulen und Grund, nicht Weiss — geprüft wird das
+    am fertigen PDF.
 
     Die SVG ist exakt so gross wie das weisse Feld im Plakat und deckt es
     ganz ab."""
@@ -75,10 +77,35 @@ def qr_svg(dest: pathlib.Path) -> None:
      viewBox="{-hb:.3f} {-hh:.3f} {breite:.3f} {hoehe:.3f}">
   <title>Hausfest Via — QR zur Fest-Seite</title>
   <defs>
-    <radialGradient id="wasser" cx="50%" cy="46%" r="75%">
-      <stop offset="0%" stop-color="#dcf0ec"/>
-      <stop offset="70%" stop-color="#c4e4df"/>
-      <stop offset="100%" stop-color="#a8d6d0"/>
+    <!-- Grundwäsche: das Teich-Türkis, deutlich aufgehellt. -->
+    <radialGradient id="wasser" cx="50%" cy="46%" r="80%">
+      <stop offset="0%" stop-color="#c8e9e3"/>
+      <stop offset="65%" stop-color="#a9dad3"/>
+      <stop offset="100%" stop-color="#8fcdc6"/>
+    </radialGradient>
+    <!-- Darüber einzelne Farbwolken aus der Palette des Plakats:
+         sattes Teich-Türkis, das Gelbgrün der Seerosenblätter, ein
+         kühles Wasserblau und ein Hauch Lilien-Pink. Alle laufen weich
+         nach aussen aus, wie ineinander verlaufende Lasuren. -->
+    <radialGradient id="tuerkis" cx="18%" cy="20%" r="55%">
+      <stop offset="0%" stop-color="rgba(47,175,181,0.42)"/>
+      <stop offset="100%" stop-color="rgba(47,175,181,0)"/>
+    </radialGradient>
+    <radialGradient id="lilie" cx="85%" cy="86%" r="50%">
+      <stop offset="0%" stop-color="rgba(197,197,40,0.38)"/>
+      <stop offset="100%" stop-color="rgba(197,197,40,0)"/>
+    </radialGradient>
+    <radialGradient id="blau" cx="82%" cy="12%" r="48%">
+      <stop offset="0%" stop-color="rgba(70,150,190,0.30)"/>
+      <stop offset="100%" stop-color="rgba(70,150,190,0)"/>
+    </radialGradient>
+    <radialGradient id="gruen" cx="12%" cy="88%" r="45%">
+      <stop offset="0%" stop-color="rgba(120,180,90,0.30)"/>
+      <stop offset="100%" stop-color="rgba(120,180,90,0)"/>
+    </radialGradient>
+    <radialGradient id="pink" cx="55%" cy="98%" r="30%">
+      <stop offset="0%" stop-color="rgba(210,90,140,0.20)"/>
+      <stop offset="100%" stop-color="rgba(210,90,140,0)"/>
     </radialGradient>
   </defs>
   <style>
@@ -90,6 +117,7 @@ def qr_svg(dest: pathlib.Path) -> None:
   </style>
   <rect x="{-hb:.3f}" y="{-hh:.3f}" width="{breite:.3f}" height="{hoehe:.3f}"
         fill="url(#wasser)"/>
+  {"".join(f'<rect x="{-hb:.3f}" y="{-hh:.3f}" width="{breite:.3f}" height="{hoehe:.3f}" fill="url(#' + w + ')"/>' for w in ("tuerkis", "lilie", "blau", "gruen", "pink"))}
   <g class="gravur">
     {"".join(gravur)}
   </g>
