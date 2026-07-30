@@ -17,11 +17,13 @@ import { FischStill } from "@/components/blubber";
  */
 // Posten bewusst unsymmetrisch: verschieden hoch, verschieden weit vom
 // Knopf weg, verschieden gross — ein Schwarm, keine Ehrengarde.
+// Die unteren zwei sind die grössten — sie stehen zuvorderst, die kleineren
+// oben wirken dadurch weiter weg.
 const FISCHE = [
-  { art: 0, vonLinks: true, stil: { left: "-1.9rem", top: "-3.1rem", width: "5.4rem" }, warte: 0.15, dauer: 0.95 },
-  { art: 1, vonLinks: true, stil: { left: "-0.3rem", top: "3.7rem", width: "4.1rem" }, warte: 0.6, dauer: 1.2 },
-  { art: 1, vonLinks: false, stil: { right: "-2.2rem", top: "-1.1rem", width: "4.8rem" }, warte: 0.35, dauer: 1.05 },
-  { art: 0, vonLinks: false, stil: { right: "0.4rem", top: "2.6rem", width: "3.6rem" }, warte: 0.8, dauer: 1.3 },
+  { art: 0, vonLinks: true, stil: { left: "-1.9rem", top: "-3.4rem", width: "5.2rem" }, warte: 0.15, dauer: 0.95 },
+  { art: 1, vonLinks: true, stil: { left: "-2.4rem", top: "3.9rem", width: "6.4rem" }, warte: 0.6, dauer: 1.2 },
+  { art: 1, vonLinks: false, stil: { right: "-2.2rem", top: "-1.6rem", width: "4.6rem" }, warte: 0.35, dauer: 1.05 },
+  { art: 0, vonLinks: false, stil: { right: "-2.0rem", top: "3.8rem", width: "5.9rem" }, warte: 0.8, dauer: 1.3 },
 ] as const;
 
 export default function TicketFische() {

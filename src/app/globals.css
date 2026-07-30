@@ -273,19 +273,19 @@ li:nth-child(4n + 1) .blasenfeld-act {
    es im Chor. */
 .tf-da .laterne {
   animation-name: tf-blinken;
-  animation-duration: 0.55s;
+  animation-duration: 0.34s;
 }
 
 .tf-da:nth-child(2) .laterne {
-  animation-duration: 0.7s;
+  animation-duration: 0.42s;
 }
 
 .tf-da:nth-child(3) .laterne {
-  animation-duration: 0.62s;
+  animation-duration: 0.38s;
 }
 
 .tf-da:nth-child(4) .laterne {
-  animation-duration: 0.78s;
+  animation-duration: 0.46s;
 }
 
 @keyframes tf-blinken {
