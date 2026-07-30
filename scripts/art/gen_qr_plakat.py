@@ -31,14 +31,25 @@ URL = gen_qr.URL
 FELD = (339.0, 769.5, 78.5, 78.0)
 
 
-def qr_svg(dest: pathlib.Path) -> float:
-    """Der QR als quadratische SVG in mm, Stil wie auf dem Anhänger:
-    weiche Module, eckige Suchringe, Pyramide mit Auge in der Mitte."""
+def qr_svg(dest: pathlib.Path) -> None:
+    """Der QR als SVG in mm, Stil wie auf dem Anhänger: weiche Module,
+    eckige Suchringe, Pyramide mit Auge in der Mitte.
+
+    Der Grund ist nicht weiss, sondern ein heller Wasserton in der Farbe
+    des Teichs rundherum (dort gemessen) — so sitzt der Code im Bild,
+    statt als weisses Loch darin zu stehen. Ein leichter Verlauf zum Rand
+    lässt ihn wie lasiert wirken. Hell genug bleibt er: QR-Scanner
+    brauchen Kontrast zwischen Modulen und Grund, nicht Weiss.
+
+    Die SVG ist exakt so gross wie das weisse Feld im Plakat und deckt es
+    ganz ab."""
     qr = segno.make(URL, error="h", boost_error=True)
     matrix = [[bool(m) for m in row] for row in qr.matrix]
     n = len(matrix)
 
-    seite = 27.0                     # mm — knapp kleiner als das weisse Feld
+    breite = FELD[2] / 72 * 25.4     # das ganze weisse Feld, in mm
+    hoehe = FELD[3] / 72 * 25.4
+    seite = 27.0                     # Kantenlänge des QR samt Ruhezone
     mod = seite / (n + 4)            # 2 Module Ruhezone je Seite
     qr_size = mod * n
     x0 = y0 = -qr_size / 2
@@ -58,20 +69,28 @@ def qr_svg(dest: pathlib.Path) -> float:
         0, motiv * 0.46, py_breite, py_hoehe, strich=mod * 0.16
     )
 
-    halb = seite / 2
+    hb, hh = breite / 2, hoehe / 2
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-     width="{seite}mm" height="{seite}mm"
-     viewBox="{-halb} {-halb} {seite} {seite}">
+     width="{breite:.3f}mm" height="{hoehe:.3f}mm"
+     viewBox="{-hb:.3f} {-hh:.3f} {breite:.3f} {hoehe:.3f}">
   <title>Hausfest Via — QR zur Fest-Seite</title>
+  <defs>
+    <radialGradient id="wasser" cx="50%" cy="46%" r="75%">
+      <stop offset="0%" stop-color="#dcf0ec"/>
+      <stop offset="70%" stop-color="#c4e4df"/>
+      <stop offset="100%" stop-color="#a8d6d0"/>
+    </radialGradient>
+  </defs>
   <style>
     .gravur {{ fill: #000; stroke: none; }}
-    .gravur .hell {{ fill: #fff; }}
+    .gravur .hell {{ fill: none; }}
     .gravur .ring {{ fill: none; stroke: #000; }}
     .gravur .linie {{ fill: none; stroke: #000;
                       stroke-linecap: round; stroke-linejoin: round; }}
   </style>
+  <rect x="{-hb:.3f}" y="{-hh:.3f}" width="{breite:.3f}" height="{hoehe:.3f}"
+        fill="url(#wasser)"/>
   <g class="gravur">
-    <rect class="hell" x="{-halb}" y="{-halb}" width="{seite}" height="{seite}"/>
     {"".join(gravur)}
   </g>
 </svg>
@@ -79,7 +98,6 @@ def qr_svg(dest: pathlib.Path) -> float:
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(svg)
     print(f"{dest.name}: {n}x{n} Module, {mod:.3f} mm/Modul")
-    return seite
 
 
 def einsetzen(plakat: pathlib.Path, svg: pathlib.Path,
@@ -98,16 +116,13 @@ def einsetzen(plakat: pathlib.Path, svg: pathlib.Path,
     doc = fitz.open(plakat)
     seite = doc[0]
     x, y, b, h = FELD
-    kante = min(b, h)
-    rect = fitz.Rect(
-        x + (b - kante) / 2, y + (h - kante) / 2,
-        x + (b + kante) / 2, y + (h + kante) / 2,
-    )
+    # Die SVG hat exakt die Masse des Felds — sie deckt das Weiss ganz ab.
+    rect = fitz.Rect(x, y, x + b, y + h)
     ueberlage = fitz.open(qr_pdf)
     seite.show_pdf_page(rect, ueberlage, 0)
     doc.save(dest, garbage=3, deflate=True)
     print(f"{dest.name}: QR bei ({rect.x0:.0f}, {rect.y0:.0f}) pt, "
-          f"{kante / 72 * 25.4:.1f} mm")
+          f"{b / 72 * 25.4:.1f} x {h / 72 * 25.4:.1f} mm")
 
 
 if __name__ == "__main__":

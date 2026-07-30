@@ -9,7 +9,11 @@ Das gezeichnete A3-Plakat, mit QR-Code zum Ticketshop.
 | `ViaFest_A3_mit_QR.pdf` | das fertige Plakat — **das in den Druck geben** |
 
 Der QR steckt im Plakat als Vektor, nicht als Bild — er bleibt also auch
-in A3 gestochen scharf.
+in A3 gestochen scharf. Sein Grund ist nicht weiss, sondern ein heller
+Wasserton in der Farbe des Teichs rundherum (dort gemessen, dann stark
+aufgehellt) — so sitzt der Code im Bild, statt als weisses Loch darin zu
+stehen. Scanner brauchen Kontrast, nicht Weiss; die Lesbarkeit ist mit
+dem getönten Grund unverändert geprüft.
 
 ## Worauf er zeigt
 
