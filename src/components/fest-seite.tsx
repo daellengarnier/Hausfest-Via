@@ -40,8 +40,8 @@ const TEXTE = {
   },
 
   tickets1: {
-    de: "Wir bitten dich ganz fest, ein Ticket zu kaufen. Wir kochen und kaufen für alle ein, die kommen — mit deinem Ticket wissen wir, mit wie vielen wir rechnen dürfen.",
-    en: "We warmly ask you to buy a ticket. We cook and shop for everyone who comes — your ticket tells us how many people to expect.",
+    de: "Wir bitten dich ganz fest, ein Ticket zu kaufen. So können wir abschätzen, wie viele Personen kommen — und wissen, wie viel wir einkaufen müssen.",
+    en: "We warmly ask you to buy a ticket. It lets us estimate how many people are coming — and how much we need to buy.",
   },
   tickets2: {
     de: "Eine Abendkasse gibt es auch, aber ab einer bestimmten Anzahl Leute stoppen wir den Einlass. Mit Ticket bist du auf der sicheren Seite.",
