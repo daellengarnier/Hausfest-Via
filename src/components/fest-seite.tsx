@@ -1,4 +1,5 @@
 import Blubber, { FischStill, MolchSitzt, Vampir } from "@/components/blubber";
+import Intro from "@/components/intro";
 import SiteNav from "@/components/site-nav";
 import TicketFische from "@/components/ticket-fische";
 import {
@@ -109,6 +110,9 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
     // Sprachen dasselbe und bleibt auf `de` — Screenreader und Übersetzer
     // lesen die Sprache darum hier ab.
     <div lang={sprache} className="relative min-h-screen">
+      {/* Der dunkle Empfang: alles schwarz, bis jemand die Laterne des
+          Fischs zündet. */}
+      <Intro sprache={sprache} />
       <div aria-hidden="true" className="fest-canvas" />
       {/* Über der Bildoberkante wächst das Riff weiter, statt dass dort ein
           leerer blauer Balken steht. Der Streifen endet genau da, wo das
