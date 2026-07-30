@@ -21,7 +21,7 @@
  * kurz davon.
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Treiber = {
   datei: string;
@@ -596,9 +596,36 @@ function stil(t: Treiber): React.CSSProperties {
 }
 
 export default function Blubber() {
+  // Die Ebenen sind normalerweise über die ganze Seite gespannt, und jede
+  // Position ist ein Prozentwert davon. Das hat einen Haken: Klappt jemand
+  // einen Act auf, wächst die Seite — und alle Tiere und Blasen springen
+  // ein Stück nach unten, weil ihre Prozente mitwachsen.
+  //
+  // Darum wird die Höhe der Ebenen einmal beim Laden gemessen (die Acts
+  // sind da noch zugeklappt) und dann festgehalten: Aufklappen ändert die
+  // Ebenen nicht mehr, nichts springt. Bei einer neuen Fensterbreite wird
+  // neu gemessen, denn dann bricht der Text anders um.
+  const [hoehe, setHoehe] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    let breite = window.innerWidth;
+    const messen = () => setHoehe(document.documentElement.scrollHeight);
+    messen();
+    // Nachladen der Schriften kann die Höhe noch leicht ändern.
+    document.fonts?.ready.then(messen);
+    const beiGroesse = () => {
+      if (window.innerWidth !== breite) {
+        breite = window.innerWidth;
+        messen();
+      }
+    };
+    window.addEventListener("resize", beiGroesse);
+    return () => window.removeEventListener("resize", beiGroesse);
+  }, []);
+  const fest = hoehe === undefined ? undefined : { height: hoehe };
+
   return (
     <>
-      <div className="blubber" aria-hidden="true">
+      <div className="blubber" aria-hidden="true" style={fest}>
         {/* Die Molche ganz hinten, hinter Quallen und Blasen. */}
         {MOLCHE.map((m, i) => (
           <span
@@ -641,7 +668,7 @@ export default function Blubber() {
 
       {/* Eigene Ebene vor dem Inhalt: Fische ziehen über Text und Karten
           hinweg, und ein paar Blasen verziehen, was hinter ihnen liegt. */}
-      <div className="blubber-vorn" aria-hidden="true">
+      <div className="blubber-vorn" aria-hidden="true" style={fest}>
         {BLASEN_VORN.map((b, i) => (
           <span key={`v${i}`} className="treiber blase" style={stil(b)}>
             <span className="blase-pendel relative block">
