@@ -634,6 +634,66 @@ li:nth-child(4n + 1) .blasenfeld-act {
   -webkit-backdrop-filter: blur(3px) saturate(1.5) brightness(1.12);
 }
 
+/* Das Plakat: schief angepinnte Vorschau, die sich zum Vollbild öffnet. */
+.plakat-knopf {
+  position: relative;
+  width: 7.2rem;
+  padding: 0;
+  border: 3px solid rgba(234, 255, 247, 0.85);
+  border-radius: 2px;
+  background: none;
+  cursor: pointer;
+  transform: rotate(-2.5deg);
+  box-shadow: 0 6px 18px rgba(0, 2, 12, 0.55);
+  transition: transform 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plakat-knopf:hover,
+.plakat-knopf:focus-visible {
+  transform: rotate(-1deg) scale(1.04);
+}
+
+.plakat-knopf img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.plakat-vollbild {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(1, 2, 8, 0.93);
+  cursor: zoom-out;
+}
+
+.plakat-vollbild img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 2px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+}
+
+.plakat-zu {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 0.6rem);
+  right: 0.9rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(1, 2, 8, 0.6);
+  color: var(--color-foam);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 /* ------------------------------------------------------------------ */
 /* Der dunkle Empfang: schwarzer Vorhang, ein Fisch, Laterne aus.      */
 

@@ -1,5 +1,6 @@
 import Blubber, { FischStill, MolchSitzt, Vampir } from "@/components/blubber";
 import Intro from "@/components/intro";
+import Plakat from "@/components/plakat";
 import SiteNav from "@/components/site-nav";
 import TicketFische from "@/components/ticket-fische";
 import {
@@ -248,6 +249,11 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
                   </li>
                 ))}
               </ul>
+
+              {/* Das gezeichnete Plakat — klein angepinnt, gross beim
+                  Antippen. Inhaltlich gehört es hierher: Es zeigt Bands,
+                  Floors und Zeiten. */}
+              <Plakat sprache={sprache} />
             </Abschnitt>
 
             <Abschnitt

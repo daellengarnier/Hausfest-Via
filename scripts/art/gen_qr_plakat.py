@@ -247,6 +247,29 @@ def einsetzen(plakat: pathlib.Path, svg: pathlib.Path,
           f"{b / 72 * 25.4:.1f} x {h / 72 * 25.4:.1f} mm")
 
 
+def web_bilder(plakat: pathlib.Path) -> None:
+    """Zwei WebP fürs Web: eine kleine Vorschau für die Karte im
+    Programm-Abschnitt und eine grosse Fassung für das Vollbild-Overlay.
+    Die grosse lädt erst, wenn jemand die Vorschau antippt."""
+    import io
+
+    import fitz
+    from PIL import Image
+
+    ordner = pathlib.Path(__file__).resolve().parents[2] / "public/art"
+    doc = fitz.open(plakat)
+    seite = doc[0]
+    for breite, name, q in [(480, "plakat_vorschau.webp", 80),
+                            (1200, "plakat_gross.webp", 78)]:
+        zoom = breite / seite.rect.width
+        pix = seite.get_pixmap(matrix=fitz.Matrix(zoom, zoom))
+        im = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
+        ziel = ordner / name
+        im.save(ziel, "WEBP", quality=q, method=6)
+        print(f"{ziel.name}: {im.width}x{im.height}, "
+              f"{ziel.stat().st_size / 1024:.0f} KB")
+
+
 if __name__ == "__main__":
     out = pathlib.Path(__file__).resolve().parents[2] / "plakat"
     svg = out / "qr_seite.svg"
@@ -256,6 +279,8 @@ if __name__ == "__main__":
         else out / "ViaFest_A3.pdf"
     )
     if plakat.exists():
-        einsetzen(plakat, svg, out / "ViaFest_A3_mit_QR.pdf")
+        fertig = out / "ViaFest_A3_mit_QR.pdf"
+        einsetzen(plakat, svg, fertig)
+        web_bilder(fertig)
     else:
         print(f"Plakat nicht gefunden ({plakat}) — nur die SVG erzeugt.")
