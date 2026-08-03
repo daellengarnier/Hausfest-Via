@@ -367,14 +367,22 @@ type Fisch = {
   verzoegerung: number;
   /** true = schwimmt nach links */
   gespiegelt?: boolean;
+  /** true = das Bild selbst schaut nach links (die Anglerfische schauen
+   *  nach rechts). Gespiegelt wird nur, wenn Blick- und Schwimmrichtung
+   *  nicht zusammenpassen. */
+  zeigtLinks?: boolean;
+  /** Schwimmt wellig wie ein gestreckter Jäger statt ruhig zu wippen. */
+  schlaengeln?: boolean;
   /** Wo der Leuchtkörper im Bild sitzt (Anteil von Breite und Höhe), wie weit
    *  das Leuchten reicht (% der Fischbreite) und wie schnell es pulst (s).
-   *  Je Fisch ein anderer Takt, sonst blinken sie im Gleichschritt. */
-  laterne: { x: number; y: number; weite: number; takt: number };
+   *  Je Fisch ein anderer Takt, sonst blinken sie im Gleichschritt.
+   *  Weglassen, wenn das Tier kein Leuchtorgan hat. */
+  laterne?: { x: number; y: number; weite: number; takt: number };
   /** Das Auge: Mittelpunkt (Anteil von Breite und Höhe), Durchmesser der Iris
    *  in % der Fischbreite und wie lange ein Blickwechsel dauert. Darüber legt
-   *  sich eine bewegliche Pupille, damit der Fisch sich umschaut. */
-  auge: { x: number; y: number; iris: number; takt: number };
+   *  sich eine bewegliche Pupille, damit der Fisch sich umschaut.
+   *  Weglassen, wenn das gemalte Auge für sich stehen soll. */
+  auge?: { x: number; y: number; iris: number; takt: number };
   /** Einer im Schwarm ist ein Disco-Fisch: Seine Laterne blinkt farbig durch,
    *  statt ruhig weiss zu pulsen. */
   disco?: boolean;
@@ -422,6 +430,30 @@ const FISCHE: Fisch[] = [
     gespiegelt: true,
     laterne: { x: 0.87, y: 0.17, weite: 52, takt: 2.9 },
     auge: { x: 0.637, y: 0.436, iris: 9.6, takt: 6.3 },
+  },
+  // Der Fangzahnfisch: ein Lauerjäger ohne Licht. Er zieht langsam durch
+  // die mittlere Tiefe — sein gemaltes Auge ist so fein, dass keine
+  // bewegliche Pupille darüber muss.
+  {
+    datei: "fangzahnfisch",
+    groesse: 118,
+    oben: 36,
+    dauer: 76,
+    verzoegerung: -33,
+    gespiegelt: true,
+    zeigtLinks: true,
+  },
+  // Der Viperfisch: gestreckter Jäger, schneller als alle und wellig im
+  // Lauf — darum schlängelt sein Körper statt zu wippen. Ganz unten, wo
+  // es am dunkelsten ist.
+  {
+    datei: "viperfisch",
+    groesse: 152,
+    oben: 90,
+    dauer: 46,
+    verzoegerung: -14,
+    zeigtLinks: true,
+    schlaengeln: true,
   },
   // Der Disco-Fisch. Schwimmt selten und weit unten durch, damit es eine
   // Entdeckung bleibt und kein Dauerlicht.
@@ -556,8 +588,18 @@ export function Vampir({ className = "" }: { className?: string }) {
     // beides nur im selben Takt.
     <span className={`vampir ${className}`} aria-hidden="true">
       <span className="vampir-atem">
+        {/* Mit festen Massen: Ohne sie wäre das lazy geladene Bild erst
+            0 px hoch, und die halbe Seite spränge beim Nachladen um seine
+            Höhe nach unten — das verschob auch alles, was am Bild
+            verankert ist. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/art/sprites/vampirtintenfisch.webp" alt="" loading="lazy" />
+        <img
+          src="/art/sprites/vampirtintenfisch.webp"
+          alt=""
+          loading="lazy"
+          width={360}
+          height={276}
+        />
         {VAMPIR_AUGEN.map((a, i) => (
           <span
             key={i}
@@ -579,6 +621,38 @@ export function Vampir({ className = "" }: { className?: string }) {
     </span>
   );
 }
+
+/** Die Tiefsee-Treiber: Tiere, die nicht schwimmen, sondern hängen und
+ *  driften — jedes mit der Bewegung, die es wirklich hat. */
+const TIEFSEE = [
+  // Glastintenfisch: fast durchsichtig, hängt fast still im Wasser und
+  // pulst mit dem Mantel.
+  { datei: "glastintenfisch", groesse: 76, links: 6, oben: 41,
+    dauer: 26, verzoegerung: -9, deckkraft: 0.55, klasse: "wesen-glast" },
+  // Rippenqualle: driftet, und über ihre Rippen läuft das Irisieren, für
+  // das diese Tiere berühmt sind.
+  { datei: "rippenqualle", groesse: 40, links: 82, oben: 90,
+    dauer: 30, verzoegerung: -17, deckkraft: 0.62, klasse: "wesen-rippen" },
+  // Staatsqualle: eine lange Kolonie-Kette, hängt senkrecht und schwoit
+  // kaum merklich — das langsamste Tier der Seite.
+  { datei: "staatsqualle", groesse: 54, links: 3, oben: 2.5,
+    dauer: 48, verzoegerung: -21, deckkraft: 0.5, klasse: "wesen-staats" },
+];
+
+/** Die Kriecher: am Fels der Bildwelt verankert (in cqw, wie Molchauge und
+ *  Höhlenfisch), damit sie in jeder Spaltenbreite auf ihrem Stein sitzen. */
+const KRIECHER = [
+  // Meerspinne: stakst in Zeitlupe über den Höhlenboden.
+  { datei: "meerspinne", breite: 14, links: 52, obenCqw: 317,
+    dauer: 36, klasse: "kriech-spinne" },
+  // Riesenassel: sitzt am Grund und rührt sich fast nie — ab und zu ein
+  // träger Schritt.
+  { datei: "riesenassel", breite: 10, links: 9, obenCqw: 330,
+    dauer: 52, klasse: "kriech-assel" },
+  // Schlangenstern: klammert sich an den Fels und wiegt die Arme.
+  { datei: "schlangenstern", breite: 15, links: 5, obenCqw: 1094,
+    dauer: 24, klasse: "kriech-stern" },
+];
 
 function stil(t: Treiber): React.CSSProperties {
   return {
@@ -626,6 +700,50 @@ export default function Blubber() {
   return (
     <>
       <div className="blubber" aria-hidden="true" style={fest}>
+        {/* Die Tiefsee-Treiber: hängen im Wasser, jede Art bewegt sich auf
+            ihre Weise (Mantelpuls, Irisieren, Schwojen). */}
+        {TIEFSEE.map((w, i) => (
+          <span
+            key={`w${i}`}
+            className="treiber wesen"
+            style={
+              {
+                left: `${w.links}%`,
+                top: `${w.oben}%`,
+                width: w.groesse,
+                opacity: w.deckkraft,
+                "--dauer": `${w.dauer}s`,
+                "--verzoegerung": `${w.verzoegerung}s`,
+              } as React.CSSProperties
+            }
+          >
+            <span className={`wesen-drift ${w.klasse}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/art/sprites/${w.datei}.webp`} alt="" loading="lazy" />
+            </span>
+          </span>
+        ))}
+
+        {/* Die Kriecher: sitzen auf den Felsen der Bildwelt. */}
+        {KRIECHER.map((k, i) => (
+          <span
+            key={`k${i}`}
+            className={`wesen ${k.klasse}`}
+            style={
+              {
+                position: "absolute",
+                left: `${k.links}cqw`,
+                top: `calc(var(--bild-oben) + ${k.obenCqw}cqw)`,
+                width: `${k.breite}cqw`,
+                "--dauer": `${k.dauer}s`,
+              } as React.CSSProperties
+            }
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`/art/sprites/${k.datei}.webp`} alt="" loading="lazy" />
+          </span>
+        ))}
+
         {/* Die Molche ganz hinten, hinter Quallen und Blasen. */}
         {MOLCHE.map((m, i) => (
           <span
@@ -702,8 +820,12 @@ export default function Blubber() {
  *  pulsende Laterne. Geteilt zwischen dem durchziehenden und dem stehenden
  *  Fisch, damit beide gleich lebendig sind. */
 function FischKoerper({ f }: { f: Fisch }) {
+  // Gespiegelt wird das BILD nur, wenn Blickrichtung und Schwimmrichtung
+  // nicht zusammenpassen: Die Anglerfische schauen nach rechts, Fangzahn
+  // und Viper nach links.
+  const spiegel = !!f.gespiegelt !== !!f.zeigtLinks;
   return (
-    <span className="fisch-wippe">
+    <span className={f.schlaengeln ? "fisch-schlaengel" : "fisch-wippe"}>
       {/* Die Spiegelung sitzt am Bild, nicht am Wipp-Element: dessen transform
           gehört der Animation, sie würde sie überschreiben. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -711,36 +833,40 @@ function FischKoerper({ f }: { f: Fisch }) {
         src={`/art/sprites/${f.datei}.webp`}
         alt=""
         loading="lazy"
-        style={f.gespiegelt ? { transform: "scaleX(-1)" } : undefined}
+        style={spiegel ? { transform: "scaleX(-1)" } : undefined}
       />
       {/* Über die gemalte Iris legt sich eine eigene, in der eine Pupille hin
           und her wandert — der Fisch schaut sich um. Beim gespiegelten Fisch
           sitzt das Auge spiegelbildlich. */}
-      <span
-        className="fisch-auge"
-        style={
-          {
-            left: `${(f.gespiegelt ? 1 - f.auge.x : f.auge.x) * 100}%`,
-            top: `${f.auge.y * 100}%`,
-            width: `${f.auge.iris}%`,
-            "--takt": `${f.auge.takt}s`,
-          } as React.CSSProperties
-        }
-      >
-        <span className="fisch-pupille" />
-      </span>
+      {f.auge ? (
+        <span
+          className="fisch-auge"
+          style={
+            {
+              left: `${(spiegel ? 1 - f.auge.x : f.auge.x) * 100}%`,
+              top: `${f.auge.y * 100}%`,
+              width: `${f.auge.iris}%`,
+              "--takt": `${f.auge.takt}s`,
+            } as React.CSSProperties
+          }
+        >
+          <span className="fisch-pupille" />
+        </span>
+      ) : null}
 
-      <span
-        className={`laterne ${f.disco ? "laterne-disco" : ""}`}
-        style={
-          {
-            left: `${(f.gespiegelt ? 1 - f.laterne.x : f.laterne.x) * 100}%`,
-            top: `${f.laterne.y * 100}%`,
-            width: `${f.laterne.weite}%`,
-            "--takt": `${f.laterne.takt}s`,
-          } as React.CSSProperties
-        }
-      />
+      {f.laterne ? (
+        <span
+          className={`laterne ${f.disco ? "laterne-disco" : ""}`}
+          style={
+            {
+              left: `${(spiegel ? 1 - f.laterne.x : f.laterne.x) * 100}%`,
+              top: `${f.laterne.y * 100}%`,
+              width: `${f.laterne.weite}%`,
+              "--takt": `${f.laterne.takt}s`,
+            } as React.CSSProperties
+          }
+        />
+      ) : null}
     </span>
   );
 }
