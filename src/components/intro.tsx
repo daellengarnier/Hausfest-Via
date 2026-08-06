@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Sprache } from "@/lib/fest";
 
 /**
@@ -32,6 +33,18 @@ export default function Intro({ sprache }: { sprache: Sprache }) {
   const [an, setAn] = useState(false); // Laterne gezündet
   const [frei, setFrei] = useState(false); // Vorhang hebt sich, Fisch geht
   const [weg, setWeg] = useState(false); // alles vorbei, raus aus dem DOM
+  const [imBody, setImBody] = useState(false); // nach Hydration: Portal
+
+  // Nach dem Aufwachen wandert das Intro als Portal an den <body>: Die
+  // `.geraet`-Hülle ist ein Query-Container mit Overflow-Clip, und WebKit
+  // macht sie damit (spec-konform) zum Bezugsrahmen für position:fixed —
+  // sie beschnitt in In-App-Browsern den schwarzen Überschuss des
+  // Vorhangs. Am Body gemessen heisst fixed wirklich „der Bildschirm".
+  // Bis zur Hydration bleibt die Server-Variante im Fluss, damit der
+  // Vorhang vom ersten gemalten Bild an da ist.
+  useEffect(() => {
+    setImBody(true);
+  }, []);
 
   // Einmal pro Sitzung: Wurde schon gezündet, gleich überspringen.
   // Layout-Effekt statt Effekt, damit es vor dem ersten Malen passiert —
@@ -68,7 +81,7 @@ export default function Intro({ sprache }: { sprache: Sprache }) {
     window.setTimeout(() => setWeg(true), 1500 + 3600);
   };
 
-  return (
+  const inhalt = (
     <div
       className={`intro ${an ? "intro-hell" : ""} ${frei ? "intro-frei" : ""}`}
     >
@@ -119,4 +132,6 @@ export default function Intro({ sprache }: { sprache: Sprache }) {
       <p className="intro-hinweis">{TEXT.hinweis[sprache]}</p>
     </div>
   );
+
+  return imBody ? createPortal(inhalt, document.body) : inhalt;
 }

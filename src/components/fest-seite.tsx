@@ -151,24 +151,31 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
                 key={j.zahl}
                 className={
                   i === 0
-                    ? "absolute left-0 top-[8.5rem] flex w-[6.2rem] flex-col items-center"
-                    : "absolute right-0 top-[14.5rem] flex w-[6.2rem] flex-col items-center"
+                    ? "absolute left-0 top-[8.5rem] flex w-[7.5rem] flex-col items-center"
+                    : "absolute right-0 top-[14.5rem] flex w-[7.5rem] flex-col items-center"
                 }
               >
-                <Bubble
-                  sprite={j.blase}
-                  className="jahresblase h-[6.2rem] w-[6.2rem]"
-                  style={{ "--takt": i === 0 ? "9s" : "12s" } as React.CSSProperties}
-                >
-                  <span className="flex flex-col items-center leading-none">
-                    <span className="font-display text-2xl font-extrabold text-foam">
-                      {j.zahl}
+                {/* Ein Knopf ohne Aktion, nur fürs Anfassen: Beim Antippen
+                    ploppt die Blase kurz auf (`:active` in der CSS) — auf
+                    einem Button reagiert iOS zuverlässig darauf. */}
+                <button type="button" className="jahr-knopf">
+                  <Bubble
+                    sprite={j.blase}
+                    className="jahresblase h-[7.5rem] w-[7.5rem]"
+                    style={{ "--takt": i === 0 ? "9s" : "12s" } as React.CSSProperties}
+                  >
+                    <span className="flex flex-col items-center leading-none">
+                      <span className="font-display text-4xl font-extrabold text-foam">
+                        {j.zahl}
+                      </span>
+                      {/* Handschrift statt nüchterner Grotesk: Die Zeile
+                          gehört zur gezeichneten Welt, nicht zur Sachschrift. */}
+                      <span className="font-hand mt-1 whitespace-nowrap text-[0.95rem] text-foam">
+                        {j.was[sprache]}
+                      </span>
                     </span>
-                    <span className="mt-0.5 text-[0.62rem] text-foam">
-                      {j.was[sprache]}
-                    </span>
-                  </span>
-                </Bubble>
+                  </Bubble>
+                </button>
               </li>
             ))}
           </ul>
