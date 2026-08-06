@@ -168,9 +168,11 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
                       <span className="font-display text-4xl font-extrabold text-foam">
                         {j.zahl}
                       </span>
-                      {/* Handschrift statt nüchterner Grotesk: Die Zeile
-                          gehört zur gezeichneten Welt, nicht zur Sachschrift. */}
-                      <span className="font-hand mt-1 whitespace-nowrap text-[0.95rem] text-foam">
+                      {/* Gleiche Schrift wie die Zahl, eine Stufe kleiner —
+                          und mit fester Breite, damit die Zeile in der
+                          runden Blase zweizeilig umbricht statt seitlich
+                          hinauszuragen. */}
+                      <span className="font-display mt-1 w-[4.8rem] text-center text-[0.72rem] font-semibold leading-tight text-foam">
                         {j.was[sprache]}
                       </span>
                     </span>
