@@ -700,6 +700,11 @@ li:nth-child(4n + 1) .blasenfeld-act {
 .intro {
   position: fixed;
   inset: 0;
+  /* In-App-Browser (Telegram, Instagram) melden mit schwebender
+     Werkzeugleiste eine zu kleine Viewport-Höhe — unten lugte die Seite
+     unter dem Vorhang hervor. lvh misst den grossen Viewport; Browser
+     ohne lvh ignorieren die Zeile und bleiben bei inset. */
+  height: 100lvh;
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -712,7 +717,9 @@ li:nth-child(4n + 1) .blasenfeld-act {
    Seite davon. */
 .intro-vorhang {
   position: absolute;
-  inset: 0;
+  /* Überschuss über Ober- und Unterkante: Selbst wenn der Browser die
+     Höhe falsch meldet, reicht das Schwarz über den Bildschirm hinaus. */
+  inset: -4rem 0 -8rem;
   background: #010208;
   transition: opacity 1s ease;
 }
