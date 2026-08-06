@@ -39,7 +39,7 @@ const TEXTE = {
     en: "On 5 September from 4 pm we're opening the doors to our house — all of them at once. The party spreads across several floors: the garden, our glass pyramid, the flats and the club in the basement.",
   },
   willkommen2: {
-    de: "Es erwarten dich ein wunderschöner Ort in Aarenähe (nimm also dein Badzeug mit), Essen, Bands, Theater und DJs — und das bis in die frühen Morgenstunden.",
+    de: "Es erwarten dich ein wunderschöner Ort in Aarenähe (nimm also deine Badesachen mit), Essen, Bands, Theater und DJs — und das bis in die frühen Morgenstunden.",
     en: "Expect a beautiful place close to the river Aare (so bring your swimming gear), food, bands, theatre and DJs — well into the early hours.",
   },
 

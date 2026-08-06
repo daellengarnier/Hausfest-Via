@@ -47,7 +47,7 @@ export const JUBILAEEN = [
   },
 ] as const;
 
-export type Sparte = "Band" | "Theater" | "DJ";
+export type Sparte = "Band" | "Theater" | "DJ" | "Feuershow";
 
 export type Act = {
   name: string;
@@ -109,7 +109,7 @@ export const ACTS: Act[] = [
       ],
     },
   },
-  { name: "FULU", sparte: "Theater" },
+  { name: "FULU", sparte: "Feuershow" },
   { name: "DJ Pantichrist", sparte: "DJ" },
   {
     name: "Yotah",
@@ -139,6 +139,7 @@ export const SPARTE_LABEL: Record<Sparte, Record<Sprache, string>> = {
   Band: { de: "Band", en: "Band" },
   Theater: { de: "Theater", en: "Theatre" },
   DJ: { de: "DJ", en: "DJ" },
+  Feuershow: { de: "Feuershow", en: "Fire show" },
 };
 
 export type NavItem = { id: string; label: Record<Sprache, string> };
