@@ -130,6 +130,29 @@ export function SparteIcon({
   );
 }
 
+/** SoundCloud als Strichzeichnung im Stil der anderen Icons: die Wolke mit
+ *  den aufsteigenden Klangbalken davor. Kein Markenlogo, aber sofort als
+ *  „da gibt's Musik zu hören" lesbar. */
+export function SoundCloudIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 16.5v-3" />
+      <path d="M6.2 16.5v-5" />
+      <path d="M9.4 16.5V9" />
+      <path d="M9.4 16.5h8.1a3.3 3.3 0 0 0 .6-6.55 5 5 0 0 0-8.7-2.2" />
+    </svg>
+  );
+}
+
 /** Eine gemalte Seifenblase als Rahmen für kleine Inhalte (Zahlen, Icons).
  *  `sprite` wählt eine der freigestellten Blasen — so bekommt jede Zahl ihre
  *  eigene, statt dass überall dieselbe Form sitzt. */

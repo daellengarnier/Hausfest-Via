@@ -58,6 +58,9 @@ export type Act = {
   /** Ein Eintrag je Absatz, je Sprache. Wer einen Text hat, dessen Karte
    *  lässt sich auf der Seite aufklappen. */
   beschrieb?: Record<Sprache, string[]>;
+  /** SoundCloud-Profil — erscheint als kleines Icon hinter dem Namen.
+   *  Die offiziellen Teilen-Links (on.soundcloud.com) funktionieren gut. */
+  soundcloud?: string;
 };
 
 /** Bereits bestätigt. Zeiten und weitere Acts kommen laufend dazu. */
@@ -108,9 +111,26 @@ export const ACTS: Act[] = [
   },
   { name: "FULU", sparte: "Theater" },
   { name: "DJ Pantichrist", sparte: "DJ" },
-  { name: "Yotah", sparte: "DJ" },
-  { name: "Morchel", sparte: "DJ" },
-  { name: "Tino Kaufholz", sparte: "DJ" },
+  {
+    name: "Yotah",
+    sparte: "DJ",
+    soundcloud: "https://on.soundcloud.com/qsJPPnOlfHzvy407mB",
+  },
+  {
+    name: "Morchel",
+    sparte: "DJ",
+    soundcloud: "https://on.soundcloud.com/antaON5k18dENc0OGh",
+  },
+  {
+    name: "Tino Kaufholz",
+    sparte: "DJ",
+    soundcloud: "https://on.soundcloud.com/xS4YrPHYCeWeIwCceX",
+  },
+  {
+    name: "Jola",
+    herkunft: "BE",
+    soundcloud: "https://on.soundcloud.com/6ncio68TrvYkpfi9IS",
+  },
 ];
 
 /** Die Sparte, wie sie auf der Karte steht — nur „Theater“ schreibt sich

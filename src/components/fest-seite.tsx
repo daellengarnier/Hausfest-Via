@@ -8,6 +8,7 @@ import {
   Kalender,
   Pfeil,
   Seegras,
+  SoundCloudIcon,
   SparteIcon,
 } from "@/components/doodles";
 import type { Act, Sprache } from "@/lib/fest";
@@ -406,6 +407,25 @@ function ActKopf({ act, sprache }: { act: Act; sprache: Sprache }) {
             <span className="ml-2 text-sm font-normal text-foam-dim">
               ({act.herkunft})
             </span>
+          ) : null}
+          {act.soundcloud ? (
+            // Ein Link im <summary>: Der Klick folgt dem Link, statt die
+            // Karte aufzuklappen — Anker gewinnen gegen das Details-Toggle.
+            // Neuer Tab, damit die installierte PWA nicht in SoundCloud
+            // stecken bleibt.
+            <a
+              href={act.soundcloud}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={
+                sprache === "de"
+                  ? `${act.name} auf SoundCloud anhören`
+                  : `Listen to ${act.name} on SoundCloud`
+              }
+              className="-m-1.5 ml-0.5 inline-flex p-1.5 align-[-0.3em] text-foam-dim transition-colors hover:text-sky"
+            >
+              <SoundCloudIcon className="h-[1.05em] w-[1.05em]" />
+            </a>
           ) : null}
         </p>
         {act.sparte ? (
