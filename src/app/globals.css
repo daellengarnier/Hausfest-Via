@@ -706,6 +706,9 @@ li:nth-child(4n + 1) .blasenfeld-act {
      ohne lvh ignorieren die Zeile und bleiben bei inset. */
   height: 100lvh;
   z-index: 100;
+  /* iOS scrollt die Seite hinter dem Intro trotz overflow:hidden auf dem
+     Body — Touch-Gesten auf dem Intro dürfen gar nicht erst scrollen. */
+  touch-action: none;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -717,9 +720,12 @@ li:nth-child(4n + 1) .blasenfeld-act {
    Seite davon. */
 .intro-vorhang {
   position: absolute;
-  /* Überschuss über Ober- und Unterkante: Selbst wenn der Browser die
-     Höhe falsch meldet, reicht das Schwarz über den Bildschirm hinaus. */
-  inset: -4rem 0 -8rem;
+  /* Massiver Überschuss über Ober- und Unterkante: In-App-Browser
+     (Telegram) zeigen hinter ihren schwebenden Leisten mehr Seite an,
+     als sie als Viewport melden — ein kleiner Rand genügte nicht. Mehr
+     als ein halber Bildschirm in jede Richtung deckt jeden Fall ab;
+     ausserhalb des Bildschirms kostet das Schwarz nichts. */
+  inset: -60vh 0;
   background: #010208;
   transition: opacity 1s ease;
 }
