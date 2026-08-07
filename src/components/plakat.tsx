@@ -25,6 +25,7 @@ const TEXT = {
   },
   offen: { de: "Plakat gross anzeigen", en: "Show poster full size" },
   zu: { de: "Schliessen", en: "Close" },
+  laden: { de: "Plakat herunterladen", en: "Download poster" },
   alt: {
     de: "Das gezeichnete Fest-Plakat: das Haus mit allen Floors, Bands und Zeiten als Wimmelbild",
     en: "The hand-drawn festival poster: the house with all floors, bands and times",
@@ -96,9 +97,41 @@ export default function Plakat({ sprache }: { sprache: Sprache }) {
           >
             ×
           </button>
+          {/* Zum Mitnehmen: dieselbe Grafik in Druckqualität. Der Klick
+              darf das Vollbild nicht schliessen — der Backdrop-Handler
+              liegt auf dem Container. */}
+          <a
+            href="/art/plakat_download.jpg"
+            download="Hausfest-Via-Plakat.jpg"
+            className="absolute bottom-[max(1.4rem,env(safe-area-inset-bottom))] left-1/2 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full border border-sky/50 bg-night-900/80 px-4 py-2 text-sm text-foam backdrop-blur-sm transition-colors hover:bg-sky/25"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <LadenIcon className="h-4 w-4" />
+            {TEXT.laden[sprache]}
+          </a>
         </div>,
         document.body,
       ) : null}
     </>
+  );
+}
+
+/** Pfeil in die Ablage — gleicher Strich wie die übrigen Icons. */
+function LadenIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 4v10" />
+      <path d="m8 10.5 4 4 4-4" />
+      <path d="M4.5 16.5v2.5a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5v-2.5" />
+    </svg>
   );
 }
