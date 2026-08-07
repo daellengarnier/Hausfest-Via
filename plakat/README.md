@@ -1,12 +1,19 @@
 # Plakat
 
-Das gezeichnete A3-Plakat, mit QR-Code zum Ticketshop.
+Das gezeichnete A3-Plakat, mit QR-Code zur Fest-Seite.
 
 | Datei | wofür |
 | --- | --- |
-| `ViaFest_A3.pdf` | die gezeichnete Vorlage mit dem leeren weissen Feld |
+| `Hausfest_Plakat_Feuershow.jpg` | **die aktuelle Version** (A3, 300 dpi, QR schon drin) — Quelle der Web-Bilder |
+| `ViaFest_A3.pdf` | ältere gezeichnete Vorlage mit dem leeren weissen Feld |
 | `qr_seite.svg` / `qr_seite.pdf` | der QR allein, 27 mm, als Vektor |
-| `ViaFest_A3_mit_QR.pdf` | das fertige Plakat — **das in den Druck geben** |
+| `ViaFest_A3_mit_QR.pdf` | ältere Druckfassung (aus der Vorlage + QR montiert) |
+
+Die aktuelle Version kam als fertiger Scan mit einmontiertem QR — der
+Code ist ab dem 300-dpi-Bild geprüft und decodiert sauber auf
+`https://hausfest-via.al-daellen.ch`. Die Web-Ableger
+(`public/art/plakat_vorschau.webp` 480 px, `plakat_gross.webp` 1200 px,
+`plakat_download.jpg` A3 bei 150 dpi) sind direkt daraus verkleinert.
 
 Der QR steckt im Plakat als Vektor, nicht als Bild — er bleibt also auch
 in A3 gestochen scharf. Sein Grund ist keine weisse
