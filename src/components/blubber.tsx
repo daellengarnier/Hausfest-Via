@@ -945,13 +945,19 @@ export function HoehlenFisch() {
   };
 
   return (
-    <span
-      className={`fisch-still hoehlen-fisch ${modus}`}
-      style={{ "--dauer": `${f.dauer}s` } as React.CSSProperties}
-      onClick={klick}
-    >
-      <FischKoerper f={{ ...f, gespiegelt: true }} />
-    </span>
+    <>
+      <span
+        className={`fisch-still hoehlen-fisch ${modus}`}
+        style={{ "--dauer": `${f.dauer}s` } as React.CSSProperties}
+      >
+        <FischKoerper f={{ ...f, gespiegelt: true }} />
+      </span>
+      {/* Der Fisch malt sich mit z-index -1 HINTER die Seite — echte
+          Tipps landen darum auf den durchsichtigen Inhalts-Containern
+          darüber und kämen nie an. Diese unsichtbare Fläche liegt an
+          derselben Stelle ÜBER der Seite und nimmt sie entgegen. */}
+      <span aria-hidden="true" className="hoehlen-tipp" onClick={klick} />
+    </>
   );
 }
 

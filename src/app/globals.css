@@ -1114,6 +1114,20 @@ li:nth-child(4n + 1) .blasenfeld-act {
   width: 26cqw;
   transform: translate(-50%, -50%);
   z-index: -1;
+}
+
+/* Die Tipp-Fläche des Höhlenfischs: gleiche Stelle, aber über der Seite —
+   der Fisch selbst liegt hinter den (durchsichtigen) Inhalts-Containern
+   und würde echte Tipps nie sehen. Bewusst unter der Fisch-Ebene
+   (.blubber-vorn), damit vorbeischwimmende Tiere antippbar bleiben. */
+.hoehlen-tipp {
+  position: absolute;
+  left: 63cqw;
+  top: calc(var(--bild-oben) + 361.5cqw);
+  width: 26cqw;
+  height: 19cqw;
+  transform: translate(-50%, -50%);
+  z-index: 1;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
