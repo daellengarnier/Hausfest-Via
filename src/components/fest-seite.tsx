@@ -1,4 +1,4 @@
-import Blubber, { FischStill, MolchSitzt, Vampir } from "@/components/blubber";
+import Blubber, { HoehlenFisch, MolchSitzt, Vampir } from "@/components/blubber";
 import Intro from "@/components/intro";
 import Plakat from "@/components/plakat";
 import SiteNav from "@/components/site-nav";
@@ -133,7 +133,7 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
           umschaut und dessen Laterne pulst. Er sitzt — wie das Molchauge —
           in cqw am Bild fest, damit er in jeder Spaltenbreite in der Höhle
           bleibt. */}
-      <FischStill art={0} gespiegelt className="hoehlen-fisch" />
+      <HoehlenFisch />
       <Blubber />
       <SiteNav sprache={sprache} />
 

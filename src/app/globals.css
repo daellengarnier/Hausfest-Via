@@ -1114,6 +1114,61 @@ li:nth-child(4n + 1) .blasenfeld-act {
   width: 26cqw;
   transform: translate(-50%, -50%);
   z-index: -1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Der Höhlenfisch als Lichtschalter (siehe HoehlenFisch in blubber.tsx):
+   `hf-aus` löscht die Laterne — der ganze Fisch versinkt im Dunkel der
+   Höhle, nur die Silhouette bleibt erahnbar. Das Licht sitzt GEMALT im
+   Sprite, darum genügt es, das Bild abzudunkeln. */
+.hoehlen-fisch img {
+  transition: filter 0.35s ease;
+}
+
+.hf-aus img {
+  filter: brightness(0.15);
+}
+
+.hf-aus .laterne,
+.hf-aus .fisch-auge {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* Strobo: hartes An/Aus im Keller-Takt — Licht und Körper blitzen
+   gemeinsam, mit steps() ohne weiches Überblenden. */
+.hf-strobo .laterne {
+  animation: hf-blitz 0.15s steps(1, end) infinite;
+}
+
+.hf-strobo img {
+  animation: hf-blitz-koerper 0.15s steps(1, end) infinite;
+}
+
+@keyframes hf-blitz {
+  0%,
+  48% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+  49%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+@keyframes hf-blitz-koerper {
+  0%,
+  48% {
+    filter: brightness(1.7) saturate(1.4);
+  }
+  49%,
+  100% {
+    filter: brightness(0.3);
+  }
 }
 
 .fisch-still img {
@@ -1324,7 +1379,9 @@ li:nth-child(4n + 1) .blasenfeld-act {
   .vampir-atem,
   .blasenfeld,
   .fisch-auge,
-  .jahresblase {
+  .jahresblase,
+  .hf-strobo .laterne,
+  .hf-strobo img {
     animation: none;
   }
   .blubber {

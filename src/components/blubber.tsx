@@ -21,7 +21,7 @@
  * kurz davon.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Treiber = {
   datei: string;
@@ -926,6 +926,34 @@ const STILL: Fisch[] = [
     auge: { x: 0.63, y: 0.417, iris: 11.3, takt: 7.6 },
   },
 ];
+
+/** Der Bewohner der Höhle als Lichtschalter: Beim ersten Antippen geht
+ *  seine Laterne kurz aus — der Fisch versinkt im Dunkel — und zündet
+ *  wieder. Beim nächsten Antippen blitzt sie ein paar Sekunden als
+ *  Strobo. Danach beginnt der Wechsel von vorn. */
+export function HoehlenFisch() {
+  const f = STILL[0];
+  const [modus, setModus] = useState<"" | "hf-aus" | "hf-strobo">("");
+  const naechster = useRef<"hf-aus" | "hf-strobo">("hf-aus");
+
+  const klick = () => {
+    if (modus) return; // läuft gerade — erst ausklingen lassen
+    const m = naechster.current;
+    naechster.current = m === "hf-aus" ? "hf-strobo" : "hf-aus";
+    setModus(m);
+    window.setTimeout(() => setModus(""), m === "hf-aus" ? 1500 : 3200);
+  };
+
+  return (
+    <span
+      className={`fisch-still hoehlen-fisch ${modus}`}
+      style={{ "--dauer": `${f.dauer}s` } as React.CSSProperties}
+      onClick={klick}
+    >
+      <FischKoerper f={{ ...f, gespiegelt: true }} />
+    </span>
+  );
+}
 
 export function FischStill({
   art = 0,
