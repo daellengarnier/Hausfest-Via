@@ -129,7 +129,13 @@ export const ACTS: Act[] = [
   {
     name: "Jola",
     herkunft: "BE",
+    sparte: "DJ",
     soundcloud: "https://on.soundcloud.com/6ncio68TrvYkpfi9IS",
+  },
+  {
+    name: "Orbflux",
+    sparte: "DJ",
+    soundcloud: "https://on.soundcloud.com/gNswEbsj2IHjEBFeqF",
   },
 ];
 
