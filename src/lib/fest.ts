@@ -137,6 +137,11 @@ export const ACTS: Act[] = [
     sparte: "DJ",
     soundcloud: "https://on.soundcloud.com/gNswEbsj2IHjEBFeqF",
   },
+  {
+    name: "GINGA LINDA",
+    sparte: "DJ",
+    soundcloud: "https://on.soundcloud.com/Tmg5NobZr3GyzmfOXO",
+  },
 ];
 
 /** Die Sparte, wie sie auf der Karte steht — nur „Theater“ schreibt sich
