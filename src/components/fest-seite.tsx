@@ -253,13 +253,24 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
               <p>{t("programm1")}</p>
               <p className="text-sm text-foam-dim">{t("programm2")}</p>
 
-              <ul className="not-prose mt-5 space-y-1">
-                {programmFolge().map((act) => (
-                  <li key={act.name}>
-                    <ActKarte act={act} sprache={sprache} />
-                  </li>
+              <div className="not-prose mt-5">
+                {programmGruppen().map(({ floor, acts }, i) => (
+                  <div key={floor ?? `frei-${i}`}>
+                    {floor ? (
+                      <h3 className="mb-2 mt-6 font-display text-lg font-bold text-foam">
+                        {FLOOR_LABEL[floor][sprache]}
+                      </h3>
+                    ) : null}
+                    <ul className="space-y-1">
+                      {acts.map((act) => (
+                        <li key={act.name}>
+                          <ActKarte act={act} sprache={sprache} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
 
               {/* Das gezeichnete Plakat — klein angepinnt, gross beim
                   Antippen. Inhaltlich gehört es hierher: Es zeigt Bands,
@@ -444,44 +455,41 @@ function ActKopf({ act, sprache }: { act: Act; sprache: Sprache }) {
   );
 }
 
-/** Die graue Zeile unter dem Namen: Sparte, Spielzeit und Floor — was
- *  davon bekannt ist, mit Punkten verbunden. */
+/** Die graue Zeile unter dem Namen: Sparte und Spielzeit — der Floor
+ *  steht schon als Überschrift über der Gruppe. */
 function ActInfos({ act, sprache }: { act: Act; sprache: Sprache }) {
   const teile = [
     act.sparte ? SPARTE_LABEL[act.sparte][sprache] : null,
     act.zeit ?? null,
-    act.floor ? FLOOR_LABEL[act.floor][sprache] : null,
   ].filter(Boolean);
   if (teile.length === 0) return null;
   return <p className="text-sm text-foam-dim">{teile.join(" · ")}</p>;
 }
 
-/** Reihenfolge im Programm: nach Floors gruppiert — Garten zuerst, dann
- *  Club, Ambient, Alternativfloor —, innerhalb des Floors chronologisch.
- *  Das Nachtessen — mit Zeit, aber
- *  ohne Floor — steht zuoberst; Acts, deren Slot noch offen ist, warten
- *  am Schluss der Liste. */
-const FLOOR_FOLGE: Record<Floor, number> = {
-  Garten: 1,
-  Club: 2,
-  Ambient: 3,
-  Alternativ: 4,
-};
+/** Das Programm als Gruppen: zuerst das Floor-lose Vorab (Nachtessen),
+ *  dann je Floor eine Gruppe mit Überschrift — Garten, Spinnerei,
+ *  Ambient, Alternativ —, innerhalb chronologisch. Acts ganz ohne
+ *  Zuteilung hängen zum Schluss wieder ohne Überschrift an. */
+const FLOOR_FOLGE: Floor[] = ["Garten", "Club", "Ambient", "Alternativ"];
 
-function programmFolge(): Act[] {
-  // Essen vor allem anderen; Acts mit Zeit, aber noch offenem Floor,
-  // hinter die Floors; ganz offene Slots ans Ende.
-  const rang = (a: Act) =>
-    a.sparte === "Essen" ? 0 : a.floor ? FLOOR_FOLGE[a.floor] : a.zeit ? 5 : 9;
+function programmGruppen(): { floor: Floor | null; acts: Act[] }[] {
   // Startzeit in Minuten; Stunden vor 16 Uhr gehören zum Morgen danach.
   const start = (a: Act) => {
     if (!a.zeit) return Number.MAX_SAFE_INTEGER;
     const [h, m] = a.zeit.split("–")[0].split(":").map(Number);
     return (h < 16 ? h + 24 : h) * 60 + m;
   };
-  return [...ACTS].sort(
-    (a, b) => rang(a) - rang(b) || start(a) - start(b)
-  );
+  const zeitlich = (liste: Act[]) => [...liste].sort((a, b) => start(a) - start(b));
+
+  const gruppen: { floor: Floor | null; acts: Act[] }[] = [
+    { floor: null, acts: zeitlich(ACTS.filter((a) => !a.floor && a.zeit)) },
+    ...FLOOR_FOLGE.map((floor) => ({
+      floor,
+      acts: zeitlich(ACTS.filter((a) => a.floor === floor)),
+    })),
+    { floor: null, acts: ACTS.filter((a) => !a.floor && !a.zeit) },
+  ];
+  return gruppen.filter((g) => g.acts.length > 0);
 }
 
 /** Ein Act. Wer einen Beschrieb hat, dessen Karte lässt sich aufklappen —
