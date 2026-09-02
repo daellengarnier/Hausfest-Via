@@ -47,7 +47,18 @@ export const JUBILAEEN = [
   },
 ] as const;
 
-export type Sparte = "Band" | "Theater" | "DJ" | "Feuershow";
+export type Sparte = "Band" | "Theater" | "DJ" | "Feuershow" | "Essen";
+
+/** Die Floors des Fests. Kurzer Schlüssel im Code, volle Namen je Sprache
+ *  in FLOOR_LABEL. */
+export type Floor = "Club" | "Ambient" | "Alternativ" | "Garten";
+
+export const FLOOR_LABEL: Record<Floor, Record<Sprache, string>> = {
+  Club: { de: "Spinnerei Floor", en: "Spinnerei floor" },
+  Ambient: { de: "Ambient-Floor", en: "Ambient floor" },
+  Alternativ: { de: "Alternativ-Floor", en: "Alternative floor" },
+  Garten: { de: "Garten", en: "Garden" },
+};
 
 export type Act = {
   name: string;
@@ -55,6 +66,11 @@ export type Act = {
   /** Weglassen, solange die Sparte nicht feststeht — die Karte zeigt dann
    *  nur den Namen, statt eine falsche Zuordnung zu behaupten. */
   sparte?: Sparte;
+  /** Spielzeit als fertige Zeichenkette, z. B. "23:00–00:00" (Gedankenstrich).
+   *  Weglassen, solange die Zeit nicht feststeht. */
+  zeit?: string;
+  /** Auf welchem Floor der Act spielt. Weglassen, solange offen. */
+  floor?: Floor;
   /** Ein Eintrag je Absatz, je Sprache. Wer einen Text hat, dessen Karte
    *  lässt sich auf der Seite aufklappen. */
   beschrieb?: Record<Sprache, string[]>;
@@ -69,6 +85,8 @@ export const ACTS: Act[] = [
     name: "Ashinoa",
     herkunft: "FR",
     sparte: "Band",
+    zeit: "23:00–00:00",
+    floor: "Club",
     beschrieb: {
       de: [
         "Ashinoa ist eine französische Band, Ende 2015 in Lyon gegründet. Seit ihrer Gründung steht das Trio an vorderster Front der alternativen Szene ihrer Heimatstadt. Beeinflusst von Krautrock und elektronischer Musik erschaffen sie ein weites Universum aus psychedelischen Synthesizern und Gitarren, perkussiven Kraut-Rhythmen und galaktischen Visuals.",
@@ -81,6 +99,8 @@ export const ACTS: Act[] = [
   {
     name: "Reverend Deadeye & Nicotine Sue",
     sparte: "Band",
+    zeit: "21:30–22:30",
+    floor: "Club",
     beschrieb: {
       de: [
         "Reverend Deadeye ist der Sohn eines Reverends, der wiederum der Sohn eines Reverends war. Seine Jugend verbrachte er mit Schlangen in den Händen und mit Auftritten bei Zelt-Erweckungen, an der Seite seiner Pfingstler-Familie in einem Navajo-Reservat in Arizona. Dieses geistliche Erbe klingt in seinen Auftritten nach.",
@@ -98,6 +118,8 @@ export const ACTS: Act[] = [
     name: "Treibend",
     herkunft: "BE",
     sparte: "Band",
+    zeit: "19:30–21:00",
+    floor: "Garten",
     beschrieb: {
       de: [
         "Das Kollektiv aus Bern und Biel spielt elektro-akustische Live-Sets, die sich im ständigen Fluss befinden – immer im Moment, immer im Wandel. Mit Piano, Synthesizer, Trompete und Gesang entstehen bewegende Melodien und treibende Beats.",
@@ -109,8 +131,8 @@ export const ACTS: Act[] = [
       ],
     },
   },
-  { name: "FULU", sparte: "Feuershow" },
-  { name: "DJ Pantichrist", sparte: "DJ" },
+  { name: "FULU", sparte: "Feuershow", zeit: "21:00–21:30", floor: "Garten" },
+  { name: "DJ Pantichrist", sparte: "DJ", zeit: "00:00–02:00", floor: "Alternativ" },
   {
     name: "Yotah",
     sparte: "DJ",
@@ -124,25 +146,37 @@ export const ACTS: Act[] = [
   {
     name: "Tino Kaufholz",
     sparte: "DJ",
+    zeit: "04:00–06:00",
+    floor: "Club",
     soundcloud: "https://on.soundcloud.com/xS4YrPHYCeWeIwCceX",
   },
   {
     name: "Jola",
     herkunft: "BE",
     sparte: "DJ",
+    zeit: "00:00–02:00",
+    floor: "Club",
     soundcloud: "https://on.soundcloud.com/6ncio68TrvYkpfi9IS",
   },
   {
     name: "Orbflux",
     sparte: "DJ",
+    zeit: "02:00–04:00",
+    floor: "Club",
     soundcloud: "https://on.soundcloud.com/gNswEbsj2IHjEBFeqF",
   },
   {
     name: "GINGA LINDA",
     sparte: "DJ",
+    zeit: "03:30–05:30",
+    floor: "Ambient",
     soundcloud: "https://on.soundcloud.com/Tmg5NobZr3GyzmfOXO",
   },
-  { name: "Paaraiso", sparte: "DJ" },
+  { name: "Paaraiso", sparte: "DJ", zeit: "00:00–01:30", floor: "Ambient" },
+  { name: "Yves Spiri", sparte: "DJ", zeit: "22:30–00:00", floor: "Ambient" },
+  { name: "Kami", sparte: "DJ", zeit: "01:30–03:30", floor: "Ambient" },
+  { name: "Mike (Via)", sparte: "DJ", zeit: "02:00–04:00", floor: "Alternativ" },
+  { name: "Nachtessen", sparte: "Essen", zeit: "18:00–20:00" },
 ];
 
 /** Die Sparte, wie sie auf der Karte steht — nur „Theater“ schreibt sich
@@ -152,6 +186,7 @@ export const SPARTE_LABEL: Record<Sparte, Record<Sprache, string>> = {
   Theater: { de: "Theater", en: "Theatre" },
   DJ: { de: "DJ", en: "DJ" },
   Feuershow: { de: "Feuershow", en: "Fire show" },
+  Essen: { de: "Essen", en: "Food" },
 };
 
 export type NavItem = { id: string; label: Record<Sprache, string> };

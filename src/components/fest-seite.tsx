@@ -11,10 +11,11 @@ import {
   SoundCloudIcon,
   SparteIcon,
 } from "@/components/doodles";
-import type { Act, Sprache } from "@/lib/fest";
+import type { Act, Floor, Sprache } from "@/lib/fest";
 import {
   ACTS,
   FEST,
+  FLOOR_LABEL,
   JUBILAEEN,
   KONTAKT_MAIL,
   NAV,
@@ -59,8 +60,8 @@ const TEXTE = {
   },
 
   programm1: {
-    de: "Diese Acts sind bestätigt. Das Line-up wächst laufend, und die Zeiten schalten wir auf, sobald sie stehen — es lohnt sich also, immer wieder vorbeizuschauen.",
-    en: "These acts are confirmed. The line-up keeps growing, and we'll publish the set times as soon as they're fixed — so it's worth checking back.",
+    de: "Gefeiert wird auf vier Floors — hier steht, wer wann wo spielt. Kleine Änderungen sind bis zuletzt möglich, ein Blick kurz vor dem Fest lohnt sich.",
+    en: "The party spreads across four floors — here's who plays when and where. Small changes are possible until the very end, so it's worth a look shortly before the party.",
   },
   programm2: {
     de: "Tippe auf einen Act, um mehr zu erfahren.",
@@ -253,7 +254,7 @@ export default function FestSeite({ sprache }: { sprache: Sprache }) {
               <p className="text-sm text-foam-dim">{t("programm2")}</p>
 
               <ul className="not-prose mt-5 space-y-1">
-                {ACTS.map((act) => (
+                {programmFolge().map((act) => (
                   <li key={act.name}>
                     <ActKarte act={act} sprache={sprache} />
                   </li>
@@ -437,13 +438,47 @@ function ActKopf({ act, sprache }: { act: Act; sprache: Sprache }) {
             </a>
           ) : null}
         </p>
-        {act.sparte ? (
-          <p className="text-sm text-foam-dim">
-            {SPARTE_LABEL[act.sparte][sprache]}
-          </p>
-        ) : null}
+        <ActInfos act={act} sprache={sprache} />
       </div>
     </>
+  );
+}
+
+/** Die graue Zeile unter dem Namen: Sparte, Spielzeit und Floor — was
+ *  davon bekannt ist, mit Punkten verbunden. */
+function ActInfos({ act, sprache }: { act: Act; sprache: Sprache }) {
+  const teile = [
+    act.sparte ? SPARTE_LABEL[act.sparte][sprache] : null,
+    act.zeit ?? null,
+    act.floor ? FLOOR_LABEL[act.floor][sprache] : null,
+  ].filter(Boolean);
+  if (teile.length === 0) return null;
+  return <p className="text-sm text-foam-dim">{teile.join(" · ")}</p>;
+}
+
+/** Reihenfolge im Programm: nach Floors gruppiert — Garten zuerst, dann
+ *  Club, Ambient, Alternativfloor —, innerhalb des Floors chronologisch.
+ *  Das Nachtessen — mit Zeit, aber
+ *  ohne Floor — steht zuoberst; Acts, deren Slot noch offen ist, warten
+ *  am Schluss der Liste. */
+const FLOOR_FOLGE: Record<Floor, number> = {
+  Garten: 1,
+  Club: 2,
+  Ambient: 3,
+  Alternativ: 4,
+};
+
+function programmFolge(): Act[] {
+  const rang = (a: Act) =>
+    a.floor ? FLOOR_FOLGE[a.floor] : a.zeit ? 0 : 9;
+  // Startzeit in Minuten; Stunden vor 16 Uhr gehören zum Morgen danach.
+  const start = (a: Act) => {
+    if (!a.zeit) return Number.MAX_SAFE_INTEGER;
+    const [h, m] = a.zeit.split("–")[0].split(":").map(Number);
+    return (h < 16 ? h + 24 : h) * 60 + m;
+  };
+  return [...ACTS].sort(
+    (a, b) => rang(a) - rang(b) || start(a) - start(b)
   );
 }
 
