@@ -143,9 +143,12 @@ export const ACTS: Act[] = [
     soundcloud: "https://on.soundcloud.com/qsJPPnOlfHzvy407mB",
   },
   {
+    // Auf dem internen Zeitplan als "Mike (Via)" gefuehrt — gleiche
+    // Person, auf der Seite gilt der Artist-Name.
     name: "Morchel",
     sparte: "DJ",
     zeit: "02:00–04:00",
+    floor: "Alternativ",
     soundcloud: "https://on.soundcloud.com/antaON5k18dENc0OGh",
   },
   {
@@ -179,7 +182,6 @@ export const ACTS: Act[] = [
   },
   { name: "Paaraiso", sparte: "DJ", zeit: "00:00–01:30", floor: "Ambient" },
   { name: "Kami", sparte: "DJ", zeit: "01:30–03:30", floor: "Ambient" },
-  { name: "Mike (Via)", sparte: "DJ", zeit: "02:00–04:00", floor: "Alternativ" },
   { name: "Nachtessen", sparte: "Essen", zeit: "18:00–20:00" },
 ];
 
