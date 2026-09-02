@@ -469,8 +469,10 @@ const FLOOR_FOLGE: Record<Floor, number> = {
 };
 
 function programmFolge(): Act[] {
+  // Essen vor allem anderen; Acts mit Zeit, aber noch offenem Floor,
+  // hinter die Floors; ganz offene Slots ans Ende.
   const rang = (a: Act) =>
-    a.floor ? FLOOR_FOLGE[a.floor] : a.zeit ? 0 : 9;
+    a.sparte === "Essen" ? 0 : a.floor ? FLOOR_FOLGE[a.floor] : a.zeit ? 5 : 9;
   // Startzeit in Minuten; Stunden vor 16 Uhr gehören zum Morgen danach.
   const start = (a: Act) => {
     if (!a.zeit) return Number.MAX_SAFE_INTEGER;

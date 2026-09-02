@@ -136,11 +136,13 @@ export const ACTS: Act[] = [
   {
     name: "Yotah",
     sparte: "DJ",
+    zeit: "22:30–00:00",
     soundcloud: "https://on.soundcloud.com/qsJPPnOlfHzvy407mB",
   },
   {
     name: "Morchel",
     sparte: "DJ",
+    zeit: "02:00–04:00",
     soundcloud: "https://on.soundcloud.com/antaON5k18dENc0OGh",
   },
   {
