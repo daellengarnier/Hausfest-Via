@@ -47,7 +47,7 @@ export const JUBILAEEN = [
   },
 ] as const;
 
-export type Sparte = "Band" | "Theater" | "DJ" | "Feuershow" | "Essen";
+export type Sparte = "Band" | "Theater" | "DJ" | "Feuershow";
 
 /** Die Floors des Fests. Kurzer Schlüssel im Code, volle Namen je Sprache
  *  in FLOOR_LABEL. */
@@ -182,7 +182,6 @@ export const ACTS: Act[] = [
   },
   { name: "Paaraiso", sparte: "DJ", zeit: "00:00–01:30", floor: "Ambient" },
   { name: "Kami", sparte: "DJ", zeit: "01:30–03:30", floor: "Ambient" },
-  { name: "Nachtessen", sparte: "Essen", zeit: "18:00–20:00" },
 ];
 
 /** Die Sparte, wie sie auf der Karte steht — nur „Theater“ schreibt sich
@@ -192,7 +191,6 @@ export const SPARTE_LABEL: Record<Sparte, Record<Sprache, string>> = {
   Theater: { de: "Theater", en: "Theatre" },
   DJ: { de: "DJ", en: "DJ" },
   Feuershow: { de: "Feuershow", en: "Fire show" },
-  Essen: { de: "Essen", en: "Food" },
 };
 
 export type NavItem = { id: string; label: Record<Sprache, string> };

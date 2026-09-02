@@ -77,17 +77,10 @@ export function SparteIcon({
   art,
   className = "",
 }: {
-  art?: "Band" | "Theater" | "DJ" | "Feuershow" | "Essen";
+  art?: "Band" | "Theater" | "DJ" | "Feuershow";
   className?: string;
 }) {
   const pfade = {
-    Essen: (
-      <>
-        <path d="M4.5 12.5h15a7.5 7.5 0 0 1-15 0Z" />
-        <path d="M9.3 8.8c0-1.2 1.1-1.6 1.1-2.8" />
-        <path d="M13.6 8.8c0-1.2 1.1-1.6 1.1-2.8" />
-      </>
-    ),
     Feuershow: (
       <>
         <path d="M12 3.5c1 2.9-4.4 5-4.4 9.3a4.4 4.4 0 0 0 8.8 0c0-2.7-1.4-4.4-2.8-6.1-.4 1.3-1 2.1-2 2.7-.1-2-.3-3.9-.6-5.9Z" />
