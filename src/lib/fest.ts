@@ -134,9 +134,12 @@ export const ACTS: Act[] = [
   { name: "FULU", sparte: "Feuershow", zeit: "21:00–21:30", floor: "Garten" },
   { name: "DJ Pantichrist", sparte: "DJ", zeit: "00:00–02:00", floor: "Alternativ" },
   {
+    // Auf dem internen Zeitplan als "Yves Spiri (opening)" gefuehrt —
+    // gleiche Person, auf der Seite gilt der Artist-Name.
     name: "Yotah",
     sparte: "DJ",
     zeit: "22:30–00:00",
+    floor: "Ambient",
     soundcloud: "https://on.soundcloud.com/qsJPPnOlfHzvy407mB",
   },
   {
@@ -175,7 +178,6 @@ export const ACTS: Act[] = [
     soundcloud: "https://on.soundcloud.com/Tmg5NobZr3GyzmfOXO",
   },
   { name: "Paaraiso", sparte: "DJ", zeit: "00:00–01:30", floor: "Ambient" },
-  { name: "Yves Spiri", sparte: "DJ", zeit: "22:30–00:00", floor: "Ambient" },
   { name: "Kami", sparte: "DJ", zeit: "01:30–03:30", floor: "Ambient" },
   { name: "Mike (Via)", sparte: "DJ", zeit: "02:00–04:00", floor: "Alternativ" },
   { name: "Nachtessen", sparte: "Essen", zeit: "18:00–20:00" },
