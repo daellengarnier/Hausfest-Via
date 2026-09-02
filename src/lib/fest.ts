@@ -181,7 +181,13 @@ export const ACTS: Act[] = [
     soundcloud: "https://on.soundcloud.com/Tmg5NobZr3GyzmfOXO",
   },
   { name: "Paaraiso", sparte: "DJ", zeit: "00:00–01:30", floor: "Ambient" },
-  { name: "Kami", sparte: "DJ", zeit: "01:30–03:30", floor: "Ambient" },
+  {
+    name: "Kami",
+    sparte: "DJ",
+    zeit: "01:30–03:30",
+    floor: "Ambient",
+    soundcloud: "https://on.soundcloud.com/zSeMTDeUDN166CklP3",
+  },
 ];
 
 /** Die Sparte, wie sie auf der Karte steht — nur „Theater“ schreibt sich
