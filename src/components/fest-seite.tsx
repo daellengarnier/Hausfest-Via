@@ -60,8 +60,8 @@ const TEXTE = {
   },
 
   programm1: {
-    de: "Gefeiert wird auf vier Floors — hier steht, wer wann wo spielt. Und von 18 bis 20 Uhr gibt es Nachtessen für alle.",
-    en: "The party spreads across four floors — here's who plays when and where. And from 6 to 8 pm there's dinner for everyone.",
+    de: "Gefeiert wird auf vier Floors — hier steht, wer wann wo spielt. Ab 16 Uhr gibt es einen Plausch im Garten, und von 18 bis 20 Uhr Nachtessen für alle.",
+    en: "The party spreads across four floors — here's who plays when and where. From 4 pm we'll gather for a get-together in the garden, and from 6 to 8 pm there's dinner for everyone.",
   },
   programm2: {
     de: "Tippe auf einen Act, um mehr zu erfahren.",
